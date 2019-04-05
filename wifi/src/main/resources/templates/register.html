@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-100">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta content="Esercitazione 1 - Applicazioni Internet" name="description">
+    <meta content="MMAP" name="author">
+
+    <title>Register</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/checkout/">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="text-center h-100">
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center text-center align-items-center p-sm-0 p-3">
+        <form action="#" class="form-register" method="post" th:action="@{/register}"
+              th:object="${formUserRegistration}">
+            <div class="form-group">
+                <img height="100px" src="images/add.svg" alt="Logo" class="svg">
+            </div>
+            <div class="form-group">
+                <h1 class="h3 mb-3 font-weight-normal">Welcome</h1>
+            </div>
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="sr-only" for="first">First name</label>
+                        <input class="form-control" id="first" name="first" th:field="*{first}" type="text"
+                               placeholder="First Name" value="">
+                        <div class="error" th:if="${#fields.hasErrors('first')}" th:errors="*{first}">FirstName Error
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="sr-only" for="last">Last name</label>
+                        <input class="form-control" id="last" name="last" th:field="*{last}" type="text"
+                               placeholder="Last name" value="">
+                        <div class="error" th:if="${#fields.hasErrors('last')}" th:errors="*{last}">LastName Error</div>
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="email" class="sr-only">Email</label>
+                    <input type="email" name="email" th:field="*{email}" class="form-control" id="email" value=""
+                           placeholder="Email address">
+                    <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="pass" class="sr-only">Password</label>
+                    <input type="password" name="pass" th:field="*{pass}" class="form-control" value="" id="pass"
+                           placeholder="Password">
+                    <div class="error" th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="pass1" class="sr-only">Ripeti password</label>
+                    <input type="password" name="pass1" class="form-control" value="" id="pass1"
+                           placeholder="Repeat Password">
+                    <div class="error" th:if="${#fields.hasErrors('pass1')}" th:errors="*{pass1}"></div>
+                </div>
+
+                <div th:if="${#fields.hasGlobalErrors()}" class="error mb-3">
+                    <p th:each="err : ${#fields.globalErrors()}">
+                        <span th:if="${err.matches('Passwords do not match!')}" th:text="( ${err} )"></span>
+                    </p>
+                </div>
+
+
+                <!--<hr class="mb-4">-->
+                <div class="mb-3">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" th:field="*{privacy}" name="privacy" class="custom-control-input"
+                               id="privacy">
+                        <label th:for="privacy" class="custom-control-label" for="privacy">I hereby authorize the
+                            processing of my personal data</label>
+                    </div>
+                    <div class="error" th:if="${#fields.hasErrors('privacy')}" th:errors="*{privacy}"></div>
+                </div>
+
+
+                <!--<hr class="mb-4">-->
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Register</button>
+                <a class="btn btn-lg btn-outline-primary btn-block" href="/login">Login</a>
+            </div>
+
+
+            <p class="mt-5 mb-3 text-muted">Applicazioni Internet - a.a. 2018/2019</p>
+
+
+        </form>
+    </div>
+
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
