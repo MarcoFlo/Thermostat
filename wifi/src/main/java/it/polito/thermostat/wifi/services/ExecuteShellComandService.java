@@ -46,7 +46,7 @@ public class ExecuteShellComandService {
         if (isWindows) {
             builder.command("cmd.exe", "/c", "ipconfig");
         } else {
-            builder.command("sh", "-c", command);
+            builder.command("echo albertengopi | sudo -S sh", "-c", command);
         }
         builder.directory(new File(System.getProperty("user.home")));
         Process process = builder.start();

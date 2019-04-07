@@ -82,7 +82,7 @@ public class WifiService {
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}");
 
-            String command = "echo " + wifiCredentials + " | sudo -S  tee -a /etc/wpa_supplicant/wpa_supplicant.conf <<< "+ raspberryPW;
+            String command = "echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf ";
             logger.info(command);
             try {
                 execService.execute(command);
