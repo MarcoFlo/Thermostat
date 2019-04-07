@@ -77,13 +77,15 @@ public class WifiService {
         if (!isWindows) {
             String raspberryPW = "'albertengopi'";
             StringBuilder wifiCredentials = new StringBuilder("'network={\n" +
-                    "\tssid=\\\"AndroidMA2\\\"\n" +
-                    "\tpsk=\\\"montagna\\\"\n" +
+                    "\tssid=\"AndroidMA2\"\n" +
+                    "\tpsk=\"montagna\"\n" +
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}'");
 
+            String command = "echo " + raspberryPW + " | sudo -S echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf";
 
-            logger.info(execService.executeCommand("echo " + raspberryPW + " | sudo -S echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf"));
+            logger.info(command);
+            logger.info(execService.executeCommand(command));
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
