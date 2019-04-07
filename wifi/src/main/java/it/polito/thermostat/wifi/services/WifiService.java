@@ -83,6 +83,7 @@ public class WifiService {
                     "}");
 
             String command = "echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf ";
+            command = "echo albertengopi | sudo -S sh -c ls";
             logger.info(command);
             try {
                 execService.execute(command);
