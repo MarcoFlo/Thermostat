@@ -27,7 +27,7 @@ public class ExecuteShellComandService {
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line + "\n");
             }
