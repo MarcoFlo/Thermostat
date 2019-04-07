@@ -81,13 +81,12 @@ public class WifiService {
                     "\tpsk=\"montagna\"\n" +
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}");
-
-            String command = "echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf ";
-            command = "echo albertengopi | sudo -S sh -c echo '" + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
+            //working from pi
+            String command = "echo albertengopi | sudo -S sh -c echo '" + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
             logger.info(command);
-          logger.info(execService.executeCommand(command));
+            logger.info(execService.executeCommand(command));
 
-            logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
+            //logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
     }
