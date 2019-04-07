@@ -84,7 +84,11 @@ public class WifiService {
 
             String command = "echo " + wifiCredentials + " | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf";
             logger.info(command);
-            logger.info(execService.executeCommand(command));
+            try {
+                execService.execute(command);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
