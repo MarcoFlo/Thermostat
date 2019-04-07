@@ -82,7 +82,9 @@ public class WifiService {
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}");
             //working from pi
-            String command = "echo albertengopi | sudo -S sh -c 'echo " + "wifiCredentials" + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
+            String command = "echo albertengopi | sudo -S sh -c 'echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
+            command = "sudo -S sh -c 'echo " + "wifiCredentials" + " >> /etc/wpa_supplicant/wpa_supplicant.conf' <<< albertengopi";
+
             logger.info(command);
             logger.info(execService.executeCommand(command));
 
