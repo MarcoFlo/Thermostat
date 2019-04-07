@@ -68,7 +68,7 @@ public class WifiService {
 
     public boolean connectNewNet() {
         if (!isWindows) {
-            execService.executeCommand("echo 'network={\n" +
+            execService.executeCommand("echo albertengopi sudo -S echo 'network={\n" +
                     "    ssid=\"AndroidMA2\"\n" +
                     "    psk=\"montagna\"\n" +
                     "    key_mgmt=WPA-PSK\n" +
