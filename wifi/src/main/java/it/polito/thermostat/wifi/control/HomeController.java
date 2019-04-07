@@ -23,12 +23,8 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
-        //logger.info(execService.executeCommand("ipconfig"));
-        try {
-           execService.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        logger.info(execService.executeCommand("ipconfig"));
+
         return "home";
     }
 

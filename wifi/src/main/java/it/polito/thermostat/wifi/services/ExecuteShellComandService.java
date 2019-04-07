@@ -41,6 +41,7 @@ public class ExecuteShellComandService {
     }
 
     public void execute() throws IOException, Exception {
+        String result;
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
             builder.command("cmd.exe", "/c", "ipconfig");
