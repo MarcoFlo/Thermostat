@@ -68,11 +68,11 @@ public class WifiService {
 
     public boolean connectNewNet() {
         if (!isWindows) {
-            logger.info(execService.executeCommand("echo albertengopi | sudo -S echo 'network={\n" +
+            logger.info(execService.executeCommand("echo 'network={\n" +
                     "    ssid=\"AndroidMA2\"\n" +
                     "    psk=\"montagna\"\n" +
                     "    key_mgmt=WPA-PSK\n" +
-                    "}' >> sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf"));
+                    "}' echo albertengopi | sudo -S tee -a /etc/wpa_supplicant/wpa_supplicant.conf"));
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
