@@ -59,7 +59,7 @@ public class WifiService {
         } else {
              result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
             while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
-                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 3).toString());
+                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 4).toString());
             }
             return wifiList;
         }
