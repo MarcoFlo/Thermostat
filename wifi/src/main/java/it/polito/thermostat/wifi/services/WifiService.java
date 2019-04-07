@@ -44,15 +44,23 @@ public class WifiService {
     public LinkedList<String> getAvailableNet() {
         StringBuilder result = new StringBuilder("");
         LinkedList<String> wifiList = new LinkedList<String>();
-        int pos = 0;
+        int pos = -1;
         if (isWindows) {
+            result.append("ESSID:\"Alice-35965732\"" +
+                    "                    Bit Rates:" +
+                    "\n\nESSID:\"FASTWEB-YPBJG9\"\n" +
+                    "                    Bit Rates:");
 
-            return null;
+            while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
+                logger.info("<<<<<" + pos + ">>>>>>>>");
+                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 3).toString());
+            }
+            return wifiList;
 
         } else {
             result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
-            while (pos != -1) {
-                pos = result.indexOf("ESSID", pos);
+            while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
+                logger.info("<<<<<<<" + pos + ">>>>>>>>");
                 wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 2).toString());
             }
             return wifiList;
