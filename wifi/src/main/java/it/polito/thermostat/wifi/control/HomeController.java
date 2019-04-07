@@ -31,6 +31,7 @@ public class HomeController {
         StringBuilder output = new StringBuilder();
         for (String s : wifiList) {
             output.append(s);
+            output.append("\n");
         }
         logger.info(output.toString());
         return "home";
