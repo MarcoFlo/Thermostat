@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.LinkedList;
+
 @Controller
 public class HomeController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -24,7 +26,11 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
-        logger.info(wifiService.getIP());
+        logger.info(">" + wifiService.getIP() + "<");
+        LinkedList<String> wifiList = wifiService.getAvailableNet();
+        for (String s : wifiList) {
+            logger.info(s);
+        }
 
         return "home";
     }
