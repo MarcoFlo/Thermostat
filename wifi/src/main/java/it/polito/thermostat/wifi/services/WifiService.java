@@ -28,10 +28,9 @@ public class WifiService {
             return result.subSequence(result.indexOf("Indirizzo IPv4",pos) + 40,result.indexOf("Subnet mask",pos)).toString();
 
         } else {
+            result.append(execService.executeCommand("ifconfig"));
             pos = result.indexOf("wlan0");
-            logger.info(String.valueOf(pos)+ "cii");
-            logger.info(result.toString());
-            return result.subSequence(result.indexOf("inet",pos) + 4,result.indexOf("netmask",pos) - 1).toString();
+            return result.subSequence(result.indexOf("inet",pos) + 5,result.indexOf("netmask",pos) - 2).toString();
         }
 
 
