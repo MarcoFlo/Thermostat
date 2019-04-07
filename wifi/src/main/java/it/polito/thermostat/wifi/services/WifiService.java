@@ -31,7 +31,7 @@ public class WifiService {
             result.append(execService.executeCommand("ipconfig"));
             pos = result.indexOf("LAN wireless Wi-Fi");
             logger.info(result.toString());
-            return result.subSequence(result.indexOf("Indirizzo IPv4", pos) + 40, result.indexOf("Subnet mask", pos -1)).toString();
+            return result.subSequence(result.indexOf("Indirizzo IPv4", pos) + 40, result.indexOf("Subnet mask", pos - 1)).toString();
 
         } else {
             result.append(execService.executeCommand("ifconfig"));
@@ -57,12 +57,23 @@ public class WifiService {
             return wifiList;
 
         } else {
-             result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
+            result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
             while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
                 wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("\n", pos) - 1).toString());
             }
             return wifiList;
         }
 
+    }
+
+    public boolean connectNewNet() {
+        if (!isWindows) {
+            execService.executeCommand("echo 'network={\n" +
+                    "    ssid=\"AndroidMA2\"\n" +
+                    "    psk=\"montagna\"\n" +
+                    "}' >> /etc/wpa_supplicant/wpa_supplicant.conf");
+            execService.executeCommand("wpa_cli -i wlan0 reconfigure");
+        }
+        return true;
     }
 }

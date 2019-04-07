@@ -1,6 +1,5 @@
 package it.polito.thermostat.wifi.control;
 
-import it.polito.thermostat.wifi.services.ExecuteShellComandService;
 import it.polito.thermostat.wifi.services.WifiService;
 import it.polito.thermostat.wifi.viewModel.WifiVM;
 import org.slf4j.Logger;
@@ -38,4 +37,11 @@ public class HomeController {
         return "home";
     }
 
+
+    @GetMapping("/new")
+    public String newConnection(@ModelAttribute("wifiVM") WifiVM wifiVM) {
+
+        wifiService.connectNewNet();
+        return "newConnection";
+    }
 }
