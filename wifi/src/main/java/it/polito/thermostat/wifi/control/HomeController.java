@@ -1,23 +1,34 @@
 package it.polito.thermostat.wifi.control;
 
-import it.polito.thermostat.wifi.view.FormUserLogin;
+import it.polito.thermostat.wifi.services.ExecuteShellComandService;
+import it.polito.thermostat.wifi.viewModel.WifiVM;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class HomeController {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    ExecuteShellComandService execService;
 
     /**
      * Mapping verso la home dell'applicazione
      *
-     * @param uvm wifidata
+     * @param wifiVM wifidata
      * @return String
      */
     @GetMapping("/")
-    public String home(@ModelAttribute("wifidata") FormUserLogin uvm) {
-
+    public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
+        //logger.info(execService.executeCommand("ipconfig"));
+        try {
+           execService.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "home";
     }
 
