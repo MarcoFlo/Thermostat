@@ -66,14 +66,21 @@ public class WifiService {
 
     }
 
+    /*
+    network={
+    ssid="testing"
+    psk="testingPassword"
+}
+     */
+
     public boolean connectNewNet() {
         if (!isWindows) {
             String raspberryPW = "'albertengopi'";
-            StringBuilder wifiCredentials = new StringBuilder("'network={\\n\" +\n" +
-                    "                    \"    ssid=\\\"AndroidMA2\\\"\\n\" +\n" +
-                    "                    \"    psk=\\\"montagna\\\"\\n\" +\n" +
-                    "                    \"    key_mgmt=WPA-PSK\\n\" +\n" +
-                    "                    \"}'");
+            StringBuilder wifiCredentials = new StringBuilder("'network={\n" +
+                    "\tssid=\"AndroidMA2\"\n" +
+                    "\tpsk=\"montagna\"\n" +
+                    "\tkey_mgmt=WPA-PSK\n" +
+                    "}'");
 
 
             logger.info(execService.executeCommand("echo " + raspberryPW + " | sudo -S echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf"));
