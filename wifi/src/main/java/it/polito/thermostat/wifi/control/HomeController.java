@@ -28,10 +28,11 @@ public class HomeController {
     public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
         logger.info(">" + wifiService.getIP() + "<");
         LinkedList<String> wifiList = wifiService.getAvailableNet();
+        StringBuilder output = new StringBuilder();
         for (String s : wifiList) {
-            logger.info(s);
+            output.append(s);
         }
-
+        logger.info(output.toString());
         return "home";
     }
 
