@@ -40,13 +40,13 @@ public class ExecuteShellComandService {
 
     }
 
-    public void execute() throws IOException, Exception {
+    public void execute(String command) throws IOException, Exception {
         String result;
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
             builder.command("cmd.exe", "/c", "ipconfig");
         } else {
-            builder.command("sh", "-c", "ifconfig");
+            builder.command("sh", "-c", command);
         }
         builder.directory(new File(System.getProperty("user.home")));
         Process process = builder.start();

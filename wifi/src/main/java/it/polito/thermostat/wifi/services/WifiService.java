@@ -58,6 +58,11 @@ public class WifiService {
             return wifiList;
 
         } else {
+            try {
+                execService.execute("sudo iwlist wlan0 scan");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
             while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
                 logger.info("<<<<<<<" + pos + ">>>>>>>>");
