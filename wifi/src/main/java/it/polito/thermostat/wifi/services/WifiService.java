@@ -68,11 +68,15 @@ public class WifiService {
 
     public boolean connectNewNet() {
         if (!isWindows) {
-            logger.info(execService.executeCommand("echo 'network={\n" +
-                    "    ssid=\"AndroidMA2\"\n" +
-                    "    psk=\"montagna\"\n" +
-                    "    key_mgmt=WPA-PSK\n" +
-                    "}' echo albertengopi | sudo -S tee -a /etc/wpa_supplicant/wpa_supplicant.conf"));
+            String raspberryPW = "'albertengopi'";
+            StringBuilder wifiCredentials = new StringBuilder("'network={\\n\" +\n" +
+                    "                    \"    ssid=\\\"AndroidMA2\\\"\\n\" +\n" +
+                    "                    \"    psk=\\\"montagna\\\"\\n\" +\n" +
+                    "                    \"    key_mgmt=WPA-PSK\\n\" +\n" +
+                    "                    \"}'");
+
+
+            logger.info(execService.executeCommand("echo " + raspberryPW + " | sudo -S echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf"));
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
