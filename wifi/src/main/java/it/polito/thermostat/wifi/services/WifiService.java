@@ -82,8 +82,8 @@ public class WifiService {
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}'");
 
-            String command = "echo " + raspberryPW + " | sudo -S echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf";
-            command = "sudo sh -c 'echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf' | echo " + raspberryPW;
+            String command = "echo " + raspberryPW + " | sudo -S 'echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
+            //command = "sudo sh -c 'echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf' | echo " + raspberryPW;
             logger.info(command);
             logger.info(execService.executeCommand(command));
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
