@@ -85,11 +85,8 @@ public class WifiService {
             String command = "echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf ";
             command = "echo albertengopi | sudo -S sh -c echo '" + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
             logger.info(command);
-            try {
-                execService.execute(command);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+          logger.info(execService.executeCommand(command));
+
             logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
