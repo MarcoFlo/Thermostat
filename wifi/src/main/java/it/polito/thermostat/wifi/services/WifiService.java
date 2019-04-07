@@ -75,14 +75,14 @@ public class WifiService {
 
     public boolean connectNewNet() {
         if (!isWindows) {
-            String raspberryPW = "'albertengopi'";
+            String raspberryPW = "albertengopi";
             StringBuilder wifiCredentials = new StringBuilder("network={\n" +
                     "\tssid=\"AndroidMA2\"\n" +
                     "\tpsk=\"montagna\"\n" +
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}");
 
-            String command = "echo " + wifiCredentials + " | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf";
+            String command = "echo " + raspberryPW + " | sudo -S  tee -a /etc/wpa_supplicant/wpa_supplicant.conf <<< "+ wifiCredentials;
             logger.info(command);
             try {
                 execService.execute(command);
