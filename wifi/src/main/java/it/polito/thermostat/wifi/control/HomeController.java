@@ -25,7 +25,7 @@ public class HomeController {
      * @return String
      */
     @GetMapping("/")
-    public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
+    public String home(@ModelAttribute("wifiVM") WifiVM wifiVM) {
         logger.info(">" + wifiService.getIP() + "<");
         LinkedList<String> wifiList = wifiService.getAvailableNet();
         StringBuilder output = new StringBuilder();
@@ -33,6 +33,7 @@ public class HomeController {
             output.append(s);
         }
         logger.info(output.toString());
+        wifiVM.setWifiList(wifiList);
         return "home";
     }
 

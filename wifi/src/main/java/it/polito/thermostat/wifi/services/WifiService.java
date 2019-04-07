@@ -31,7 +31,7 @@ public class WifiService {
             result.append(execService.executeCommand("ipconfig"));
             pos = result.indexOf("LAN wireless Wi-Fi");
             logger.info(result.toString());
-            return result.subSequence(result.indexOf("Indirizzo IPv4", pos) + 40, result.indexOf("Subnet mask", pos)).toString();
+            return result.subSequence(result.indexOf("Indirizzo IPv4", pos) + 40, result.indexOf("Subnet mask", pos -1)).toString();
 
         } else {
             result.append(execService.executeCommand("ifconfig"));
@@ -52,20 +52,13 @@ public class WifiService {
                     "                    Bit Rates:");
 
             while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
-                logger.info("<<<<<" + pos + ">>>>>>>>");
-                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 3).toString());
+                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 6).toString());
             }
             return wifiList;
 
         } else {
-            try {
-                execService.execute("sudo iwlist wlan0 scan");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
+             result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
             while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
-                logger.info("<<<<<<<" + pos + ">>>>>>>>");
                 wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("Bit Rates", pos) - 3).toString());
             }
             return wifiList;
