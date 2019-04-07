@@ -24,7 +24,7 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home(@ModelAttribute("wifidata") WifiVM wifiVM) {
-        logger.info(wifiService.getWifi());
+        logger.info(wifiService.getIP());
 
         return "home";
     }
