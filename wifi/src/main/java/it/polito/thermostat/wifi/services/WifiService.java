@@ -71,7 +71,8 @@ public class WifiService {
             execService.executeCommand("echo 'network={\n" +
                     "    ssid=\"AndroidMA2\"\n" +
                     "    psk=\"montagna\"\n" +
-                    "}' >> /etc/wpa_supplicant/wpa_supplicant.conf");
+                    "    key_mgmt=WPA-PSK\n" +
+                    "}' >> sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf");
             execService.executeCommand("wpa_cli -i wlan0 reconfigure");
         }
         return true;
