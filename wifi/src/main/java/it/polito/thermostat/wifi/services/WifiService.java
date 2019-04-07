@@ -70,15 +70,15 @@ public class WifiService {
     network={
     ssid="testing"
     psk="testingPassword"
-}
+    }
      */
 
     public boolean connectNewNet() {
         if (!isWindows) {
             String raspberryPW = "'albertengopi'";
             StringBuilder wifiCredentials = new StringBuilder("'network={\n" +
-                    "\tssid=\"AndroidMA2\"\n" +
-                    "\tpsk=\"montagna\"\n" +
+                    "\tssid=\\\"AndroidMA2\\\"\n" +
+                    "\tpsk=\\\"montagna\\\"\n" +
                     "\tkey_mgmt=WPA-PSK\n" +
                     "}'");
 
