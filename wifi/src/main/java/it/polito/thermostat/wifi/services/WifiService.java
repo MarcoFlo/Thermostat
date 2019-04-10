@@ -57,7 +57,11 @@ public class WifiService {
             return wifiList;
 
         } else {
-            result.append(execService.executeCommand("iwlist wlan0 scan | grep ESSID"));
+            try {
+                logger.info(execService.execute("iwlist wlan0 scan | grep ESSID"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             String[] lines = result.toString().split("\n");
             logger.info(lines[0]);
 

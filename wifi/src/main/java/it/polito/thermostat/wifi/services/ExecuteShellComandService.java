@@ -1,20 +1,21 @@
 package it.polito.thermostat.wifi.services;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-@Service @Transactional
+@Service
+@Transactional
 public class ExecuteShellComandService {
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     public String executeCommand(String command) {
@@ -40,21 +41,25 @@ public class ExecuteShellComandService {
 
     }
 
-    public void execute(String command) throws IOException, Exception {
-        String result;
+    public String execute(String command) throws IOException, Exception {
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
-            builder.command("cmd.exe", "/c", "ipconfig");
+            builder.command("cmd.exe", "/c", command);
         } else {
             builder.command("sh", "-c", command);
         }
         builder.directory(new File(System.getProperty("user.home")));
         Process process = builder.start();
-        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), (line -> stringBuilder.append(line + "\n")));
         Executors.newSingleThreadExecutor().submit(streamGobbler);
         int exitCode = process.waitFor();
         assert exitCode == 0;
+
+        return stringBuilder.toString();
     }
+
 
     private static class StreamGobbler implements Runnable {
         private InputStream inputStream;
