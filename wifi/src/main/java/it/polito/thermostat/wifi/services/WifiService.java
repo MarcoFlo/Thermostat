@@ -57,10 +57,12 @@ public class WifiService {
             return wifiList;
 
         } else {
-            result.append(execService.executeCommand("sudo iwlist wlan0 scan"));
-            while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
-                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, result.indexOf("\n", pos) - 1).toString());
-            }
+            result.append(execService.executeCommand("iwlist wlan0 scan | grep ESSID"));
+            String[] lines = result.toString().split("\n");
+            logger.info(lines[0]);
+
+            // wifiList.add();
+
             return wifiList;
         }
 
@@ -75,20 +77,7 @@ public class WifiService {
 
     public boolean connectNewNet() {
         if (!isWindows) {
-            String raspberryPW = "albertengopi";
-            StringBuilder wifiCredentials = new StringBuilder("network={\n" +
-                    "\tssid=\"AndroidMA2\"\n" +
-                    "\tpsk=\"montagna\"\n" +
-                    "\tkey_mgmt=WPA-PSK\n" +
-                    "}");
-            //working from pi
-            String command = "echo albertengopi | sudo -S sh -c 'echo " + wifiCredentials + " >> /etc/wpa_supplicant/wpa_supplicant.conf'";
-            command = "sudo -S sh -c 'echo " + "wifiCredentials" + " >> /etc/wpa_supplicant/wpa_supplicant.conf' <<< albertengopi";
 
-            logger.info(command);
-            logger.info(execService.executeCommand(command));
-
-            //logger.info(execService.executeCommand("wpa_cli -i wlan0 reconfigure"));
         }
         return true;
     }
