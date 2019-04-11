@@ -41,7 +41,7 @@ public class ExecuteShellComandService {
 
     }
 
-    public String execute(String command) throws IOException, Exception {
+    public StringBuilder execute(String command) {
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
             builder.command("cmd.exe", "/c", command);
@@ -49,15 +49,24 @@ public class ExecuteShellComandService {
             builder.command("sh", "-c", command);
         }
         builder.directory(new File(System.getProperty("user.home")));
-        Process process = builder.start();
+        Process process = null;
+        try {
+            process = builder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         StringBuilder stringBuilder = new StringBuilder();
         StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), (line -> stringBuilder.append(line + "\n")));
         Executors.newSingleThreadExecutor().submit(streamGobbler);
-        int exitCode = process.waitFor();
+        int exitCode = 0;
+        try {
+            exitCode = process.waitFor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assert exitCode == 0;
-
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
 

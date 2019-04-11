@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -25,23 +26,13 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home(@ModelAttribute("wifiVM") WifiVM wifiVM) {
-        logger.info(">" + wifiService.getIP() + "<");
-        LinkedList<String> wifiList = wifiService.getAvailableNet();
-        wifiVM.setWifiList(wifiList);
-        StringBuilder output = new StringBuilder();
-        for (String s : wifiList) {
-            output.append(s);
-        }
-        logger.info(output.toString());
+        logger.info("myIP ->" + wifiService.getIP() + "<");
 
+        wifiVM.setWifiList(wifiService.getAvailableNet());
+
+        logger.info("TISCALI-Moschettieri should be a known net" + wifiService.isKnownNet("TISCALI-Moschettieri"));
+
+        logger.info("New connection to hotspot -> " +wifiService.connectNewNet("AndroidMA2", "montagna"));
         return "home";
-    }
-
-
-    @GetMapping("/new")
-    public String newConnection(@ModelAttribute("wifiVM") WifiVM wifiVM) {
-
-        wifiService.connectNewNet();
-        return "newConnection";
     }
 }
