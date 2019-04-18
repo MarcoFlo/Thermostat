@@ -64,6 +64,7 @@ public class WifiService {
 
         } else {
             result = execService.execute("iwlist wlan0 scan | grep ESSID");
+            logger.info(result.toString());
             return Arrays.asList(result.toString().split("\n"));
         }
     }
