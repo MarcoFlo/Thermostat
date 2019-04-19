@@ -136,8 +136,10 @@ public class WifiService {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep " + essid));
             if (result.length() == 0) {
+                logger.info("isKnownNet, sconosciuta");
                 return -1;
             } else {
+                logger.info("isKnownNet, nota");
                 return Integer.valueOf(result.substring(0, result.indexOf("\t")));
             }
         }
@@ -205,8 +207,7 @@ public class WifiService {
     private void switchToStation() {
         if (!isWindows) {
             if (!isStationMode()) {
-                StringBuilder result = new StringBuilder();
-                result.append(execService.execute("echo albertengopi | sudo -S systemctl stop dnsmasq.service | echo albertengopi | sudo -S systemctl stop hostapd.service"));
+                execService.execute("echo albertengopi | sudo -S systemctl stop dnsmasq.service | echo albertengopi | sudo -S systemctl stop hostapd.service");
             }
         }
     }
@@ -248,11 +249,13 @@ public class WifiService {
         }
         if (result.indexOf("INACTIVE") != -1) {
             execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
+            logger.error("handleConnectResult -> credenziali sbagliate");
             return false;
 
         }
         if (result.indexOf("id") != -1) {
             execService.execute(" wpa_cli -iwlan0 save_config");
+            logger.info("handleConnectResult credenziali ok");
             return true;
         }
         return false;
