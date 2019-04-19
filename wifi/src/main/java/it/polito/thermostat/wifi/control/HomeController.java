@@ -30,7 +30,7 @@ public class HomeController {
 
         wifiVM.setWifiList(wifiService.getAvailableNet());
 
-//        logger.info("switch to AP (true = okay) "+ wifiService.switchToAP());
+        logger.info("switch to AP (true = okay) "+ wifiService.switchToAP());
 //        logger.info("New connection to hotspot -> " +wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
 //
 //

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -26,15 +27,18 @@ public class WifiService {
     public String getIP() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
-
-            result.append(execService.execute("wpa_cli -iwlan0 status | grep ip_address"));
-            if (result.length() != 0) {
-                String[] arr = result.toString().split("=");
-                return arr[1];
-            } else {
-                logger.error("Errore in getIP, comando non andato a buon fine");
-                return "Errore in getIP, comando non andato a buon fine";
+            while (true) {
+                result.append(execService.execute("wpa_cli -iwlan0 status | grep ip_address"));
+                if (result.length() != 0)
+                    break;
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            String[] arr = result.toString().split("=");
+            return arr[1];
         }
         return "windows no good";
     }
@@ -52,9 +56,7 @@ public class WifiService {
             if (result.length() != 0) {
                 logger.info(result.toString());
                 return Arrays.asList(result.toString().split("\n"));
-            }
-            else
-            {
+            } else {
                 logger.error("Errore in getAvailableNet, comando non andato a buon fine");
                 return null;
             }
@@ -156,7 +158,13 @@ public class WifiService {
             result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep CURRENT"));
             if (result.length() != 0) {
                 String[] split = result.toString().split("\t");
+                logger.info("getCurrentNetNumber okay");
                 return Integer.valueOf(split[0]);
+            }
+            else
+            {
+                logger.error("getCurrentNetNumber error");
+                return -1;
             }
         }
         return -1;
@@ -173,12 +181,14 @@ public class WifiService {
      *
      * @return
      */
-    public Boolean switchToAP() {
+    public void switchToAP() {
         if (!isWindows) {
-            StringBuilder result = new StringBuilder();
-            result.append(execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service"));
+            execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
+            if (!isStationMode())
+                logger.info("switchToAP okay");
+            else
+                logger.error("switchToAP error");
         }
-        return !isStationMode();
     }
 
     /**
