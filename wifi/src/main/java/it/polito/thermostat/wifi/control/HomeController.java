@@ -25,12 +25,16 @@ public class HomeController {
      * @return String
      */
     @GetMapping("/")
-    public String home(@ModelAttribute("wifiVM") WifiVM wifiVM) {
+    public String home(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
         logger.info("myIP ->" + wifiService.getIP() + "<");
+
+
+        wifiService.switchToAP();
 
         wifiVM.setWifiList(wifiService.getAvailableNet());
 
-         wifiService.switchToAP();
+
+
 //        logger.info("New connection to hotspot -> " +wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
 //
 //

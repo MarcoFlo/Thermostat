@@ -24,21 +24,19 @@ public class WifiService {
     /**
      * Restituisce l'ipv4 dell'interfaccia wifi
      */
-    public String getIP() {
+    public String getIP() throws InterruptedException {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
             while (true) {
                 result.append(execService.execute("wpa_cli -iwlan0 status | grep ip_address"));
                 if (result.length() != 0)
                     break;
-                try {
+
                     TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             }
             String[] arr = result.toString().split("=");
-            return arr[1];
+            return arr[1].split("\n")[0];
         }
         return "windows no good";
     }
@@ -183,11 +181,14 @@ public class WifiService {
      */
     public void switchToAP() {
         if (!isWindows) {
-            execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
-            if (!isStationMode())
-                logger.info("switchToAP okay");
-            else
-                logger.error("switchToAP error");
+            if (isStationMode())
+            {
+                execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
+                if (!isStationMode())
+                    logger.info("switchToAP okay");
+                else
+                    logger.error("switchToAP error");
+            }
         }
     }
 

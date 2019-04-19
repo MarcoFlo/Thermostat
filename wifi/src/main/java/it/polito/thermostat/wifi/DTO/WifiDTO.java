@@ -1,4 +1,4 @@
-package it.polito.thermostat.wifi.dataTransferObject;
+package it.polito.thermostat.wifi.DTO;
 
 import lombok.Data;
 
