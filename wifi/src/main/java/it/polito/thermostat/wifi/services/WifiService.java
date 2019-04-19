@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,22 +24,20 @@ public class WifiService {
      * Restituisce l'ipv4 dell'interfaccia wifi
      */
     public String getIP() {
-        StringBuilder result;
-        int pos;
-        if (isWindows) {
-            result = new StringBuilder();
-            result.append(execService.executeCommand("ipconfig"));
-            pos = result.indexOf("LAN wireless Wi-Fi");
-            logger.info(result.toString());
-            return result.subSequence(result.indexOf("Indirizzo IPv4", pos) + 40, result.indexOf("Subnet mask", pos - 1)).toString();
+        if (!isWindows) {
+            StringBuilder result = new StringBuilder();
 
-        } else {
-            result = execService.execute("ifconfig");
-            pos = result.indexOf("wlan0");
-            return result.subSequence(result.indexOf("inet", pos) + 5, result.indexOf("netmask", pos) - 2).toString();
+            result.append(execService.execute("wpa_cli -iwlan0 status | grep ip_address"));
+            if (result.length() != 0) {
+                String[] arr = result.toString().split("=");
+                return arr[1];
+            } else {
+                logger.error("Errore in getIP, comando non andato a buon fine");
+                return "Errore in getIP, comando non andato a buon fine";
+            }
         }
+        return "windows no good";
     }
-
 
 
     /**
@@ -47,26 +46,20 @@ public class WifiService {
      * @return
      */
     public List<String> getAvailableNet() {
-        StringBuilder result;
-        if (isWindows) {
-            result = new StringBuilder();
-            List<String> wifiList = new LinkedList<>();
-            int pos = -1;
-            result.append("ESSID:\"Alice-35965732\"\n" +
-                    "                    Bit Rates:" +
-                    "\n\nESSID:\"FASTWEB-YPBJG9\"\n" +
-                    "                    Bit Rates:");
-
-            while ((pos = result.indexOf("ESSID", pos + 1)) != -1) {
-                wifiList.add(result.subSequence(result.indexOf("ESSID:", pos) + 7, (result.indexOf("\n", pos) - 1)).toString());
+        if (!isWindows) {
+            StringBuilder result = new StringBuilder();
+            result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
+            if (result.length() != 0) {
+                logger.info(result.toString());
+                return Arrays.asList(result.toString().split("\n"));
             }
-            return wifiList;
-
-        } else {
-            result = execService.execute("iwlist wlan0 scan | grep ESSID");
-            logger.info(result.toString());
-            return Arrays.asList(result.toString().split("\n"));
+            else
+            {
+                logger.error("Errore in getAvailableNet, comando non andato a buon fine");
+                return null;
+            }
         }
+        return null;
     }
 
 
@@ -90,8 +83,8 @@ public class WifiService {
             }
         }
         if (!isWindows) {
-                execService.execute("echo albertengopi | sudo - S ip link set dev wlan0 up");
-            }
+            execService.execute("echo albertengopi | sudo - S ip link set dev wlan0 up");
+        }
         return "connectToNet okay";
 
     }
@@ -210,7 +203,7 @@ public class WifiService {
     /**
      * True se in station mode
      * False se in AP mode
-     *
+     * <p>
      * Controllo solo hostapd e on dnsmasq tanto vanno di pari passo
      *
      * @return
