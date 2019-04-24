@@ -237,6 +237,7 @@ public class WifiService {
      */
     private Boolean handleConnectResult(Integer netNumber) {
         StringBuilder result = new StringBuilder();
+        logger.info(result.toString());
         int i=0; //TODO eliminare
         if (!isWindows) {
             result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
