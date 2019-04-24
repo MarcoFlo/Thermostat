@@ -244,7 +244,7 @@ public class WifiService {
                 execService.execute("echo albertengopi | sudo -S ip link set dev wlan0 up");
                 i++;
                 logger.info("abbiamo provato a fare la up in connectTONet " + i + " volte");
-                result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+                result.append(execService.execute("sleep 2 | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
             }
         }
 
