@@ -32,7 +32,7 @@ public class WifiService {
                 if (result.length() != 0)
                     break;
 
-                    TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(1);
 
             }
             String[] arr = result.toString().split("=");
@@ -82,9 +82,7 @@ public class WifiService {
                 return "err connectToNet/known";
             }
         }
-        if (!isWindows) {
-            execService.execute("echo albertengopi | sudo - S ip link set dev wlan0 up");
-        }
+
         return "connectToNet okay";
 
     }
@@ -102,10 +100,9 @@ public class WifiService {
             Integer netNumber;
             result.append(execService.execute("wpa_cli -iwlan0 disconnect | wpa_cli -iwlan0 add_network"));
             netNumber = Integer.valueOf(result.toString());
-            result.setLength(0);
-            result.append(execService.execute("wpa_cli -iwlan0 set_network " + netNumber + " auth_alg OPEN | wpa_cli -iwlan0 set_network " + netNumber + " key_mgmt WPA-PSK | wpa_cli -iwlan0 set_network " + netNumber + " psk '\"" + pw + "\"' | wpa_cli -iwlan0 set_network " + netNumber + " proto RSN | wpa_cli -iwlan0 set_network " + netNumber + " mode 0 | wpa_cli -iwlan0 set_network " + netNumber + " ssid '\"" + essid + "\"' | wpa_cli -iwlan0 select_network " + netNumber + " | wpa_cli -iwlan0 enable_network " + netNumber + " | wpa_cli -iwlan0 reassociate | wpa_cli -iwlan0 status"));
 
-            return handleConnectResult(result, netNumber);
+            execService.execute("wpa_cli -iwlan0 set_network " + netNumber + " auth_alg OPEN | wpa_cli -iwlan0 set_network " + netNumber + " key_mgmt WPA-PSK | wpa_cli -iwlan0 set_network " + netNumber + " psk '\"" + pw + "\"' | wpa_cli -iwlan0 set_network " + netNumber + " proto RSN | wpa_cli -iwlan0 set_network " + netNumber + " mode 0 | wpa_cli -iwlan0 set_network " + netNumber + " ssid '\"" + essid + "\"' | wpa_cli -iwlan0 select_network " + netNumber + " | wpa_cli -iwlan0 enable_network " + netNumber + " | wpa_cli -iwlan0 reassociate ");
+            return handleConnectResult(netNumber);
         }
         return false;
     }
@@ -118,9 +115,8 @@ public class WifiService {
      */
     private boolean connectKnownNet(Integer netNumber) {
         if (!isWindows) {
-            StringBuilder result = new StringBuilder();
             execService.execute("wpa_cli -iwlan0 disconnect | wpa_cli -iwlan0 select_network " + netNumber + " | wpa_cli -iwlan0 enable_network " + netNumber + " | wpa_cli -iwlan0 reassociate");
-            return handleConnectResult(result, netNumber);
+            return handleConnectResult(netNumber);
         }
         return false;
     }
@@ -160,9 +156,7 @@ public class WifiService {
                 String[] split = result.toString().split("\t");
                 logger.info("getCurrentNetNumber okay");
                 return Integer.valueOf(split[0]);
-            }
-            else
-            {
+            } else {
                 logger.error("getCurrentNetNumber error");
                 return -1;
             }
@@ -183,8 +177,7 @@ public class WifiService {
      */
     public void switchToAP() {
         if (!isWindows) {
-            if (isStationMode())
-            {
+            if (isStationMode()) {
                 execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
                 if (!isStationMode())
                     logger.info("switchToAP okay");
@@ -234,15 +227,25 @@ public class WifiService {
 
     /**
      * Meotodo privato che gestisce la riuscita o meno della connessione
+     * Per prima cosa tira su l'interfaccia se non lo è già
      * SCANNING significa che ci sta ancora provando
      * INACTIVE vuol dire che le credenziali sono sbaglaite
      * è presente "id=netNumber" andato tutto bene
      *
-     * @param result
      * @param netNumber
      * @return
      */
-    private Boolean handleConnectResult(StringBuilder result, Integer netNumber) {
+    private Boolean handleConnectResult(Integer netNumber) {
+        StringBuilder result = new StringBuilder();
+        int i=0; //TODO eliminare
+        if (!isWindows) {
+            result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+            while (result.indexOf("INTERFACE_DISABLED") != -1) {
+                execService.execute("echo albertengopi | sudo -S ip link set dev wlan0 up");
+                logger.info("abbiamo provato a fare la up in connectTONet " + i + " volte");
+            }
+        }
+
         while (result.indexOf("SCANNING") != -1) {
             result.setLength(0);
             result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class HomeController {
@@ -33,6 +34,7 @@ public class HomeController {
 
         wifiVM.setWifiList(wifiService.getAvailableNet());
 
+        TimeUnit.SECONDS.sleep(5);
 
 
       logger.info("New connection to hotspot -> " +wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
