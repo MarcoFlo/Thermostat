@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -158,7 +156,7 @@ public class WifiService {
                 logger.info("getCurrentNetNumber okay");
                 return Integer.valueOf(split[0]);
             } else {
-                logger.error("getCurrentNetNumber error");
+                logger.info("getCurrentNetNumber no current net");
                 return -1;
             }
         }
@@ -179,7 +177,13 @@ public class WifiService {
     public void switchToAP() {
         if (!isWindows) {
             if (isStationMode()) {
-                execService.execute("wpa_cli -iwlan0 disable_network " + getCurrentNetNumber() + " | echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
+                int netNumber = getCurrentNetNumber();
+                StringBuilder disable_network = new StringBuilder();
+
+                if (netNumber != -1)
+                    disable_network.append("wpa_cli -iwlan0 disable_network " + netNumber + " | ");
+
+                execService.execute(disable_network + "echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
                 if (!isStationMode())
                     logger.info("switchToAP okay");
                 else
