@@ -79,6 +79,7 @@ public class WifiService {
                 logger.error("errore nella connectToNet/new");
                 return "err connectToNet/known";
             }
+            logger.info("done");
         }
 
         return "connectToNet okay";
@@ -93,6 +94,7 @@ public class WifiService {
      * @return
      */
     private boolean connectNewNet(String essid, String pw) {
+        logger.info("cia");
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
             Integer netNumber;
