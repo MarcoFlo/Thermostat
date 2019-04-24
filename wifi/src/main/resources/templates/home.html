@@ -20,11 +20,22 @@
 
 <body class="text-center">
 <div class="container-fluid">
-    <div class="col justify-content-center text-center align-items-center p-3" th:object="${wifiVM}">
-        <div class="row justify-content-center" th:each="wifi : *{wifiList}">
-                        <span th:text="( ${wifi} )"></span>
+    <div class="row">
+        <div class="col justify-content-center text-center align-items-center p-3" th:object="${wifiVM}">
+            <span>WifiList</span>
+            <div class="row justify-content-center" th:each="wifi : *{wifiList}">
+                <span th:text="( ${wifi} )"></span>
+            </div>
         </div>
+        <div class="col justify-content-center text-center align-items-center p-3" th:object="${wifiVM}">
+            <span>WifiListIterator</span>
+            <div class="row justify-content-center" th:each="wifiIT : *{wifiListIterator}">
+                <span th:text="( ${wifiIT} )"></span>
+            </div>
+        </div>
+
     </div>
+
 </div>
 
 <script crossorigin="anonymous"

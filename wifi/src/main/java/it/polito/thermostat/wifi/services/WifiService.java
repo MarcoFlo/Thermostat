@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -58,6 +58,34 @@ public class WifiService {
         return null;
     }
 
+    /**
+     * Restituisce le reti visibili iterando
+     * Cerco 5 volte, mi segno ogni volta quante ne trovo e restituisco il risultato che ne ha di più
+     *
+     * @return
+     */
+    public List<String> getAvailableNetIterator() throws InterruptedException {
+        if (!isWindows) {
+            Map<Integer, List<String>> mapAvailableNet = new HashMap<>();
+            StringBuilder result = new StringBuilder();
+            List<String> listNet;
+
+            int count = 0;
+
+            while (count < 5) {
+                result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
+                listNet = Arrays.asList(result.toString().split("\n"));
+                mapAvailableNet.put(listNet.size(), listNet);
+                result.setLength(0);
+                count++;
+                TimeUnit.MILLISECONDS.sleep(250);
+            }
+            return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet()));
+
+        }
+        return null;
+    }
+
 
     /**
      * Ci permette di connetterci a una rete
@@ -87,12 +115,9 @@ public class WifiService {
     /**
      * Se non ci sono reti note nei paraggi passa a in AP mode
      * TODO lo fa da solo, cancellare
-     *
      */
-    public void startupWifi()
-    {
-        if (!isWindows)
-        {
+    public void startupWifi() {
+        if (!isWindows) {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
             if (result.indexOf("id") == -1) {

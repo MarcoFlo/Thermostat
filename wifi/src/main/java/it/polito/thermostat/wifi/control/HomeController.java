@@ -35,6 +35,8 @@ public class HomeController {
         TimeUnit.SECONDS.sleep(5);
 
         wifiVM.setWifiList(wifiService.getAvailableNet());
+        TimeUnit.SECONDS.sleep(1);
+        wifiVM.setWifiListIterator(wifiService.getAvailableNetIterator());
 
         TimeUnit.SECONDS.sleep(5);
 
