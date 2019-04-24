@@ -98,7 +98,7 @@ public class WifiService {
             StringBuilder result = new StringBuilder();
             Integer netNumber;
             result.append(execService.execute("wpa_cli -iwlan0 disconnect | wpa_cli -iwlan0 add_network"));
-            netNumber = Integer.valueOf(result.substring(0,result.indexOf("\n")));
+            netNumber = Integer.valueOf(result.substring(0, result.indexOf("\n")));
             logger.info(netNumber + " net number in connectNewNet");
             result.setLength(0);
             result.append(execService.execute("wpa_cli -iwlan0 set_network " + netNumber + " auth_alg OPEN | wpa_cli -iwlan0 set_network " + netNumber + " key_mgmt WPA-PSK | wpa_cli -iwlan0 set_network " + netNumber + " psk '\"" + pw + "\"' | wpa_cli -iwlan0 set_network " + netNumber + " proto RSN | wpa_cli -iwlan0 set_network " + netNumber + " mode 0 | wpa_cli -iwlan0 set_network " + netNumber + " ssid '\"" + essid + "\"' | wpa_cli -iwlan0 select_network " + netNumber + " | wpa_cli -iwlan0 enable_network " + netNumber + " | wpa_cli -iwlan0 reassociate "));
@@ -202,6 +202,18 @@ public class WifiService {
         if (!isWindows) {
             if (!isStationMode()) {
                 execService.execute("echo albertengopi | sudo -S systemctl stop dnsmasq.service | echo albertengopi | sudo -S systemctl stop hostapd.service");
+
+                int i = 0;
+                StringBuilder result = new StringBuilder();
+                result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+                while (result.indexOf("INTERFACE_DISABLED") != -1) {
+                    execService.execute("echo albertengopi | sudo -S ip link set dev wlan0 up");
+                    i++;
+                    logger.info("abbiamo provato a fare la up in switchTOStation " + i + " volte");
+                    result.setLength(0);
+                    result.append(execService.execute("sleep 0.25s | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+                    logger.info(result.toString());
+                }
             }
         }
     }
@@ -238,19 +250,10 @@ public class WifiService {
      */
     private Boolean handleConnectResult(Integer netNumber) {
         StringBuilder result = new StringBuilder();
+        result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+
         logger.info(result.toString());
-        int i=0; //TODO eliminare
-        if (!isWindows) {
-            result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
-            while (result.indexOf("INTERFACE_DISABLED") != -1) {
-                execService.execute("echo albertengopi | sudo -S ip link set dev wlan0 up");
-                i++;
-                logger.info("abbiamo provato a fare la up in connectTONet " + i + " volte");
-                result.setLength(0);
-                result.append(execService.execute("sleep 0.25s | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
-                logger.info(result.toString());
-            }
-        }
+
 
         while (result.indexOf("SCANNING") != -1) {
             result.setLength(0);
