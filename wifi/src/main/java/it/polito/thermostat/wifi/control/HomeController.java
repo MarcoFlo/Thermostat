@@ -39,7 +39,7 @@ public class HomeController {
 
 //      logger.info("New connection to hotspot -> " +wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
 
-       logger.info("New connection to hotspot -> " +wifiService.connectToNet("AndroidMA2", "montagna"));
+        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
         return "home";
     }
 }
