@@ -32,6 +32,8 @@ public class HomeController {
 
         wifiService.switchToAP();
 
+        TimeUnit.SECONDS.sleep(5);
+
         wifiVM.setWifiList(wifiService.getAvailableNet());
 
         TimeUnit.SECONDS.sleep(5);
