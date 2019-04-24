@@ -245,6 +245,7 @@ public class WifiService {
                 i++;
                 logger.info("abbiamo provato a fare la up in connectTONet " + i + " volte");
                 result.append(execService.execute("sleep 2 | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+                logger.info(result.toString());
             }
         }
 
