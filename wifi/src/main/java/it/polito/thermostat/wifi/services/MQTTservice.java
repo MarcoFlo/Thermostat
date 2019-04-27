@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class MQTTservice  {
+public class MQTTservice {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String esp8266Topic = "/esp8266/#";
     private InetAddress id = InetAddress.getLocalHost();
@@ -40,7 +40,7 @@ public class MQTTservice  {
             return;
         }
 
-        MqttMessage msg = new MqttMessage("true".getBytes());
+        MqttMessage msg = new MqttMessage("sensor".getBytes());
         msg.setQos(2);
         //msg.setRetained(true);
         mqttClient.publish("/esp8266/id1", msg);
@@ -48,13 +48,21 @@ public class MQTTservice  {
 
 
     /**
-     *  This callback is invoked when a message is received on a subscribed topic.
+     * This callback is invoked when a message is received on a subscribed topic.
      */
-    private void esp8266Connection(String topic, MqttMessage message) {
+    private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
         ESP8266 esp8266 = new ESP8266();
         esp8266.setId(topic.split("/")[2]);
-        esp8266.setIsActuator(Boolean.valueOf(message.toString()));
-        esp8266Map.put(esp8266.getId(),esp8266);
+        if (message.equals("actuator"))
+            esp8266.setIsActuator(true);
+        else
+            esp8266.setIsActuator(false);
+        esp8266Map.put(esp8266.getId(), esp8266); //TODO DB
+
+        if (!esp8266.getIsActuator()) {
+            mqttClient.subscribe("/" + esp8266.getId(), this::sensorDataReceived);
+        }
+
 
         logger.info("New esp8266 connected");
         logger.info("\tesp8266 id ->" + esp8266.getId());
@@ -62,4 +70,13 @@ public class MQTTservice  {
 
     }
 
+    /**
+     * Handle new sensor data
+     *
+     * @param topic
+     * @param message
+     */
+    private void sensorDataReceived(String topic, MqttMessage message) {
+        ESP8266 esp8266 = esp8266Map.get(topic.split("/")[1]);
+    }
 }
