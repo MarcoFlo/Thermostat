@@ -45,9 +45,9 @@ public class MQTTservice  {
      * messageArrived
      * This callback is invoked when a message is received on a subscribed topic.
      */
-    private void messageArrived(String topic, MqttMessage message) throws Exception {
-        logger.info("| Topic:" + topic);
-        logger.info("| Message: " + message.getPayload().toString());
+    private void messageArrived(String topic, MqttMessage message) {
+        logger.info("Topic:" + topic);
+        logger.info("Message: " + message.toString());
     }
 
 }

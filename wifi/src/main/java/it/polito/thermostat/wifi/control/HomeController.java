@@ -53,7 +53,6 @@ public class HomeController {
 
     @GetMapping("/mqtt")
     public String mqttDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws Exception {
-
         mqttService.publishCommand();
         return "mqtt";
     }
