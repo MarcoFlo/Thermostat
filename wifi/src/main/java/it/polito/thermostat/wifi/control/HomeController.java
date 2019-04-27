@@ -1,7 +1,9 @@
 package it.polito.thermostat.wifi.control;
 
+import it.polito.thermostat.wifi.services.MQTTservice;
 import it.polito.thermostat.wifi.services.WifiService;
 import it.polito.thermostat.wifi.viewModel.WifiVM;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,17 @@ public class HomeController {
     @Autowired
     WifiService wifiService;
 
+    @Autowired
+    MQTTservice mqttService;
+
     /**
      * Mapping verso la home dell'applicazione
      *
      * @param wifiVM wifidata
      * @return String
      */
-    @GetMapping("/")
-    public String home(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
+    @GetMapping("/wifi")
+    public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
         logger.info("myIP ->" + wifiService.getIP() + "<");
 
 
@@ -40,10 +45,16 @@ public class HomeController {
 
         TimeUnit.SECONDS.sleep(5);
 
-
-//      logger.info("New connection to hotspot -> " +wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
+        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
 
         logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
         return "home";
+    }
+
+    @GetMapping("/mqtt")
+    public String mqttDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws Exception {
+
+        mqttService.publishCommand();
+        return "mqtt";
     }
 }
