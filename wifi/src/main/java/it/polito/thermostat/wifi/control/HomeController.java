@@ -3,7 +3,6 @@ package it.polito.thermostat.wifi.control;
 import it.polito.thermostat.wifi.services.MQTTservice;
 import it.polito.thermostat.wifi.services.WifiService;
 import it.polito.thermostat.wifi.viewModel.WifiVM;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -53,7 +50,7 @@ public class HomeController {
 
     @GetMapping("/mqtt")
     public String mqttDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws Exception {
-        mqttService.publishCommand();
+        mqttService.publishESP8266Debug();
         return "mqtt";
     }
 }
