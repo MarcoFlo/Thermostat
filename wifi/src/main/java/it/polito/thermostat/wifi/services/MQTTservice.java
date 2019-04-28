@@ -46,6 +46,29 @@ public class MQTTservice {
         mqttClient.publish("/esp8266/id1", msg);
     }
 
+    /**
+     * ci permette di gestire gli actuator
+     * @param esp8266
+     * @throws Exception
+     */
+    public void manageActuator(ESP8266 esp8266, String command) throws Exception {
+
+        if (!esp8266.getIsActuator())
+        {
+            logger.error("manageActuator error, this esp8266 is not related to an actuator");
+            return;
+        }
+        if (!mqttClient.isConnected()) {
+            logger.error("MQTT Client not connected.");
+            return;
+        }
+
+        MqttMessage msg = new MqttMessage(command.getBytes());
+        msg.setQos(2);
+        //msg.setRetained(true);
+        mqttClient.publish("/"+esp8266.getId(), msg);
+    }
+
 
     /**
      * This callback is invoked when a message is received on a subscribed topic.

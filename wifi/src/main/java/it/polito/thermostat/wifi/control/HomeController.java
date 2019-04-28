@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -20,6 +21,15 @@ public class HomeController {
 
     @Autowired
     MQTTservice mqttService;
+
+    /**
+     * Metodo eseguito all'avvio della classe come init
+     */
+    @PostConstruct
+    public void init() {
+
+    }
+
 
     /**
      * Mapping verso la home dell'applicazione
