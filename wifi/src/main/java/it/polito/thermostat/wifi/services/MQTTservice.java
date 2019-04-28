@@ -17,6 +17,8 @@ public class MQTTservice {
     private String esp8266Topic = "/esp8266/#";
     private InetAddress id = InetAddress.getLocalHost();
     private String hostname = "192.168.43.100";
+    String localBroker = "tcp://" + hostname + ":1883";
+    String internetBroker = "tcp://test.mosquitto.org:1883";
     private IMqttClient mqttClient;
 
     @Autowired
@@ -27,7 +29,7 @@ public class MQTTservice {
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(1000);
-        mqttClient = new MqttClient("tcp://" + hostname + ":1883", id.toString());
+        mqttClient = new MqttClient(internetBroker, id.toString());
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
     }
@@ -48,13 +50,13 @@ public class MQTTservice {
 
     /**
      * ci permette di gestire gli actuator
+     *
      * @param esp8266
      * @throws Exception
      */
     public void manageActuator(ESP8266 esp8266, String command) throws Exception {
 
-        if (!esp8266.getIsActuator())
-        {
+        if (!esp8266.getIsActuator()) {
             logger.error("manageActuator error, this esp8266 is not related to an actuator");
             return;
         }
@@ -66,7 +68,7 @@ public class MQTTservice {
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
         //msg.setRetained(true);
-        mqttClient.publish("/"+esp8266.getId(), msg);
+        mqttClient.publish("/" + esp8266.getId(), msg);
     }
 
 
@@ -76,15 +78,13 @@ public class MQTTservice {
     private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
         ESP8266 esp8266 = new ESP8266();
         esp8266.setId(topic.split("/")[2]);
-        if (message.equals("actuator"))
+        if (message.equals("actuator")) {
             esp8266.setIsActuator(true);
-        else
+        } else {
             esp8266.setIsActuator(false);
-        esp8266Map.put(esp8266.getId(), esp8266); //TODO DB
-
-        if (!esp8266.getIsActuator()) {
             mqttClient.subscribe("/" + esp8266.getId(), this::sensorDataReceived);
         }
+        esp8266Map.put(esp8266.getId(), esp8266); //TODO DB
 
 
         logger.info("New esp8266 connected");
