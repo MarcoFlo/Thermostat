@@ -1,5 +1,6 @@
 package it.polito.thermostat.wifi.control;
 
+import it.polito.thermostat.wifi.services.JsonHandlerService;
 import it.polito.thermostat.wifi.services.MQTTservice;
 import it.polito.thermostat.wifi.services.WifiService;
 import it.polito.thermostat.wifi.viewModel.WifiVM;
@@ -22,12 +23,17 @@ public class HomeController {
     @Autowired
     MQTTservice mqttService;
 
+    @Autowired
+    JsonHandlerService jsonHandlerService;
+
     /**
      * Metodo eseguito all'avvio della classe come init
      */
     @PostConstruct
     public void init() {
-
+        logger.info("mode loading....");
+        jsonHandlerService.readMode();
+        logger.info("mode loaded!");
     }
 
 
