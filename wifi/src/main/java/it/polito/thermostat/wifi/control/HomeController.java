@@ -1,5 +1,6 @@
 package it.polito.thermostat.wifi.control;
 
+import it.polito.thermostat.wifi.services.Esp8266ManagementService;
 import it.polito.thermostat.wifi.services.JsonHandlerService;
 import it.polito.thermostat.wifi.services.MQTTservice;
 import it.polito.thermostat.wifi.services.WifiService;
@@ -8,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +25,9 @@ public class HomeController {
 
     @Autowired
     JsonHandlerService jsonHandlerService;
+
+    @Autowired
+    Esp8266ManagementService esp8266ManagementService;
 
     /**
      * Metodo eseguito all'avvio della classe come init
@@ -68,5 +71,11 @@ public class HomeController {
     public String mqttDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws Exception {
         mqttService.publishESP8266Debug();
         return "mqtt";
+    }
+
+    @PostMapping("/association/{id_esp}")
+    public String postReservation(@RequestBody String idRoom, @PathVariable("id_esp") String idEsp) {
+        esp8266ManagementService.setAssociation(idRoom, idEsp);
+        return "registered association";
     }
 }

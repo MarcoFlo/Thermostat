@@ -1,8 +1,6 @@
 package it.polito.thermostat.wifi.Object;
 
 import lombok.Data;
-
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
