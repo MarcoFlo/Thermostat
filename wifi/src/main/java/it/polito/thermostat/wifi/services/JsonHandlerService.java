@@ -1,7 +1,7 @@
 package it.polito.thermostat.wifi.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.thermostat.wifi.Object.Mode;
+import it.polito.thermostat.wifi.object.Programm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,28 +19,28 @@ public class JsonHandlerService {
     ObjectMapper objectMapper;
 
     @Autowired
-    private ConcurrentHashMap<String, Mode> modesMap;
+    private ConcurrentHashMap<String, Programm> defaultProgramsMap;
 
-    public void readMode() {
-        Mode mode;
+    public void readProgramms() {
+        Programm programm;
 
-        int countMode = 0;
+        int countProgram = 0;
         try {
-            countMode = Objects.requireNonNull(ResourceUtils.getFile("classpath:modes//").list()).length;
-            countMode++;
+            countProgram = Objects.requireNonNull(ResourceUtils.getFile("classpath:defaultPrograms//").list()).length;
+            countProgram++;
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("Directory mode inesistente");
+            logger.error("Directory defaultPrograms inesistente");
             System.exit(-1);
         }
-        for (int i = 1; i < countMode; i++) {
+        for (int i = 1; i < countProgram; i++) {
             try {
-                mode = objectMapper.readValue(ResourceUtils.getFile("classpath:modes/inverno.json"), Mode.class);
-                modesMap.put(mode.getNome(), mode);
-                logger.info(mode.toString());
+                programm = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/invernoDefault.json"), Programm.class);
+                defaultProgramsMap.put(programm.getIdProgramm(), programm);
+                logger.info(programm.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.error("JsonHandlerService/readMode -> File not present");
+                logger.error("JsonHandlerService/readProgramms -> File not present");
                 System.exit(-1);
             }
         }

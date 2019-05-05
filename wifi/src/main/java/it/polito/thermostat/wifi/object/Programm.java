@@ -1,10 +1,10 @@
-package it.polito.thermostat.wifi.Object;
+package it.polito.thermostat.wifi.object;
 
 import lombok.Data;
 import java.util.Map;
 
 @Data
-public class Mode {
-    private String nome;
+public class Programm {
+    private String idProgramm;
     private Map<Integer,DailyProgram> programs;
 }

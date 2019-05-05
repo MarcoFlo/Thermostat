@@ -1,6 +1,6 @@
 package it.polito.thermostat.wifi.services;
 
-import it.polito.thermostat.wifi.Object.ESP8266;
+import it.polito.thermostat.wifi.object.ESP8266;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

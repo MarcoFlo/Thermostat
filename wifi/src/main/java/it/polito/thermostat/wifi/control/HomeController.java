@@ -1,9 +1,6 @@
 package it.polito.thermostat.wifi.control;
 
-import it.polito.thermostat.wifi.services.Esp8266ManagementService;
-import it.polito.thermostat.wifi.services.JsonHandlerService;
-import it.polito.thermostat.wifi.services.MQTTservice;
-import it.polito.thermostat.wifi.services.WifiService;
+import it.polito.thermostat.wifi.services.*;
 import it.polito.thermostat.wifi.viewModel.WifiVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +26,16 @@ public class HomeController {
     @Autowired
     Esp8266ManagementService esp8266ManagementService;
 
+
+
     /**
      * Metodo eseguito all'avvio della classe come init
      */
     @PostConstruct
     public void init() {
-        logger.info("mode loading....");
-        jsonHandlerService.readMode();
-        logger.info("mode loaded!");
+        logger.info("Programs loading....");
+        jsonHandlerService.readProgramms();
+        logger.info("Programs loaded!");
     }
 
 
@@ -78,4 +77,6 @@ public class HomeController {
         esp8266ManagementService.setAssociation(idRoom, idEsp);
         return "registered association";
     }
+
+
 }

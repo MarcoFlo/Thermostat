@@ -1,7 +1,7 @@
 package it.polito.thermostat.wifi;
 
-import it.polito.thermostat.wifi.Object.ESP8266;
-import it.polito.thermostat.wifi.Object.Mode;
+import it.polito.thermostat.wifi.object.ESP8266;
+import it.polito.thermostat.wifi.object.Programm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ public class WifiApplication {
     }
 
     @Bean
-    public ConcurrentHashMap<String, Mode> modes() {
+    public ConcurrentHashMap<String, Programm> modes() {
         return new ConcurrentHashMap<>();
     }
 
