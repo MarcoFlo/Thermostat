@@ -54,7 +54,7 @@ public class MQTTservice {
      * @param esp8266
      * @throws Exception
      */
-    public void manageActuator(ESP8266 esp8266, String command) throws Exception {
+    public void manageActuator(ESP8266 esp8266, String command) {
 
         if (esp8266.getIsSensor()) {
             logger.error("manageActuator error, this esp8266 is not related to an actuator");
@@ -68,7 +68,11 @@ public class MQTTservice {
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
         //msg.setRetained(true);
-        mqttClient.publish("/" + esp8266.getId(), msg);
+        try {
+            mqttClient.publish("/" + esp8266.getId(), msg);
+        } catch (MqttException e) {
+            logger.error("MqttService/manageActuator - publish -> " + e.toString());
+        }
     }
 
 

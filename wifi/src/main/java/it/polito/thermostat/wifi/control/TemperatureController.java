@@ -33,7 +33,7 @@ public class TemperatureController {
 
     @PostMapping("/manual")
     public void postManual(@RequestBody RoomSettingResource roomSettingResource) {
-        temperatureService.setManualRoom(roomSettingResource.getIdRoom(), roomSettingResource.getDesiredTemperature());
+        temperatureService.setManualRoom(roomSettingResource.getIdRoom(), roomSettingResource.getDesiredTemperature(), roomSettingResource.getIsSummer());
     }
 
     @PostMapping("/programm")

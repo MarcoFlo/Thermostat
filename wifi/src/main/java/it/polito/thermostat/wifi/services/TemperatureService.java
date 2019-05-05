@@ -5,11 +5,15 @@ import it.polito.thermostat.wifi.object.Programm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DefaultPropertiesPersister;
 
+import java.io.*;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -27,14 +31,15 @@ public class TemperatureService {
     MQTTservice mqttService;
 
 
-    public void setManualRoom(String idRoom, Double desiredTemperature) {
+    public void setManualRoom(String idRoom, Double desiredTemperature, Boolean isSummer) {
         List<ESP8266> espRoomActuators = esp8266Map.values().stream().filter(esp -> (esp.getIdRoom() == idRoom) && !esp.getIsSensor()).collect(Collectors.toList());
-        if (true/*isWinter*/) {
-            //espRoomActuators.
+        if (isSummer) {
+            espRoomActuators.stream().filter(esp -> !esp.getIsHeater()).forEach(cooler -> mqttService.manageActuator(cooler, "on"));
         }
 
 
     }
+
 
     /**
      * Memorize in the db if we are in WinterSummerAntifreeze
@@ -53,6 +58,8 @@ public class TemperatureService {
     public void setL(LocalTime leaveTime) {
     }
 
+
+
     /**
      * Set the actuator accordingly to the program related to the room
      *
@@ -62,12 +69,18 @@ public class TemperatureService {
     public void setProgrammRoom(String idRoom) {
     }
 
+    //@Async("threadPoolTaskExecutor")
+    public void manageDesiredTemperature() {
+
+    }
+
+
     /**
-     * Save into the db (//TODO) the programs set by the user
+     * Save into the db (TODO) the programs set by the user
      *
      * @param programmList
      */
     public void saveProgrammList(List<Programm> programmList) {
-        programmList.stream().forEach(programm -> programMap.put(programm.getIdProgramm(),programm));
+        programmList.stream().forEach(programm -> programMap.put(programm.getIdProgramm(), programm));
     }
 }

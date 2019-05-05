@@ -26,7 +26,8 @@ public class HomeController {
     @Autowired
     Esp8266ManagementService esp8266ManagementService;
 
-
+    @Autowired
+    TemperatureService temperatureService;
 
     /**
      * Metodo eseguito all'avvio della classe come init
@@ -78,5 +79,11 @@ public class HomeController {
         return "registered association";
     }
 
+    @GetMapping("/appmio")
+    public String propertiesDebug() {
+        logger.info("ciao");
+        temperatureService.setProgrammedMode();
+        return "mqtt";
+    }
 
 }

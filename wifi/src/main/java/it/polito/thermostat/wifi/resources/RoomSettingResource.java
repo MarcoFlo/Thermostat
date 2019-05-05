@@ -7,5 +7,6 @@ import org.springframework.hateoas.ResourceSupport;
 public class RoomSettingResource extends ResourceSupport {
     private String idRoom;
     private Double desiredTemperature;
+    private Boolean isSummer;
 
 }
