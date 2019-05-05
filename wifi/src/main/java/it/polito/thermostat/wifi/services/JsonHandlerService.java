@@ -19,9 +19,11 @@ public class JsonHandlerService {
     ObjectMapper objectMapper;
 
     @Autowired
-    private ConcurrentHashMap<String, Programm> defaultProgramsMap;
+    private ConcurrentHashMap<String, Programm> programsMap;
 
     public void readProgramms() {
+
+        String[] deafultProgramsName = {"winter", "summer"};
         Programm programm;
 
         int countProgram = 0;
@@ -33,10 +35,10 @@ public class JsonHandlerService {
             logger.error("Directory defaultPrograms inesistente");
             System.exit(-1);
         }
-        for (int i = 1; i < countProgram; i++) {
+        for (int i = 0; i < countProgram-1; i++) {
             try {
-                programm = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/invernoDefault.json"), Programm.class);
-                defaultProgramsMap.put(programm.getIdProgramm(), programm);
+                programm = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Programm.class);
+                programsMap.put(programm.getIdProgramm(), programm);
                 logger.info(programm.toString());
             } catch (IOException e) {
                 e.printStackTrace();

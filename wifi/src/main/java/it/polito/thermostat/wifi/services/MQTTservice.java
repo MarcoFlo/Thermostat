@@ -56,7 +56,7 @@ public class MQTTservice {
      */
     public void manageActuator(ESP8266 esp8266, String command) throws Exception {
 
-        if (!esp8266.getIsActuator()) {
+        if (esp8266.getIsSensor()) {
             logger.error("manageActuator error, this esp8266 is not related to an actuator");
             return;
         }
@@ -78,18 +78,22 @@ public class MQTTservice {
     private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
         ESP8266 esp8266 = new ESP8266();
         esp8266.setId(topic.split("/")[2]);
-        if (message.equals("actuator")) {
-            esp8266.setIsActuator(true);
-        } else {
-            esp8266.setIsActuator(false);
+        if (message.equals("sensor")) {
+            esp8266.setIsSensor(true);
             mqttClient.subscribe("/" + esp8266.getId(), this::sensorDataReceived);
+        } else {
+            esp8266.setIsSensor(false);
+            if (message.equals("heater"))
+                esp8266.setIsHeater(true);
+            else
+                esp8266.setIsHeater(false);
         }
         esp8266Map.put(esp8266.getId(), esp8266); //TODO DB
 
 
         logger.info("New esp8266 connected");
         logger.info("\tesp8266 id ->" + esp8266.getId());
-        logger.info("\tisActuator ->" + esp8266.getIsActuator());
+        logger.info("\tisActuator ->" + !esp8266.getIsSensor());
 
     }
 

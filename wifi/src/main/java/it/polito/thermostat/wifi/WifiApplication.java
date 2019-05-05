@@ -17,8 +17,12 @@ public class WifiApplication {
         return new ConcurrentHashMap<>();
     }
 
+    /**
+     * Contains boot default and roomPrograms
+     * @return
+     */
     @Bean
-    public ConcurrentHashMap<String, Programm> modes() {
+    public ConcurrentHashMap<String, Programm> programs() {
         return new ConcurrentHashMap<>();
     }
 
