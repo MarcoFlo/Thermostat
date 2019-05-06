@@ -2,6 +2,7 @@ package it.polito.thermostat.controllermd.services;
 
 
 import it.polito.thermostat.controllermd.object.ESP8266;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,20 +11,22 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class MQTTservice {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String esp8266Topic = "/esp8266/#";
     private InetAddress id = InetAddress.getLocalHost();
-    private String hostname = "192.168.1.143";
+    //private String hostname = "192.168.1.143";
+    private String hostname  = "192.168.1.206";
     String localBroker = "tcp://" + hostname + ":1883";
     String internetBroker = "tcp://test.mosquitto.org:1883";
     private IMqttClient mqttClient;
 
+
+
     @Autowired
-    private ConcurrentHashMap<String, ESP8266> esp8266Map;
+    ESP8266Repository esp8266Repository;
 
     public MQTTservice() throws UnknownHostException, MqttException {
         MqttConnectOptions options = new MqttConnectOptions();
@@ -70,7 +73,7 @@ public class MQTTservice {
         msg.setQos(2);
         //msg.setRetained(true);
         try {
-            mqttClient.publish("/" + esp8266.getId(), msg);
+            mqttClient.publish("/" + esp8266.getIdEsp(), msg);
         } catch (MqttException e) {
             logger.error("MqttService/manageActuator - publish -> " + e.toString());
         }
@@ -82,10 +85,10 @@ public class MQTTservice {
      */
     private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
         ESP8266 esp8266 = new ESP8266();
-        esp8266.setId(topic.split("/")[2]);
+        esp8266.setIdEsp(topic.split("/")[2]);
         if (message.equals("sensor")) {
             esp8266.setIsSensor(true);
-            mqttClient.subscribe("/" + esp8266.getId(), this::sensorDataReceived);
+            mqttClient.subscribe("/" + esp8266.getIdEsp(), this::sensorDataReceived);
         } else {
             esp8266.setIsSensor(false);
             if (message.equals("heater"))
@@ -93,11 +96,10 @@ public class MQTTservice {
             else
                 esp8266.setIsHeater(false);
         }
-        esp8266Map.put(esp8266.getId(), esp8266); //TODO DB
-
+        esp8266Repository.save(esp8266);
 
         logger.info("New esp8266 connected");
-        logger.info("\tesp8266 id ->" + esp8266.getId());
+        logger.info("\tesp8266 idEsp ->" + esp8266.getIdEsp());
         logger.info("\tisActuator ->" + !esp8266.getIsSensor());
 
     }
@@ -109,7 +111,7 @@ public class MQTTservice {
      * @param message
      */
     private void sensorDataReceived(String topic, MqttMessage message) {
-        ESP8266 esp8266 = esp8266Map.get(topic.split("/")[1]);
+        ESP8266 esp8266 = esp8266Repository.findByIdEsp(topic.split("/")[1]).get();
         String[] data = message.toString().split("_");
         esp8266.setTemperature(Double.valueOf(data[0]));
         esp8266.setHumidity(Double.valueOf(data[1]));

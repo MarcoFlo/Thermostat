@@ -1,8 +1,10 @@
 package it.polito.thermostat.controllermd.object;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import it.polito.thermostat.controllermd.configuration.CustomDateDeserializer;
 import lombok.Data;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * wake
@@ -12,16 +14,24 @@ import java.time.LocalTime;
  */
 @Data
 public class DailyProgramm {
-    private LocalTime wakeTime;
+
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    private Date wakeTime;
     private Integer wakeTemperature;
 
-    private LocalTime leaveTime;
+
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    private Date leaveTime;
     private Integer leaveTemperature;
 
-    private LocalTime backTime;
+
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    private Date backTime;
     private Integer backTemperature;
 
-    private LocalTime sleepTime;
+
+    @JsonDeserialize(using = CustomDateDeserializer.class)
+    private Date sleepTime;
     private Integer sleepTemperature;
 
 }

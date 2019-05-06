@@ -2,6 +2,7 @@ package it.polito.thermostat.controllermd.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.object.Programm;
+import it.polito.thermostat.controllermd.repository.ProgrammRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.util.ResourceUtils;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
+
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
@@ -27,12 +28,13 @@ public class JsonHandlerService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
+
+    @Autowired
+    ProgrammRepository programmRepository;
+
     /**
      * Metodo che legge i JSON delle fermate e li salva sul DB
      */
-    @Autowired
-    private ConcurrentHashMap<String, Programm> programsMap;
-
     public void readProgramms() {
 
         String[] deafultProgramsName = {"winter", "summer"};
@@ -50,7 +52,7 @@ public class JsonHandlerService {
         for (int i = 0; i < countProgram - 1; i++) {
             try {
                 programm = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Programm.class);
-                programsMap.put(programm.getIdProgramm(), programm);
+                programmRepository.save(programm);
                 logger.info(programm.toString());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -59,4 +61,12 @@ public class JsonHandlerService {
             }
         }
     }
+
+    /**
+     * Da Stringa a Data
+     *
+     * @param time stringa time
+     * @return Data
+     */
+
 }
