@@ -67,11 +67,7 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/mqtt")
-    public String mqttDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws Exception {
-        mqttService.publishESP8266Debug();
-        return "mqtt";
-    }
+
 
     @PostMapping("/association/{id_esp}")
     public String postReservation(@RequestBody String idRoom, @PathVariable("id_esp") String idEsp) {
@@ -81,8 +77,8 @@ public class HomeController {
 
     @GetMapping("/appmio")
     public String propertiesDebug() {
-        logger.info("ciao");
-        temperatureService.setProgrammedMode();
+
+        //temperatureService.setProgrammedMode();
         return "mqtt";
     }
 
