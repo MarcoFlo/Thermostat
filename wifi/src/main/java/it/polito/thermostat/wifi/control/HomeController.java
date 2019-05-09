@@ -21,9 +21,6 @@ public class HomeController {
     MQTTservice mqttService;
 
     @Autowired
-    JsonHandlerService jsonHandlerService;
-
-    @Autowired
     Esp8266ManagementService esp8266ManagementService;
 
     @Autowired
@@ -34,9 +31,7 @@ public class HomeController {
      */
     @PostConstruct
     public void init() {
-        logger.info("Programs loading....");
-        jsonHandlerService.readProgramms();
-        logger.info("Programs loaded!");
+
     }
 
 

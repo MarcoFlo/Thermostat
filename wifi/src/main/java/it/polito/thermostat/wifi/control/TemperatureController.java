@@ -1,6 +1,7 @@
 package it.polito.thermostat.wifi.control;
 
 import it.polito.thermostat.wifi.object.Programm;
+import it.polito.thermostat.wifi.resources.LeaveResource;
 import it.polito.thermostat.wifi.resources.RoomSettingResource;
 import it.polito.thermostat.wifi.services.TemperatureService;
 import org.slf4j.Logger;
@@ -26,19 +27,19 @@ public class TemperatureController {
     }
 
     @PostMapping("/leave")
-    public void postL(@RequestBody LocalTime leaveTime) {
+    public void postL(@RequestBody LeaveResource leaveResource) {
 
-        temperatureService.setL(leaveTime);
+        temperatureService.setL(leaveResource.getLeaveTime(),leaveResource.getDesiredTemperature());
     }
 
     @PostMapping("/manual")
     public void postManual(@RequestBody RoomSettingResource roomSettingResource) {
-        temperatureService.setManualRoom(roomSettingResource.getIdRoom(), roomSettingResource.getDesiredTemperature(), roomSettingResource.getIsSummer());
+        temperatureService.setManualRoom(roomSettingResource.getIdRoom(), roomSettingResource.getDesiredTemperature());
     }
 
     @PostMapping("/programm")
     public void postProgramm(@RequestBody String idRoom) {
-        temperatureService.setProgrammRoom(idRoom);
+        temperatureService.setIsProgrammedRoom(idRoom);
     }
 
     @PostMapping("/room_setting")

@@ -2,7 +2,7 @@ package it.polito.thermostat.wifi.object;
 
 import lombok.Data;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * wake
@@ -12,16 +12,20 @@ import java.time.LocalTime;
  */
 @Data
 public class DailyProgramm {
-    private LocalTime wakeTime;
+
+    private Date wakeTime;
     private Integer wakeTemperature;
 
-    private LocalTime leaveTime;
+
+    private Date leaveTime;
     private Integer leaveTemperature;
 
-    private LocalTime backTime;
+
+    private Date backTime;
     private Integer backTemperature;
 
-    private LocalTime sleepTime;
+
+    private Date sleepTime;
     private Integer sleepTemperature;
 
 }

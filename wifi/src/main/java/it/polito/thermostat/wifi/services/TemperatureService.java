@@ -1,43 +1,45 @@
 package it.polito.thermostat.wifi.services;
 
-import it.polito.thermostat.wifi.object.ESP8266;
+import it.polito.thermostat.wifi.entity.Mode;
+import it.polito.thermostat.wifi.entity.Room;
 import it.polito.thermostat.wifi.object.Programm;
+import it.polito.thermostat.wifi.repository.ModeRepository;
+import it.polito.thermostat.wifi.repository.ESP8266Repository;
+import it.polito.thermostat.wifi.repository.ProgrammRepository;
+import it.polito.thermostat.wifi.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DefaultPropertiesPersister;
 
-import java.io.*;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 public class TemperatureService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ConcurrentHashMap<String, ESP8266> esp8266Map;
+    ESP8266Repository esp8266Repository;
 
     @Autowired
-    private ConcurrentHashMap<String, Programm> programMap;
+    RoomRepository roomRepository;
+
+    @Autowired
+    ProgrammRepository programmRepository;
+
+    @Autowired
+    ModeRepository modeRepository;
 
     @Autowired
     MQTTservice mqttService;
 
 
-    public void setManualRoom(String idRoom, Double desiredTemperature, Boolean isSummer) {
-        List<ESP8266> espRoomActuators = esp8266Map.values().stream().filter(esp -> (esp.getIdRoom() == idRoom) && !esp.getIsSensor()).collect(Collectors.toList());
-        if (isSummer) {
-            espRoomActuators.stream().filter(esp -> !esp.getIsHeater()).forEach(cooler -> mqttService.manageActuator(cooler, "on"));
-        }
-
-
+    public void setManualRoom(String idRoom, Double desiredTemperature) {
+        Room room = roomRepository.findByIdRoom(idRoom).get();
+        room.setIsManual(true);
+        room.setDesiredTemperature(desiredTemperature);
+        roomRepository.save(room);
     }
 
 
@@ -48,6 +50,23 @@ public class TemperatureService {
      * @param wsa
      */
     public void setWSA(String wsa) {
+        Mode mode = modeRepository.findAll().get(0);
+        switch (wsa) {
+            case "winter":
+                mode.setIsSummer(false);
+                break;
+            case "summer":
+                mode.setIsSummer(true);
+                mode.setIsAntifreeze(false);
+                break;
+            case "antifreeze":
+                mode.setIsAntifreeze(true);
+                mode.setIsSummer(false);
+                break;
+            default:
+                logger.error("setWsa string not recognised");
+        }
+        modeRepository.save(mode);
     }
 
     /**
@@ -55,32 +74,30 @@ public class TemperatureService {
      *
      * @param leaveTime
      */
-    public void setL(LocalTime leaveTime) {
+    public void setL(LocalTime leaveTime, Double desiredTemperature) {
+        Mode mode = modeRepository.findAll().get(0);
+        mode.setLeaveTime(leaveTime);
+        mode.setDesiredTemperature(desiredTemperature);
+        modeRepository.save(mode);
     }
 
 
-
     /**
-     * Set the actuator accordingly to the program related to the room
+     * Set the esp related to the room to programm/manual mode
      *
      * @param idRoom
      */
-    //@Scheduled(cron = "${" +  + "}")
-    public void setProgrammRoom(String idRoom) {
-    }
-
-    //@Async("threadPoolTaskExecutor")
-    public void manageDesiredTemperature() {
-
+    public void setIsProgrammedRoom(String idRoom) {
+        Room room = roomRepository.findByIdRoom(idRoom).get();
+        room.setIsManual(false);
+        roomRepository.save(room);
     }
 
 
     /**
-     * Save into the db (TODO) the programs set by the user
-     *
      * @param programmList
      */
     public void saveProgrammList(List<Programm> programmList) {
-        programmList.stream().forEach(programm -> programMap.put(programm.getIdProgramm(), programm));
+        programmRepository.saveAll(programmList);
     }
 }

@@ -33,7 +33,7 @@ public class MQTTservice {
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(1000);
-        mqttClient = new MqttClient(localBroker, id.toString());
+        mqttClient = new MqttClient(internetBroker, id.toString());
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
     }
@@ -115,5 +115,6 @@ public class MQTTservice {
         String[] data = message.toString().split("_");
         esp8266.setTemperature(Double.valueOf(data[0]));
         esp8266.setHumidity(Double.valueOf(data[1]));
+        esp8266Repository.save(esp8266);
     }
 }

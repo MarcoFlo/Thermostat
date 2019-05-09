@@ -26,19 +26,6 @@ public class WifiApplication {
         return executor;
     }
 
-    @Bean
-    public ConcurrentHashMap<String, ESP8266> esps() {
-        return new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Contains boot default and roomPrograms
-     * @return
-     */
-    @Bean
-    public ConcurrentHashMap<String, Programm> programs() {
-        return new ConcurrentHashMap<>();
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(WifiApplication.class, args);

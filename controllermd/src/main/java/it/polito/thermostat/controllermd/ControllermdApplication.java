@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.annotation.PostConstruct;
+import java.util.*;
 
 
 @SpringBootApplication
@@ -41,8 +42,29 @@ public class ControllermdApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         logger.info(programmRepository.findByIdProgramm("winter").get().getIdProgramm());
+
+        Timer timer = new Timer();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MINUTE,cal.getTime().getMinutes()+1);
+
+        Date timeoRun = cal.getTime();
+        logger.info(timeoRun.toString());
+        timer.schedule(new  MyTimeTask(), timeoRun);
+
+        List<Integer> integerList = new ArrayList<>();
+        integerList.add(1);
+        integerList.add(2);
+        integerList.add(3);
+        integerList.add(4);
+        integerList.add(5);
+integerList.stream().filter(n -> n != 1).forEach(num -> logger.info(num + " "));
     }
 
 
 
+    private static class MyTimeTask extends TimerTask {
+        public void run() {
+            System.out.println("Timer Task");
+        }
+    }
 }
