@@ -20,7 +20,7 @@ public class WifiService {
     /**
      * Restituisce l'ipv4 dell'interfaccia wifi
      */
-    public String getIP() throws InterruptedException {
+    public String getIP() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
             while (true) {
@@ -28,8 +28,11 @@ public class WifiService {
                 if (result.length() != 0)
                     break;
 
-                TimeUnit.SECONDS.sleep(1);
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
 
+                }
             }
             String[] arr = result.toString().split("=");
             return arr[1].split("\n")[0];

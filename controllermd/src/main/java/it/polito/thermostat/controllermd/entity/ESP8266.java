@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.object;
+package it.polito.thermostat.controllermd.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -10,8 +10,6 @@ public class ESP8266 {
     @Id
     private String idEsp;
     private String idRoom;
-    private Double temperature;
-    private Double humidity;
     private Boolean isSensor;
-    private Boolean isHeater;
+    private Boolean isCooler;
 }

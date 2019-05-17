@@ -26,7 +26,7 @@ public class MQTTservice {
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(1000);
-        mqttClient = new MqttClient(localBroker, id.toString());
+        mqttClient = new MqttClient(internetBroker, id.toString());
         mqttClient.connect(options);
     }
 

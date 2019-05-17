@@ -1,7 +1,8 @@
 package it.polito.thermostat.controllermd.services;
 
 
-import it.polito.thermostat.controllermd.object.ESP8266;
+import it.polito.thermostat.controllermd.entity.ESP8266;
+import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -10,30 +11,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class MQTTservice {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String esp8266Topic = "/esp8266/#";
-    private InetAddress id = InetAddress.getLocalHost();
-    //private String hostname = "192.168.1.143";
-    private String hostname  = "192.168.1.206";
-    String localBroker = "tcp://" + hostname + ":1883";
-    String internetBroker = "tcp://test.mosquitto.org:1883";
-    private IMqttClient mqttClient;
-
+    boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
 
     @Autowired
     ESP8266Repository esp8266Repository;
+
+    @Autowired
+    TemperatureService temperatureService;
+
+    //The key is idESP
+    @Autowired
+    ConcurrentHashMap<String, SensorData> mapSensorData;
+
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private String esp8266Topic = "/esp8266/#";
+    private InetAddress id = InetAddress.getLocalHost();
+    private String hostname = getIp();
+
+    String localBroker = "tcp://" + hostname + ":1883";
+    String internetBroker = "tcp://test.mosquitto.org:1883";
+    private IMqttClient mqttClient;
+
 
     public MQTTservice() throws UnknownHostException, MqttException {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(1000);
-        mqttClient = new MqttClient(internetBroker, id.toString());
+        mqttClient = new MqttClient(localBroker, id.toString());
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
     }
@@ -91,10 +106,10 @@ public class MQTTservice {
             mqttClient.subscribe("/" + esp8266.getIdEsp(), this::sensorDataReceived);
         } else {
             esp8266.setIsSensor(false);
-            if (message.equals("heater"))
-                esp8266.setIsHeater(true);
+            if (message.equals("cooler"))
+                esp8266.setIsCooler(true);
             else
-                esp8266.setIsHeater(false);
+                esp8266.setIsCooler(false);
         }
         esp8266Repository.save(esp8266);
 
@@ -111,10 +126,44 @@ public class MQTTservice {
      * @param message
      */
     private void sensorDataReceived(String topic, MqttMessage message) {
-        ESP8266 esp8266 = esp8266Repository.findByIdEsp(topic.split("/")[1]).get();
         String[] data = message.toString().split("_");
-        esp8266.setTemperature(Double.valueOf(data[0]));
-        esp8266.setHumidity(Double.valueOf(data[1]));
-        esp8266Repository.save(esp8266);
+        String idEsp = topic.split("/")[1];
+        SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
+        mapSensorData.put(idEsp, sensorData);
+
+    }
+
+
+    private String getIp() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+
+                if (networkInterface.isUp() &&
+                        !networkInterface.isLoopback() &&
+                        !networkInterface.isVirtual()) {
+
+                    String nameInterface;
+                    if (isWindows) {
+                        nameInterface = "3165";
+                    } else {
+                        nameInterface = ""; //TODO da settare
+                    }
+                    if (networkInterface.getDisplayName().contains(nameInterface)) {
+                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                        while (addresses.hasMoreElements()) {
+                            InetAddress addr = addresses.nextElement();
+                            if (addr.getHostAddress().length() < 20)
+                                return addr.getHostAddress();
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            logger.error("error MQTTService/getIP");
+        }
+
+        return "error";
     }
 }

@@ -1,8 +1,8 @@
 package it.polito.thermostat.controllermd.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.thermostat.controllermd.object.Programm;
-import it.polito.thermostat.controllermd.repository.ProgrammRepository;
+import it.polito.thermostat.controllermd.entity.Program;
+import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class JsonHandlerService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+
+    @Autowired
+    ProgramRepository programRepository;
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -29,16 +34,13 @@ public class JsonHandlerService {
     }
 
 
-    @Autowired
-    ProgrammRepository programmRepository;
-
     /**
      * Metodo che legge i JSON delle fermate e li salva sul DB
      */
-    public void readProgramms() {
+    public void readPrograms() {
 
         String[] deafultProgramsName = {"winter", "summer"};
-        Programm programm;
+        Program program;
 
         int countProgram = 0;
         try {
@@ -51,12 +53,12 @@ public class JsonHandlerService {
         }
         for (int i = 0; i < countProgram - 1; i++) {
             try {
-                programm = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Programm.class);
-                programmRepository.save(programm);
-                logger.info(programm.toString());
+                program = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Program.class);
+                programRepository.save(program);
+                logger.info(program.toString());
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.error("JsonHandlerService/readProgramms -> File not present");
+                logger.error("JsonHandlerService/readPrograms -> File not present");
                 System.exit(-1);
             }
         }
