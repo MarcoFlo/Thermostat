@@ -7,13 +7,13 @@ public class SensorData {
     private String idEsp;
     private Double temperature;
     private Double humidity;
-    private Double perceivedTemperature;
+    private Double apparentTemperature;
 
     public SensorData(String idEsp, Double temperature, Double humidity) {
         this.idEsp = idEsp;
         this.temperature = temperature;
         this.humidity = humidity;
-        perceivedTemperature = getApparentTemperature(temperature,humidity);
+        apparentTemperature = getApparentTemperature(temperature,humidity);
     }
 
     /**
@@ -26,5 +26,4 @@ public class SensorData {
         Double r = humidity / 100 * 6.105 * Math.exp((17.27 * temperature) / (237.7 + temperature));
         return temperature + 0.33 * r - 4;
     }
-
 }
