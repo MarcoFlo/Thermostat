@@ -43,9 +43,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("#{T(java.lang.Double).parseDouble('${scaling.factor}')}")
-    Double scalingFactor;
-
     @Autowired
     JsonHandlerService jsonHandlerService;
 
@@ -63,8 +60,6 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Autowired
     TemperatureService temperatureService;
-
-
 
 
     @Bean
@@ -88,31 +83,9 @@ public class ControllermdApplication implements CommandLineRunner {
         jsonHandlerService.readPrograms();
         logger.info("Loading default programs done");
 
-
-        DailyProgram dailyProgram = programRepository.findByIdProgram("winter").get().getWeeklyMap().get(1);
-        LocalDateTime time = MongoZonedDateTime.getDateFromMongoZonedDateTime(dailyProgram.getDailyMap().get("wake").getTime());
-
-        //Program program = programRepository.findByIdProgram("winter").get();
-        //Date date = program.getWeeklyMap().get(1).getDailyMap().get("wake").getTime();
-        //logger.info(MongoZonedDateTime.getDateFromMongoZonedDateTime(date).toString());
+        Program program = programRepository.findByIdProgram("winter").get();
 
 
-//                > currentWSAL.getLeaveDuration().getNano()
-
-        //logger.info(temperatureService.findNearestTimeSlot(program).getTime().toString());
-        //        logger.info(MongoZonedDateTime.getNow().toString());
-//        WSAL wsal = new WSAL(true, false, false, false, MongoZonedDateTime.getNow());
-//        wsalRepository.deleteAll();
-//        wsalRepository.save(wsal);
-//
-//        logger.info(wsalRepository.findAll().get(0).getCreationDate().toString());
-//        Timer timer = new Timer();
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(Calendar.MINUTE, cal.getTime().getMinutes() + 1);
-//
-//        Date timeoRun = cal.getTime();
-//        logger.info(timeoRun.toString());
-//        timer.schedule(new MyTimeTask(), timeoRun);
 
 
 //        Room room = new Room();
@@ -133,13 +106,5 @@ public class ControllermdApplication implements CommandLineRunner {
 
 
     }
-
-
-    private static class MyTimeTask extends TimerTask {
-        public void run() {
-            System.out.println("Timer Task");
-        }
-    }
-
 
 }
