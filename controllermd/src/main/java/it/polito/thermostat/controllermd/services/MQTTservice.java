@@ -70,25 +70,21 @@ public class MQTTservice {
     /**
      * ci permette di gestire gli actuator
      *
-     * @param esp8266
+     * @param idEsp
      * @throws Exception
      */
-    public void manageActuator(ESP8266 esp8266, String command) {
+    public void manageActuator(String idEsp, Boolean commandBoolean) {
 
-        if (esp8266.getIsSensor()) {
-            logger.error("manageActuator error, this esp8266 is not related to an actuator");
-            return;
-        }
         if (!mqttClient.isConnected()) {
             logger.error("MQTT Client not connected.");
             return;
         }
-
+        String command = commandBoolean ? "on" : "off";
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
         //msg.setRetained(true);
         try {
-            mqttClient.publish("/" + esp8266.getIdEsp(), msg);
+            mqttClient.publish("/" + idEsp, msg);
         } catch (MqttException e) {
             logger.error("MqttService/manageActuator - publish -> " + e.toString());
         }

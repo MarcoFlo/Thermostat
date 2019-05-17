@@ -64,6 +64,9 @@ public class ControllermdApplication implements CommandLineRunner {
     @Autowired
     TemperatureService temperatureService;
 
+
+
+
     @Bean
     public ConcurrentHashMap<String, SensorData> sensorData() {
         return new ConcurrentHashMap<>();
@@ -85,13 +88,10 @@ public class ControllermdApplication implements CommandLineRunner {
         jsonHandlerService.readPrograms();
         logger.info("Loading default programs done");
 
-        logger.info((long) (450.12) + "vdasv");
-
 
         DailyProgram dailyProgram = programRepository.findByIdProgram("winter").get().getWeeklyMap().get(1);
         LocalDateTime time = MongoZonedDateTime.getDateFromMongoZonedDateTime(dailyProgram.getDailyMap().get("wake").getTime());
 
-        logger.info(time.toString());
         //Program program = programRepository.findByIdProgram("winter").get();
         //Date date = program.getWeeklyMap().get(1).getDailyMap().get("wake").getTime();
         //logger.info(MongoZonedDateTime.getDateFromMongoZonedDateTime(date).toString());

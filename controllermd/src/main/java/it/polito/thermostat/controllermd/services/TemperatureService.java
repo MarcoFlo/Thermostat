@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,7 +67,7 @@ public class TemperatureService {
             } else if (currentWSAL.getIsAntiFreeze()) {
                 logger.info("AntiFreeze mode");
                 manageESP(roomList.stream().flatMap(room -> room.getEsp8266List().stream()).collect(Collectors.toList())
-                        , currentWSAL.getAntiFreezeTemperature(), false);
+                        , currentWSAL.getAntiFreezeTemperature(), false, true);
                 return;
             }
 
@@ -84,10 +83,10 @@ public class TemperatureService {
 
         //It's time to turn on the system
         if (now.isAfter(leaveEnd.plus((long) (60 * temperatureDiff * scalingFactor), ChronoUnit.MINUTES))) {
-            manageESP(esp8266List, currentWSAL.getLeaveDesiredTemperature(), currentWSAL.getIsSummer());
+            manageESP(esp8266List, currentWSAL.getLeaveDesiredTemperature(), currentWSAL.getIsSummer(), true);
         } else //waiting at leaveTemperature
         {
-            manageESP(esp8266List, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer());
+            manageESP(esp8266List, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);
 
         }
     }
@@ -95,7 +94,7 @@ public class TemperatureService {
     private void manageRoom(Room room, Boolean isSummer) {
         if (room.getIsManual()) {
             logger.info(room.getIdRoom() + "isManual");
-            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer);
+            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
             Program programRoom = programRepository.findByIdProgram(room.getIdRoom()).get();
@@ -106,7 +105,7 @@ public class TemperatureService {
 
     private void manageProgram(List<ESP8266> esp8266List, Program programRoom, Boolean isSummer) {
         HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
-        manageESP(esp8266List, hourlyProgram.getTemperature(), isSummer);
+        manageESP(esp8266List, hourlyProgram.getTemperature(), isSummer, true);
     }
 
     private HourlyProgram findNearestTimeSlot(Program programRoom) {
@@ -123,15 +122,16 @@ public class TemperatureService {
         return programResult;
     }
 
-    private void manageESP(List<ESP8266> esp8266List, Double desiredTemperature, Boolean isSummer) {
+    private void manageESP(List<ESP8266> esp8266List, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
+        int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
         List<ESP8266> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266.getIsCooler().equals(isSummer)).collect(Collectors.toList());
-          esp8266ListSeason.stream().forEach(esp8266 -> {
-              SensorData sensorData = mapSensorData.get(esp8266.getIdEsp());
-              if (sensorData.getTemperature() < (desiredTemperature - temperatureBuffer) && !isSummer)
-              {
-                  mqttService.manageActuator(esp8266,"on");
-                  return;
-              }
-          });
+
+        esp8266ListSeason.stream().forEach(esp8266 -> {
+            SensorData sensorData = mapSensorData.get(esp8266.getIdEsp());
+            if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer*deleteBuffer)))
+                mqttService.manageActuator(esp8266.getIdEsp(), !isSummer);
+            else
+                mqttService.manageActuator(esp8266.getIdEsp(), isSummer);
+        });
     }
 }
