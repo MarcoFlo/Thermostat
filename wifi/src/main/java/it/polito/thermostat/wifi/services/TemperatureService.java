@@ -1,18 +1,21 @@
 package it.polito.thermostat.wifi.services;
 
-import it.polito.thermostat.wifi.entity.Mode;
+import it.polito.thermostat.wifi.configuration.MongoZonedDateTime;
 import it.polito.thermostat.wifi.entity.Room;
-import it.polito.thermostat.wifi.object.Programm;
-import it.polito.thermostat.wifi.repository.ModeRepository;
+import it.polito.thermostat.wifi.entity.WSAL;
+import it.polito.thermostat.wifi.entity.program.Program;
 import it.polito.thermostat.wifi.repository.ESP8266Repository;
-import it.polito.thermostat.wifi.repository.ProgrammRepository;
+import it.polito.thermostat.wifi.repository.ProgramRepository;
 import it.polito.thermostat.wifi.repository.RoomRepository;
+import it.polito.thermostat.wifi.repository.WSALRepository;
+import it.polito.thermostat.wifi.resources.LeaveResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,10 +29,10 @@ public class TemperatureService {
     RoomRepository roomRepository;
 
     @Autowired
-    ProgrammRepository programmRepository;
+    ProgramRepository programRepository;
 
     @Autowired
-    ModeRepository modeRepository;
+    WSALRepository wsalRepository;
 
     @Autowired
     MQTTservice mqttService;
@@ -50,40 +53,42 @@ public class TemperatureService {
      * @param wsa
      */
     public void setWSA(String wsa) {
-        Mode mode = modeRepository.findAll().get(0);
+        WSAL wsal = wsalRepository.findAll().get(0);
         switch (wsa) {
             case "winter":
-                mode.setIsSummer(false);
+                wsal.setIsSummer(false);
                 break;
             case "summer":
-                mode.setIsSummer(true);
-                mode.setIsAntifreeze(false);
+                wsal.setIsSummer(true);
+                wsal.setIsAntiFreeze(false);
                 break;
             case "antifreeze":
-                mode.setIsAntifreeze(true);
-                mode.setIsSummer(false);
+                wsal.setIsAntiFreeze(true);
+                wsal.setIsSummer(false);
                 break;
             default:
                 logger.error("setWsa string not recognised");
         }
-        modeRepository.save(mode);
+        wsalRepository.save(wsal);
     }
 
     /**
      * Set the actuator accordingly to the leave time
-     *
-     * @param leaveTime
+     * @param leaveResource
      */
-    public void setL(LocalTime leaveTime, Double desiredTemperature) {
-        Mode mode = modeRepository.findAll().get(0);
-        mode.setLeaveTime(leaveTime);
-        mode.setDesiredTemperature(desiredTemperature);
-        modeRepository.save(mode);
+    public void setL(LeaveResource leaveResource) {
+        WSAL wsal = wsalRepository.findAll().get(0);
+        wsal.setIsAntiFreeze(false);
+        wsal.setIsLeave(true);
+        wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
+        wsal.setLeaveBackTemperature(leaveResource.getLeaveBackTemperature());
+        wsal.setLeaveEnd(MongoZonedDateTime.getMongoZonedDateTimeFromDate(leaveResource.getLeaveEnd()));
+        wsalRepository.save(wsal);
     }
 
 
     /**
-     * Set the esp related to the room to programm/manual mode
+     * Set the esp related to the room to program/manual mode
      *
      * @param idRoom
      */
@@ -95,9 +100,9 @@ public class TemperatureService {
 
 
     /**
-     * @param programmList
+     * @param programList
      */
-    public void saveProgrammList(List<Programm> programmList) {
-        programmRepository.saveAll(programmList);
+    public void saveProgramList(List<Program> programList) {
+        programRepository.saveAll(programList);
     }
 }

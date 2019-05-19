@@ -1,11 +1,9 @@
-package it.polito.thermostat.controllermd.object;
+package it.polito.thermostat.wifi.configuration;
 
 import lombok.Data;
-import org.springframework.cglib.core.Local;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 

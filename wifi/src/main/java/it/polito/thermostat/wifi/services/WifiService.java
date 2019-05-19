@@ -17,8 +17,15 @@ public class WifiService {
     @Autowired
     ExecuteShellComandService execService;
 
+    @Autowired
+    MQTTservice mqttService;
+
+    Boolean wasAP;
+
     /**
-     * Restituisce l'ipv4 dell'interfaccia wifi
+     * Restituisce le reti visibili
+     *
+     * @return
      */
     public String getIP() {
         if (!isWindows) {
@@ -39,7 +46,6 @@ public class WifiService {
         }
         return "windows no good";
     }
-
 
     /**
      * Restituisce le reti visibili
@@ -66,8 +72,9 @@ public class WifiService {
      * Cerco 5 volte, mi segno ogni volta quante ne trovo e restituisco il risultato che ne ha di più
      *
      * @return
+     * @throws InterruptedException
      */
-    public List<String> getAvailableNetIterator() throws InterruptedException {
+    public List<String> getAvailableNetIterator() {
         if (!isWindows) {
             Map<Integer, List<String>> mapAvailableNet = new HashMap<>();
             StringBuilder result = new StringBuilder();
@@ -76,12 +83,16 @@ public class WifiService {
             int count = 0;
 
             while (count < 5) {
-                result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
-                listNet = Arrays.asList(result.toString().split("\n"));
-                mapAvailableNet.put(listNet.size(), listNet);
-                result.setLength(0);
-                count++;
-                TimeUnit.MILLISECONDS.sleep(250);
+                try {
+                    result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
+                    listNet = Arrays.asList(result.toString().split("\n"));
+                    mapAvailableNet.put(listNet.size(), listNet);
+                    result.setLength(0);
+                    count++;
+                    TimeUnit.MILLISECONDS.sleep(250);
+                } catch (InterruptedException e) {
+                    logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
+                }
             }
             return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet()));
 
@@ -91,11 +102,19 @@ public class WifiService {
 
 
     /**
-     * Ci permette di connetterci a una rete
+     * Ci permette di connetterci a una rete.
+     * Se le credenziali sono sbagliate e wasAP == true torniamo in AP mode, in modo che gli esp abbiano una loro rete
+     *
+     * @param essid
+     * @param pw
+     * @return
      */
     public String connectToNet(String essid, String pw) {
         Integer knownNet;
 
+        mqttService.sendWifiCredentials(essid, pw);
+
+        //TOdo se non va a buon fine dobbiamo tornare ad acces point mode
         switchToStation();
 
         if ((knownNet = isKnownNet(essid)) != -1) {
@@ -249,6 +268,7 @@ public class WifiService {
     private void switchToStation() {
         if (!isWindows) {
             if (!isStationMode()) {
+                wasAP = true;
                 int i = 0;
                 StringBuilder result = new StringBuilder();
 
@@ -263,6 +283,8 @@ public class WifiService {
                     result.append(execService.execute("sleep 0.25s | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
                     //logger.info(result.toString());
                 }
+            } else {
+                wasAP = false;
             }
         }
     }
@@ -291,7 +313,7 @@ public class WifiService {
      * Meotodo privato che gestisce la riuscita o meno della connessione
      * Per prima cosa tira su l'interfaccia se non lo è già
      * SCANNING significa che ci sta ancora provando
-     * INACTIVE vuol dire che le credenziali sono sbaglaite
+     * INACTIVE vuol dire che le credenziali sono sbagliate e nel caso fossimo in AP mode ci ritorniamo
      * è presente "id=netNumber" andato tutto bene
      *
      * @param netNumber
@@ -310,9 +332,10 @@ public class WifiService {
         }
         if (result.indexOf("INACTIVE") != -1) {
             execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
-            logger.error("handleConnectResult -> credenziali sbagliate");
+            if (wasAP)
+                switchToAP();
+            logger.info("handleConnectResult -> credenziali sbagliate");
             return false;
-
         }
         if (result.indexOf("id") != -1) {
             execService.execute(" wpa_cli -iwlan0 save_config");

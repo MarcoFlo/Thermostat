@@ -1,6 +1,5 @@
-package it.polito.thermostat.controllermd.entity;
+package it.polito.thermostat.wifi.entity.program;
 
-import it.polito.thermostat.controllermd.object.DailyProgram;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -1,7 +1,7 @@
 package it.polito.thermostat.wifi.services;
 
 import it.polito.thermostat.wifi.entity.Room;
-import it.polito.thermostat.wifi.object.ESP8266;
+import it.polito.thermostat.wifi.entity.ESP8266;
 import it.polito.thermostat.wifi.repository.ESP8266Repository;
 import it.polito.thermostat.wifi.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class Esp8266ManagementService {
      * @param idEsp
      * @return
      */
-    public void setAssociation(String idRoom, String idEsp) {
+    public void setAssociation( String idEsp, String idRoom) {
         ESP8266 esp8266 = esp8266Repository.findByIdEsp(idEsp).get();
 
         //The esp was already associated to some room

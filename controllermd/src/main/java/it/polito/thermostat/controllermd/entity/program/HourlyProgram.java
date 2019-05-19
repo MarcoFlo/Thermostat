@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.object;
+package it.polito.thermostat.controllermd.entity.program;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import it.polito.thermostat.controllermd.configuration.CustomDateDeserializer;

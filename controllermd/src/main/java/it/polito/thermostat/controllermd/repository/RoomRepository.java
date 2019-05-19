@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface RoomRepository extends MongoRepository<Room, Integer> {
     Optional<Room> findByIdRoom(String idRoom);
 }

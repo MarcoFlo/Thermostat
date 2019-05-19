@@ -4,6 +4,7 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import it.polito.thermostat.controllermd.object.MongoZonedDateTime;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
@@ -27,6 +28,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.annotation.PostConstruct;
 
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -80,9 +83,8 @@ public class ControllermdApplication implements CommandLineRunner {
         jsonHandlerService.readPrograms();
         logger.info("Loading default programs done");
 
-//        testLauncher.launchAll();
-
-
+        Date date = MongoZonedDateTime.getMongoZonedDateTimeFromDate(LocalDateTime.now());
+logger.info(date.toString());
 //        Program program = programRepository.findByIdProgram("winter").get();
 
 

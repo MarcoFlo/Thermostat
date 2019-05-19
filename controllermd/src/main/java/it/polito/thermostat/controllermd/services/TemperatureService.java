@@ -1,11 +1,11 @@
 package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
-import it.polito.thermostat.controllermd.entity.Program;
+import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.WSAL;
-import it.polito.thermostat.controllermd.object.DailyProgram;
-import it.polito.thermostat.controllermd.object.HourlyProgram;
+import it.polito.thermostat.controllermd.entity.program.DailyProgram;
+import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
 import it.polito.thermostat.controllermd.object.MongoZonedDateTime;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
@@ -79,11 +79,11 @@ public class TemperatureService {
     private void manageLeave(List<ESP8266> esp8266List, WSAL currentWSAL) {
         LocalDateTime leaveEnd = MongoZonedDateTime.getDateFromMongoZonedDateTime(currentWSAL.getLeaveEnd());
         LocalDateTime now = LocalDateTime.now();
-        Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveDesiredTemperature());
+        Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveBackTemperature());
 
         //It's time to turn on the system
         if (now.isAfter(leaveEnd.plus((long) (60 * temperatureDiff * scalingFactor), ChronoUnit.MINUTES))) {
-            manageESP(esp8266List, currentWSAL.getLeaveDesiredTemperature(), currentWSAL.getIsSummer(), true);
+            manageESP(esp8266List, currentWSAL.getLeaveBackTemperature(), currentWSAL.getIsSummer(), true);
         } else //waiting at leaveTemperature
         {
             manageESP(esp8266List, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);

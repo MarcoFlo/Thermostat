@@ -1,10 +1,7 @@
-package it.polito.thermostat.controllermd.object;
+package it.polito.thermostat.wifi.entity.program;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import it.polito.thermostat.controllermd.configuration.CustomDateDeserializer;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

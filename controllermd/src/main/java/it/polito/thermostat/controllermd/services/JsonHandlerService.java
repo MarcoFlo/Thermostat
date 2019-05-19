@@ -1,7 +1,7 @@
 package it.polito.thermostat.controllermd.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.thermostat.controllermd.entity.Program;
+import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

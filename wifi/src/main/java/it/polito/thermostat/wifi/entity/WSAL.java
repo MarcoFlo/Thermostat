@@ -1,11 +1,9 @@
-package it.polito.thermostat.controllermd.entity;
+package it.polito.thermostat.wifi.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalTime;
 import java.util.Date;
 
 @Data

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -17,30 +16,7 @@ public class HomeController {
     @Autowired
     WifiService wifiService;
 
-    @Autowired
-    MQTTservice mqttService;
 
-    @Autowired
-    Esp8266ManagementService esp8266ManagementService;
-
-    @Autowired
-    TemperatureService temperatureService;
-
-    /**
-     * Metodo eseguito all'avvio della classe come init
-     */
-    @PostConstruct
-    public void init() {
-
-    }
-
-
-    /**
-     * Mapping verso la home dell'applicazione
-     *
-     * @param wifiVM wifidata
-     * @return String
-     */
     @GetMapping("/wifi")
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
         logger.info("myIP ->" + wifiService.getIP() + "<");
@@ -64,17 +40,5 @@ public class HomeController {
 
 
 
-    @PostMapping("/association/{id_esp}")
-    public String postReservation(@RequestBody String idRoom, @PathVariable("id_esp") String idEsp) {
-        esp8266ManagementService.setAssociation(idRoom, idEsp);
-        return "registered association";
-    }
-
-    @GetMapping("/appmio")
-    public String propertiesDebug() {
-
-        //temperatureService.setProgrammedMode();
-        return "mqtt";
-    }
 
 }

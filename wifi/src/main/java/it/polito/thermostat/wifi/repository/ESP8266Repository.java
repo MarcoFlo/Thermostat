@@ -1,6 +1,6 @@
 package it.polito.thermostat.wifi.repository;
 
-import it.polito.thermostat.wifi.object.ESP8266;
+import it.polito.thermostat.wifi.entity.ESP8266;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

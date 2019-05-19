@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class MQTTservice {
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @Autowired
@@ -33,29 +34,24 @@ public class MQTTservice {
     @Autowired
     ConcurrentHashMap<String, SensorData> mapSensorData;
 
-    private String ipAddr;
+    String internetBroker = "tcp://test.mosquitto.org:1883";
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private IMqttClient mqttClient;
     private String esp8266Topic = "/esp8266/#";
 
-    String internetBroker = "tcp://test.mosquitto.org:1883";
-    private IMqttClient mqttClient;
-
     @PostConstruct
-    public void init() throws UnknownHostException, MqttException{
-        InetAddress id = InetAddress.getLocalHost();
-        ipAddr = calculateIp();
-        String localBroker = "tcp://" + ipAddr + ":1883";
+    public void init() throws UnknownHostException, MqttException {
+        String localBroker = "tcp://" + calculateIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
-//        options.setCleanSession(true);
+//      options.setCleanSession(true);
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
-        mqttClient = new MqttClient(localBroker, id.toString());
+        mqttClient = new MqttClient(localBroker, "controllerMD");
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
 
-        esp8266Repository.findAll().stream().filter(esp8266 -> esp8266.getIsSensor()).forEach(esp -> {
+        esp8266Repository.findAll().stream().filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
             } catch (MqttException e) {
@@ -63,8 +59,6 @@ public class MQTTservice {
             }
         });
     }
-
-
 
 
     /**
