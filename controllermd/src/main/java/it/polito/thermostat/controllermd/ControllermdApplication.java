@@ -4,37 +4,29 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import it.polito.thermostat.controllermd.entity.ESP8266;
-import it.polito.thermostat.controllermd.entity.Program;
-import it.polito.thermostat.controllermd.object.DailyProgram;
-import it.polito.thermostat.controllermd.object.MongoZonedDateTime;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.JsonHandlerService;
+import it.polito.thermostat.controllermd.services.MQTTservice;
 import it.polito.thermostat.controllermd.services.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 import javax.annotation.PostConstruct;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.util.*;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -62,6 +54,12 @@ public class ControllermdApplication implements CommandLineRunner {
     TemperatureService temperatureService;
 
 
+
+
+    @Autowired
+    MQTTservice mqtTservice;
+
+
     @Bean
     public ConcurrentHashMap<String, SensorData> sensorData() {
         return new ConcurrentHashMap<>();
@@ -69,7 +67,6 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @PostConstruct
     public void init() {
-
     }
 
     public static void main(String[] args) {
@@ -83,8 +80,10 @@ public class ControllermdApplication implements CommandLineRunner {
         jsonHandlerService.readPrograms();
         logger.info("Loading default programs done");
 
-        Program program = programRepository.findByIdProgram("winter").get();
+//        testLauncher.launchAll();
 
+
+//        Program program = programRepository.findByIdProgram("winter").get();
 
 
 
@@ -106,5 +105,6 @@ public class ControllermdApplication implements CommandLineRunner {
 
 
     }
+
 
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -32,40 +33,39 @@ public class MQTTservice {
     @Autowired
     ConcurrentHashMap<String, SensorData> mapSensorData;
 
+    private String ipAddr;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private String esp8266Topic = "/esp8266/#";
-    private InetAddress id = InetAddress.getLocalHost();
-    private String hostname = getIp();
 
-    String localBroker = "tcp://" + hostname + ":1883";
     String internetBroker = "tcp://test.mosquitto.org:1883";
     private IMqttClient mqttClient;
 
-
-    public MQTTservice() throws UnknownHostException, MqttException {
+    @PostConstruct
+    public void init() throws UnknownHostException, MqttException{
+        InetAddress id = InetAddress.getLocalHost();
+        ipAddr = calculateIp();
+        String localBroker = "tcp://" + ipAddr + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
-        options.setCleanSession(true);
-        options.setConnectionTimeout(1000);
+//        options.setCleanSession(true);
+        options.setConnectionTimeout(10000);
+        options.setKeepAliveInterval(10000);
         mqttClient = new MqttClient(localBroker, id.toString());
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
+
+        esp8266Repository.findAll().stream().filter(esp8266 -> esp8266.getIsSensor()).forEach(esp -> {
+            try {
+                mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
+            } catch (MqttException e) {
+                logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
+            }
+        });
     }
 
 
-    public void publishESP8266Debug() throws Exception {
 
-        if (!mqttClient.isConnected()) {
-            logger.error("MQTT Client not connected.");
-            return;
-        }
-
-        MqttMessage msg = new MqttMessage("sensor".getBytes());
-        msg.setQos(2);
-        //msg.setRetained(true);
-        mqttClient.publish("/esp8266/id1", msg);
-    }
 
     /**
      * ci permette di gestire gli actuator
@@ -75,10 +75,6 @@ public class MQTTservice {
      */
     public void manageActuator(String idEsp, Boolean commandBoolean) {
 
-        if (!mqttClient.isConnected()) {
-            logger.error("MQTT Client not connected.");
-            return;
-        }
         String command = commandBoolean ? "on" : "off";
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
@@ -97,22 +93,30 @@ public class MQTTservice {
     private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
         ESP8266 esp8266 = new ESP8266();
         esp8266.setIdEsp(topic.split("/")[2]);
-        if (message.equals("sensor")) {
-            esp8266.setIsSensor(true);
-            mqttClient.subscribe("/" + esp8266.getIdEsp(), this::sensorDataReceived);
-        } else {
-            esp8266.setIsSensor(false);
-            if (message.equals("cooler"))
-                esp8266.setIsCooler(true);
-            else
+
+        switch (message.toString()) {
+            case "sensor":
+                esp8266.setIsSensor(true);
                 esp8266.setIsCooler(false);
+                mqttClient.subscribe("/" + esp8266.getIdEsp(), this::sensorDataReceived);
+                break;
+            case "cooler":
+                esp8266.setIsSensor(false);
+                esp8266.setIsCooler(true);
+                break;
+            case "heater":
+                esp8266.setIsSensor(false);
+                esp8266.setIsCooler(false);
+                break;
+            default:
+                logger.error("mqttService/esp8266Connection esp msg err");
         }
+
         esp8266Repository.save(esp8266);
 
-        logger.info("New esp8266 connected");
-        logger.info("\tesp8266 idEsp ->" + esp8266.getIdEsp());
-        logger.info("\tisActuator ->" + !esp8266.getIsSensor());
-
+        logger.info("New esp8266 idEsp ->" + esp8266.getIdEsp());
+        logger.info("\tisSensor ->" + esp8266.getIsSensor());
+        logger.info("\tisCooler ->" + esp8266.getIsCooler());
     }
 
     /**
@@ -126,11 +130,11 @@ public class MQTTservice {
         String idEsp = topic.split("/")[1];
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         mapSensorData.put(idEsp, sensorData);
-
+        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
     }
 
 
-    private String getIp() {
+    private String calculateIp() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
