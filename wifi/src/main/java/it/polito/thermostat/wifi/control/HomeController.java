@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Controller
@@ -20,7 +19,7 @@ public class HomeController {
 
     @GetMapping("/wifi")
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
-        wifiVM.setWifiList(wifiService.getAvailableNetIterator().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).map(s -> "<" + s + ">").collect(Collectors.toList()));
+        wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).map(s -> "<" + s + ">").collect(Collectors.toList()));
 
 //        TimeUnit.SECONDS.sleep(5);
 //        wifiService.switchToAP();

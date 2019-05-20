@@ -65,6 +65,6 @@ public class SettingController {
     @GetMapping("/wifi/list")
     public List<WifiNetDTO> wifiList() {
         //TODO scegliere se questo o "wifiService.getAvailableNet()" che non itera
-        return wifiService.getAvailableNetIterator();
+        return wifiService.getAvailableNet();
     }
 }

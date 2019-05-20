@@ -45,30 +45,12 @@ public class WifiService {
     }
 
     /**
-     * @return list of available net
-     */
-    public List<WifiNetDTO> getAvailableNet() {
-        if (!isWindows) {
-            StringBuilder result = new StringBuilder();
-            result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
-            if (result.length() != 0) {
-                logger.info(result.toString());
-                return Arrays.asList(result.toString().split("\n")).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
-            } else {
-                logger.info("Errore in getAvailableNet, no net returned");
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
      * return the available net iterating 5 times to check the result with more results
      *
      * @return
      * @throws InterruptedException
      */
-    public List<WifiNetDTO> getAvailableNetIterator() {
+    public List<WifiNetDTO> getAvailableNet() {
         if (!isWindows) {
             Map<Integer, List<String>> mapAvailableNet = new HashMap<>();
             StringBuilder result = new StringBuilder();
@@ -76,14 +58,14 @@ public class WifiService {
 
             int count = 0;
 
-            while (count < 5) {
+            while (count < 3) {
                 try {
                     result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
                     listNet = Arrays.asList(result.toString().split("\n"));
-                    mapAvailableNet.put(listNet.size(), listNet);
+                    mapAvailableNet.put(listNet.size(), listNet.stream().map(s -> s.substring(s.indexOf("\"")+1, s.indexOf("\"", 7))).collect(Collectors.toList()));
                     result.setLength(0);
                     count++;
-                    TimeUnit.MILLISECONDS.sleep(250);
+                    TimeUnit.MILLISECONDS.sleep(320);
                 } catch (InterruptedException e) {
                     logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
                 }
