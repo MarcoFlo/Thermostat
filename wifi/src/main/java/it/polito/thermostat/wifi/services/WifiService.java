@@ -62,7 +62,9 @@ public class WifiService {
                 try {
                     result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
                     listNet = Arrays.asList(result.toString().split("\n"));
-                    mapAvailableNet.put(listNet.size(), listNet.stream().map(s -> s.substring(s.indexOf("\"")+1, s.indexOf("\"", 7))).collect(Collectors.toList()));
+                    if (listNet.size() != 0) {
+                        mapAvailableNet.put(listNet.size(), listNet.stream().map(s -> s.substring(s.indexOf("\"") + 1, s.indexOf("\"", 7))).collect(Collectors.toList()));
+                    }
                     result.setLength(0);
                     count++;
                     TimeUnit.MILLISECONDS.sleep(320);
