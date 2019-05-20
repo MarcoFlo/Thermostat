@@ -14,7 +14,7 @@ import java.util.Enumeration;
 
 @Service
 public class MQTTservice {
-    boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private IMqttClient mqttClient;
@@ -31,6 +31,11 @@ public class MQTTservice {
         mqttClient.connect(options);
     }
 
+    /**
+     * Send the new net credentials to the esp
+     * @param essid
+     * @param pw
+     */
     public void sendWifiCredentials(String essid, String pw) {
         String credentials = essid + "_" + pw;
         MqttMessage msg = new MqttMessage(credentials.getBytes());

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class WifiNetResource {
-    private String netName;
+    private String essid;
     private String netPassword;
 }

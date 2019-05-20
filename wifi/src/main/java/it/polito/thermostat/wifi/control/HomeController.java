@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -26,9 +27,9 @@ public class HomeController {
 
         TimeUnit.SECONDS.sleep(5);
 
-        wifiVM.setWifiList(wifiService.getAvailableNet());
+        wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).collect(Collectors.toList()));
         TimeUnit.SECONDS.sleep(1);
-        wifiVM.setWifiListIterator(wifiService.getAvailableNetIterator());
+        wifiVM.setWifiListIterator(wifiService.getAvailableNetIterator().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).collect(Collectors.toList()));
 
         TimeUnit.SECONDS.sleep(5);
 

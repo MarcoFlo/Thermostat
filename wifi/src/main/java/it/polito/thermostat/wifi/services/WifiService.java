@@ -1,5 +1,6 @@
 package it.polito.thermostat.wifi.services;
 
+import it.polito.thermostat.wifi.DTO.WifiNetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class WifiService {
-
-    boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -22,11 +23,7 @@ public class WifiService {
 
     Boolean wasAP;
 
-    /**
-     * Restituisce le reti visibili
-     *
-     * @return
-     */
+
     public String getIP() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
@@ -48,17 +45,15 @@ public class WifiService {
     }
 
     /**
-     * Restituisce le reti visibili
-     *
-     * @return
+     * @return list of available net
      */
-    public List<String> getAvailableNet() {
+    public List<WifiNetDTO> getAvailableNet() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
             if (result.length() != 0) {
                 logger.info(result.toString());
-                return Arrays.asList(result.toString().split("\n"));
+                return Arrays.asList(result.toString().split("\n")).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
             } else {
                 logger.error("Errore in getAvailableNet, comando non andato a buon fine");
                 return null;
@@ -68,13 +63,12 @@ public class WifiService {
     }
 
     /**
-     * Restituisce le reti visibili iterando
-     * Cerco 5 volte, mi segno ogni volta quante ne trovo e restituisco il risultato che ne ha di più
+     * return the available net iterating 5 times to check the result with more results
      *
      * @return
      * @throws InterruptedException
      */
-    public List<String> getAvailableNetIterator() {
+    public List<WifiNetDTO> getAvailableNetIterator() {
         if (!isWindows) {
             Map<Integer, List<String>> mapAvailableNet = new HashMap<>();
             StringBuilder result = new StringBuilder();
@@ -94,7 +88,7 @@ public class WifiService {
                     logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
                 }
             }
-            return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet()));
+            return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet())).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
 
         }
         return null;
@@ -102,25 +96,26 @@ public class WifiService {
 
 
     /**
-     * Ci permette di connetterci a una rete.
-     * Se le credenziali sono sbagliate e wasAP == true torniamo in AP mode, in modo che gli esp abbiano una loro rete
+     * Allow us to connect to a net
+     * If the credentials are wrong and wasAP == true we go back to AP mode, so that the esp have a neto una loro rete
      *
      * @param essid
      * @param pw
      * @return
      */
     public String connectToNet(String essid, String pw) {
-        Integer knownNet;
-
         mqttService.sendWifiCredentials(essid, pw);
-
-        //TOdo se non va a buon fine dobbiamo tornare ad acces point mode
         switchToStation();
 
-        if ((knownNet = isKnownNet(essid)) != -1) {
-            if (!connectKnownNet(knownNet)) {
-                logger.error("errore nella connectToNet/known");
-                return "err connectToNet/known";
+        if (pw == null) {
+            Integer knownNet;
+            if ((knownNet = isKnownNet(essid)) != -1) {
+                if (!connectKnownNet(knownNet)) {
+                    logger.error("errore nella connectToNet/known");
+                    return "err connectToNet/known";
+                }
+            } else {
+                logger.error("WifiService/conncetToNet it was not a known net");
             }
         } else {
             if (!connectNewNet(essid, pw)) {
@@ -148,13 +143,7 @@ public class WifiService {
         }
     }
 
-    /**
-     * Connette alla rete selezionata
-     *
-     * @param essid
-     * @param pw
-     * @return
-     */
+
     private boolean connectNewNet(String essid, String pw) {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();

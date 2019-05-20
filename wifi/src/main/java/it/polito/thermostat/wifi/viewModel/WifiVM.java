@@ -2,7 +2,6 @@ package it.polito.thermostat.wifi.viewModel;
 
 import lombok.Data;
 
-import java.util.LinkedList;
 import java.util.List;
 
 

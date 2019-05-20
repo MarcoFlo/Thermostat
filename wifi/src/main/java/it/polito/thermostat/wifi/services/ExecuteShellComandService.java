@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 @Service
 public class ExecuteShellComandService {
-    boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 

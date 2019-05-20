@@ -38,6 +38,12 @@ public class TemperatureService {
     MQTTservice mqttService;
 
 
+    /**
+     * Set the room in manual mode
+     *
+     * @param idRoom
+     * @param desiredTemperature
+     */
     public void setManualRoom(String idRoom, Double desiredTemperature) {
         Room room = roomRepository.findByIdRoom(idRoom).get();
         room.setIsManual(true);
@@ -45,10 +51,19 @@ public class TemperatureService {
         roomRepository.save(room);
     }
 
+    /**
+     * Set the the room to program mode
+     *
+     * @param idRoom
+     */
+    public void setIsProgrammedRoom(String idRoom) {
+        Room room = roomRepository.findByIdRoom(idRoom).get();
+        room.setIsManual(false);
+        roomRepository.save(room);
+    }
 
     /**
      * Memorize in the db if we are in WinterSummerAntifreeze
-     * if antifreeze activate the actuator accordingly
      *
      * @param wsa
      */
@@ -73,7 +88,8 @@ public class TemperatureService {
     }
 
     /**
-     * Set the actuator accordingly to the leave time
+     * Memorize into the db the leave details
+     *
      * @param leaveResource
      */
     public void setL(LeaveResource leaveResource) {
@@ -88,18 +104,8 @@ public class TemperatureService {
 
 
     /**
-     * Set the esp related to the room to program/manual mode
+     * Save the program related to a room into the db
      *
-     * @param idRoom
-     */
-    public void setIsProgrammedRoom(String idRoom) {
-        Room room = roomRepository.findByIdRoom(idRoom).get();
-        room.setIsManual(false);
-        roomRepository.save(room);
-    }
-
-
-    /**
      * @param programList
      */
     public void saveProgramList(List<Program> programList) {
