@@ -55,7 +55,7 @@ public class WifiService {
                 logger.info(result.toString());
                 return Arrays.asList(result.toString().split("\n")).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
             } else {
-                logger.error("Errore in getAvailableNet, comando non andato a buon fine");
+                logger.info("Errore in getAvailableNet, no net returned");
                 return null;
             }
         }
