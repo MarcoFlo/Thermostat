@@ -63,7 +63,7 @@ public class MQTTservice {
                     if (isWindows) {
                         nameInterface = "3165";
                     } else {
-                        nameInterface = ""; //TODO da settare
+                        nameInterface = "wlan0";
                     }
                     if (networkInterface.getDisplayName().contains(nameInterface)) {
                         Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();

@@ -20,23 +20,17 @@ public class HomeController {
 
     @GetMapping("/wifi")
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
-        logger.info("myIP ->" + wifiService.getIP() + "<");
-
-
-        wifiService.switchToAP();
-
-        TimeUnit.SECONDS.sleep(5);
 
         wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).collect(Collectors.toList()));
         TimeUnit.SECONDS.sleep(1);
         wifiVM.setWifiListIterator(wifiService.getAvailableNetIterator().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).collect(Collectors.toList()));
 
-        TimeUnit.SECONDS.sleep(5);
-
-        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
-
-        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
-        return "home";
+//        TimeUnit.SECONDS.sleep(5);
+//        wifiService.switchToAP();
+//        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
+//
+//        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
+        return "wifi";
     }
 
 
