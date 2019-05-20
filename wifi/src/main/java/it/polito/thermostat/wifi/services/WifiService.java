@@ -183,10 +183,10 @@ public class WifiService {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep " + essid));
             if (result.length() == 0) {
-                logger.info("isKnownNet, sconosciuta");
+                logger.info("isKnownNet, " + essid+ " sconosciuta");
                 return -1;
             } else {
-                logger.info("isKnownNet, nota");
+                logger.info("isKnownNet, " + essid + " nota");
                 return Integer.valueOf(result.substring(0, result.indexOf("\t")));
             }
         }

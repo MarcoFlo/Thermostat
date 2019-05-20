@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/wifi")
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
-        wifiVM.setWifiList(wifiService.getAvailableNetIterator().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).collect(Collectors.toList()));
+        wifiVM.setWifiList(wifiService.getAvailableNetIterator().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).map(s -> "<" + s + ">").collect(Collectors.toList()));
 
 //        TimeUnit.SECONDS.sleep(5);
 //        wifiService.switchToAP();
