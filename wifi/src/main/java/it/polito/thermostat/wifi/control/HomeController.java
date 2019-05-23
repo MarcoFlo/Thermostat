@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.stream.Collectors;
 
 @Controller
@@ -19,8 +20,9 @@ public class HomeController {
 
     @GetMapping("/wifi")
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
+        long start = System.nanoTime();
         wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).map(s -> "<" + s + ">").collect(Collectors.toList()));
-
+        logger.info("Ellapsed time = " + (start - System.nanoTime()));
 //        TimeUnit.SECONDS.sleep(5);
 //        wifiService.switchToAP();
 //        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
@@ -28,8 +30,6 @@ public class HomeController {
 //        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
         return "wifi";
     }
-
-
 
 
 }

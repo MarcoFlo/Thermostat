@@ -45,7 +45,7 @@ public class WifiService {
     }
 
     /**
-     * return the available net iterating 5 times to check the result with more results
+     * return the available net iterating @count times to check the result with more results
      *
      * @return
      * @throws InterruptedException
@@ -57,8 +57,7 @@ public class WifiService {
             List<String> listNet;
 
             int count = 0;
-
-            while (count < 3) {
+            while (count < 4 || mapAvailableNet.keySet().size() == 0) {
                 try {
                     result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
                     listNet = Arrays.asList(result.toString().split("\n"));
@@ -67,13 +66,13 @@ public class WifiService {
                     }
                     result.setLength(0);
                     count++;
-                    TimeUnit.MILLISECONDS.sleep(320);
+                    TimeUnit.MILLISECONDS.sleep(300);
+
                 } catch (InterruptedException e) {
                     logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
                 }
             }
             return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet())).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
-
         }
         return null;
     }
@@ -167,7 +166,7 @@ public class WifiService {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep " + essid));
             if (result.length() == 0) {
-                logger.info("isKnownNet, " + essid+ " sconosciuta");
+                logger.info("isKnownNet, " + essid + " sconosciuta");
                 return -1;
             } else {
                 logger.info("isKnownNet, " + essid + " nota");
