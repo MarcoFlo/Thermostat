@@ -64,9 +64,10 @@ public class WifiService {
                     if (listNet.size() != 0) {
                         mapAvailableNet.put(listNet.size(), listNet.stream().map(s ->
                         {
-                            logger.info(s.indexOf("\n") + "a cap");
                             int n = s.indexOf("\"");
-                            return s.substring(s.indexOf("\"") + 1, s.indexOf("\"", n));
+                            String supp = s.substring(s.indexOf("\"") + 1, s.indexOf("\"", n));
+                            logger.info("<" + s + ">\t" + supp);
+                            return supp;
                         }).collect(Collectors.toList()));
                     }
                     result.setLength(0);
