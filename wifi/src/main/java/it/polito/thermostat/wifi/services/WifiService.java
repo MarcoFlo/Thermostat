@@ -57,7 +57,7 @@ public class WifiService {
             List<String> listNet;
 
             int count = 0;
-            while (count < 4 || mapAvailableNet.keySet().size() == 0) {
+            while (count < 9 || mapAvailableNet.keySet().size() == 0) {
                 try {
                     result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
                     listNet = Arrays.asList(result.toString().split("\n"));
@@ -66,7 +66,7 @@ public class WifiService {
                     }
                     result.setLength(0);
                     count++;
-                    TimeUnit.MILLISECONDS.sleep(300);
+                    TimeUnit.MILLISECONDS.sleep(100);
 
                 } catch (InterruptedException e) {
                     logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
