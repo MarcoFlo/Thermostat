@@ -57,7 +57,7 @@ public class WifiService {
             List<String> listNet;
 
             int count = 0;
-            while (count < 3 || mapAvailableNet.keySet().size() == 0) {
+            while (count < 4 || mapAvailableNet.keySet().size() == 0) {
                 try {
                     result.append(execService.execute("iwlist wlan0 scan | grep ESSID"));
                     listNet = Arrays.asList(result.toString().split("\n"));

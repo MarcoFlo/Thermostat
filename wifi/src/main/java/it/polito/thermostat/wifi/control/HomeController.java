@@ -24,7 +24,7 @@ public class HomeController {
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
         long start = System.nanoTime();
         wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(WifiNetDTO::getEssid).collect(Collectors.toList()));
-        logger.info("Ellapsed time = " + TimeUnit.SECONDS.convert(( System.nanoTime() - start), TimeUnit.NANOSECONDS));
+        logger.info("Ellapsed time = " + TimeUnit.SECONDS.convert(( System.nanoTime() - start), TimeUnit.MILLISECONDS));
 
 //        TimeUnit.SECONDS.sleep(5);
 //        wifiService.switchToAP();
