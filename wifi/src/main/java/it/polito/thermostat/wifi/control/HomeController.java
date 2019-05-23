@@ -22,7 +22,7 @@ public class HomeController {
     public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
         long start = System.nanoTime();
         wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(wifiNetDTO -> wifiNetDTO.getEssid()).map(s -> "<" + s + ">").collect(Collectors.toList()));
-        logger.info("Ellapsed time = " + (start - System.nanoTime()));
+        logger.info("Ellapsed time = " + ( System.nanoTime() - start)/1000000000);
 //        TimeUnit.SECONDS.sleep(5);
 //        wifiService.switchToAP();
 //        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
