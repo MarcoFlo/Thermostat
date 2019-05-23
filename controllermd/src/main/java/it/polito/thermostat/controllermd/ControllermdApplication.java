@@ -83,8 +83,7 @@ public class ControllermdApplication implements CommandLineRunner {
         jsonHandlerService.readPrograms();
         logger.info("Loading default programs done");
 
-        Date date = MongoZonedDateTime.getMongoZonedDateTimeFromDate(LocalDateTime.now());
-logger.info(date.toString());
+
 //        Program program = programRepository.findByIdProgram("winter").get();
 
 
