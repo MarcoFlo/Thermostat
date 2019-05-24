@@ -47,8 +47,8 @@ public class RedisApplication implements CommandLineRunner {
         n.setLocalDateTime(LocalDateTime.now());
         userRepository.save(n);
 
-        logger.info(userRepository.findByName("marco").getLocalDateTime().toString());
-        logger.info(userRepository.findByName("marco").getEsame().toString());
+        logger.info(userRepository.findById("marco").get().getLocalDateTime().toString());
+        logger.info(userRepository.findById("marco").get().getEsame().toString());
 
     }
 
