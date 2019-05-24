@@ -14,6 +14,7 @@ public class UserEntity implements Serializable {
 
     @Id
     private String name;
+    private String cognome;
 private Esame esame;
     private LocalDateTime localDateTime;
 

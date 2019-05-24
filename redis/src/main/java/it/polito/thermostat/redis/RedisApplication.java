@@ -43,13 +43,19 @@ public class RedisApplication implements CommandLineRunner {
 
         UserEntity n = new UserEntity();
         n.setName("marco");
+        n.setCognome("florian");
         n.setEsame(new Esame("Filosofia"));
         n.setLocalDateTime(LocalDateTime.now());
         userRepository.save(n);
 
-        logger.info(userRepository.findById("marco").get().getLocalDateTime().toString());
-        logger.info(userRepository.findById("marco").get().getEsame().toString());
 
+        UserEntity userEntity = userRepository.findById("marco").get();
+        logger.info(userEntity.getLocalDateTime().toString());
+        logger.info(userEntity.getEsame().toString());
+
+        userEntity = userRepository.findByCognome("florian");
+        logger.info(userEntity.getLocalDateTime().toString());
+        logger.info(userEntity.getEsame().toString());
     }
 
 
