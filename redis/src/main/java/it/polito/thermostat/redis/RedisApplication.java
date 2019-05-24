@@ -1,4 +1,5 @@
-package it.polito.thermostat.database;
+package it.polito.thermostat.redis;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 
 @SpringBootApplication
 @EnableRedisRepositories
-public class DatabaseApplication implements CommandLineRunner {
+public class RedisApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Bean
@@ -34,7 +35,7 @@ public class DatabaseApplication implements CommandLineRunner {
     UserRepository userRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(DatabaseApplication.class, args);
+        SpringApplication.run(RedisApplication.class, args);
     }
 
     @Override

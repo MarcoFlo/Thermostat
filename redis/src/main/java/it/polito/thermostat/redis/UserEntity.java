@@ -1,4 +1,4 @@
-package it.polito.thermostat.database;
+package it.polito.thermostat.redis;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
