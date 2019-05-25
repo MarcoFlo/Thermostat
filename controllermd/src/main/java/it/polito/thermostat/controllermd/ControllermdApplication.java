@@ -81,6 +81,9 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @PostConstruct
     public void init() {
+        logger.info("Loading default programs....");
+        jsonHandlerService.readPrograms();
+        logger.info("Loading default programs done");
     }
 
     public static void main(String[] args) {
@@ -90,9 +93,7 @@ public class ControllermdApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        logger.info("Loading default programs....");
-        jsonHandlerService.readPrograms();
-        logger.info("Loading default programs done");
+
 
 
 //        Program program = programRepository.findByIdProgram("winter").get();
