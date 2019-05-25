@@ -44,7 +44,7 @@ public class JsonHandlerService {
 
         int countProgram = 0;
         try {
-            countProgram = Objects.requireNonNull(ResourceUtils.getFile("classpath:defaultPrograms//").list()).length;
+            countProgram = Objects.requireNonNull(ResourceUtils.getFile("./defaultPrograms//").list()).length;
             countProgram++;
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class JsonHandlerService {
         }
         for (int i = 0; i < countProgram - 1; i++) {
             try {
-                program = objectMapper.readValue(ResourceUtils.getFile("classpath:defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Program.class);
+                program = objectMapper.readValue(ResourceUtils.getFile("./defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Program.class);
                 programRepository.save(program);
                 logger.info(program.toString());
             } catch (IOException e) {
