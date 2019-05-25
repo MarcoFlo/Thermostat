@@ -4,7 +4,6 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import it.polito.thermostat.controllermd.object.MongoZonedDateTime;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
@@ -19,19 +18,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 import javax.annotation.PostConstruct;
 
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 

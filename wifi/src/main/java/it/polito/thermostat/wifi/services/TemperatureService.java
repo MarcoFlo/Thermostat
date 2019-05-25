@@ -1,6 +1,5 @@
 package it.polito.thermostat.wifi.services;
 
-import it.polito.thermostat.wifi.configuration.MongoZonedDateTime;
 import it.polito.thermostat.wifi.entity.Room;
 import it.polito.thermostat.wifi.entity.WSAL;
 import it.polito.thermostat.wifi.entity.program.Program;
@@ -18,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class TemperatureService {
@@ -119,9 +119,34 @@ public class TemperatureService {
     /**
      * Save the program related to a room into the db
      *
-     * @param programList
+     * @param program
      */
-    public void saveProgramList(List<Program> programList) {
-        programRepository.saveAll(programList);
+    public void saveProgram(Program program) {
+        programRepository.save(program);
+    }
+
+
+    public Program getDefaultProgram() {
+        switch (LocalDateTime.now().getMonth()) {
+            case APRIL:
+            case MAY:
+            case JUNE:
+            case JULY:
+            case AUGUST:
+            case SEPTEMBER:
+            case OCTOBER:
+                //summer
+                return programRepository.findById("summer").get();
+
+            case NOVEMBER:
+            case DECEMBER:
+            case JANUARY:
+            case FEBRUARY:
+            case MARCH:
+                //winter
+                return programRepository.findById("winter").get();
+            default:
+                return null;
+        }
     }
 }

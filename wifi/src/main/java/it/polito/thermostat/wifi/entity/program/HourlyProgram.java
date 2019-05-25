@@ -2,11 +2,11 @@ package it.polito.thermostat.wifi.entity.program;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalTime;
 
 @Data
 public class HourlyProgram {
     //deserializzer missing because done in controllermd
-    private Date time;
+    private LocalTime time;
     private Double temperature;
 }

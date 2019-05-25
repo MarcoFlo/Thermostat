@@ -6,7 +6,6 @@ import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.WSAL;
 import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
-import it.polito.thermostat.controllermd.object.MongoZonedDateTime;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
@@ -117,8 +116,8 @@ public class TemperatureService {
             dailyProgram = programRoom.getWeeklyMap().get(2);
 
         HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
-                .filter(hourlyProgram -> MongoZonedDateTime.getTimeFromMongoZonedDateTime(hourlyProgram.getTime()).isAfter(LocalTime.now()))
-                .min(Comparator.comparing(o -> MongoZonedDateTime.getTimeFromMongoZonedDateTime(o.getTime())))
+                .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(LocalTime.now()))
+                .min(Comparator.comparing(o -> o.getTime()))
                 .get();
         return programResult;
     }

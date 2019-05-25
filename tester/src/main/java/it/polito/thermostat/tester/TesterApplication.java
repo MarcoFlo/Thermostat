@@ -53,7 +53,6 @@ public class TesterApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        //testLauncher.launchAll();
+        testLauncher.launchAll();
     }
 }

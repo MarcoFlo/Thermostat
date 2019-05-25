@@ -41,11 +41,19 @@ public class SettingController {
 
     /**
      * Endpoint to save the new room setting
-     * @param programList
+     * @param program
      */
     @PostMapping("/room_setting")
-    public void postPrograms(@RequestBody List<Program> programList) {
-        temperatureService.saveProgramList(programList);
+    public void postProgram(@RequestBody Program program) {
+        temperatureService.saveProgram(program);
+    }
+
+    /**
+     * Endpoint to get the default room setting
+     */
+    @PostMapping("/room_setting")
+    public Program getDefaultProgram() {
+        return temperatureService.getDefaultProgram();
     }
 
     /**
