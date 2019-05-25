@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -89,6 +90,7 @@ public class TemperatureService {
             default:
                 logger.error("setWsa string not recognised");
         }
+        wsal.setCreationDate(LocalDateTime.now());
         wsalRepository.save(wsal);
     }
 
@@ -109,6 +111,7 @@ public class TemperatureService {
         wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
         wsal.setLeaveBackTemperature(leaveResource.getLeaveBackTemperature());
         wsal.setLeaveEnd(leaveResource.getLeaveEnd());
+        wsal.setCreationDate(LocalDateTime.now());
         wsalRepository.save(wsal);
     }
 

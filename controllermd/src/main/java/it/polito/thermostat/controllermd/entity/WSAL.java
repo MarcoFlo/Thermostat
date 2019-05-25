@@ -2,14 +2,17 @@ package it.polito.thermostat.controllermd.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @RedisHash("wsal")
 public class WSAL {
+    @Id
+    private LocalDateTime creationDate;
+
     private Boolean isWinter;
     private Boolean isSummer;
 
@@ -20,7 +23,5 @@ public class WSAL {
     private Double leaveTemperature;
     private Double leaveBackTemperature;
     private LocalDateTime leaveEnd;
-
-    private LocalDateTime creationDate;
 
 }
