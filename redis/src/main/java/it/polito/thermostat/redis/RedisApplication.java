@@ -53,9 +53,6 @@ public class RedisApplication implements CommandLineRunner {
         logger.info(userEntity.getLocalDateTime().toString());
         logger.info(userEntity.getEsame().toString());
 
-        userEntity = userRepository.findByCognome("florian");
-        logger.info(userEntity.getLocalDateTime().toString());
-        logger.info(userEntity.getEsame().toString());
     }
 
 

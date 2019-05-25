@@ -2,10 +2,10 @@ package it.polito.thermostat.wifi.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
-@Document(collection = "esp")
+@RedisHash("esp")
 public class ESP8266 {
     @Id
     private String idEsp;

@@ -1,14 +1,13 @@
 package it.polito.thermostat.controllermd.entity.program;
 
-import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Map;
 
 @Data
-@Document(collection = "weeklyPrograms")
+@RedisHash("weeklyPrograms")
 public class Program {
 
     @Id

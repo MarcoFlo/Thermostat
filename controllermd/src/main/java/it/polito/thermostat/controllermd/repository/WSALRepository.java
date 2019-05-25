@@ -1,10 +1,9 @@
 package it.polito.thermostat.controllermd.repository;
 
 import it.polito.thermostat.controllermd.entity.WSAL;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
 
-public interface WSALRepository extends MongoRepository<WSAL,Integer> {
+public interface WSALRepository extends CrudRepository<WSAL,Integer> {
 
 }

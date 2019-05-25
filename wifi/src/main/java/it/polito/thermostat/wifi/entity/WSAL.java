@@ -2,13 +2,12 @@ package it.polito.thermostat.wifi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@Document(collection = "wsal")
+@RedisHash("wsal")
 public class WSAL {
     private Boolean isWinter;
     private Boolean isSummer;
@@ -19,8 +18,8 @@ public class WSAL {
     private Boolean isLeave;
     private Double leaveTemperature;
     private Double leaveBackTemperature;
-    private Date leaveEnd;
+    private LocalDateTime leaveEnd;
 
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
 }

@@ -1,8 +1,9 @@
 package it.polito.thermostat.wifi.repository;
 
 import it.polito.thermostat.wifi.entity.WSAL;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface WSALRepository extends MongoRepository<WSAL,Integer> {
+
+public interface WSALRepository extends CrudRepository<WSAL,Integer> {
 
 }

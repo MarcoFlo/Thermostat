@@ -53,7 +53,7 @@ public class MQTTServiceTest {
         msg.setQos(2);
         mqttClient.publish("/esp8266/idTest", msg);
         Thread.sleep(500);
-        Optional<ESP8266> check = esp8266Repository.findByIdEsp("idTest");
+        Optional<ESP8266> check = esp8266Repository.findById("idTest");
         if (!check.isPresent() || !check.get().getIsSensor() || check.get().getIsCooler())
             logger.error("newEspTest sensor error");
         esp8266Repository.delete(check.get());
@@ -63,7 +63,7 @@ public class MQTTServiceTest {
         msg.setRetained(true);
         mqttClient.publish("/esp8266/idTest", msg);
         Thread.sleep(500);
-        check = esp8266Repository.findByIdEsp("idTest");
+        check = esp8266Repository.findById("idTest");
         if (!check.isPresent() || check.get().getIsSensor() || check.get().getIsCooler())
             logger.error("newEspTest heater error");
         esp8266Repository.delete(check.get());
@@ -73,7 +73,7 @@ public class MQTTServiceTest {
         msg.setRetained(true);
         mqttClient.publish("/esp8266/idTest", msg);
         Thread.sleep(500);
-        check = esp8266Repository.findByIdEsp("idTest");
+        check = esp8266Repository.findById("idTest");
         if (!check.isPresent() || check.get().getIsSensor() || !check.get().getIsCooler())
             logger.error("newEspTest cooler error");
 
@@ -91,7 +91,7 @@ public class MQTTServiceTest {
     }
 
     private void setUpProducer() throws MqttException, InterruptedException {
-        if (!esp8266Repository.findByIdEsp(espDataProducer).isPresent()) {
+        if (!esp8266Repository.findById(espDataProducer).isPresent()) {
             MqttMessage msg = new MqttMessage("sensor".getBytes());
             msg.setQos(2);
             mqttClient.publish("/esp8266/" + espDataProducer, msg);

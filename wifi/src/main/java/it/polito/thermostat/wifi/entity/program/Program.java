@@ -2,12 +2,12 @@ package it.polito.thermostat.wifi.entity.program;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Map;
 
 @Data
-@Document(collection = "weeklyPrograms")
+@RedisHash("weeklyPrograms")
 public class Program {
 
     @Id

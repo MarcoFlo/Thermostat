@@ -45,7 +45,7 @@ public class TemperatureService {
      * @param desiredTemperature
      */
     public void setManualRoom(String idRoom, Double desiredTemperature) {
-        Room room = roomRepository.findByIdRoom(idRoom).get();
+        Room room = roomRepository.findById(idRoom).get();
         room.setIsManual(true);
         room.setDesiredTemperature(desiredTemperature);
         roomRepository.save(room);
@@ -57,7 +57,7 @@ public class TemperatureService {
      * @param idRoom
      */
     public void setIsProgrammedRoom(String idRoom) {
-        Room room = roomRepository.findByIdRoom(idRoom).get();
+        Room room = roomRepository.findById(idRoom).get();
         room.setIsManual(false);
         roomRepository.save(room);
     }
@@ -68,7 +68,12 @@ public class TemperatureService {
      * @param wsa
      */
     public void setWSA(String wsa) {
-        WSAL wsal = wsalRepository.findAll().get(0);
+        WSAL wsal;
+        if (wsalRepository.findAll().iterator().hasNext())
+            wsal = wsalRepository.findAll().iterator().next();
+        else
+            wsal = new WSAL();
+
         switch (wsa) {
             case "winter":
                 wsal.setIsSummer(false);
@@ -93,12 +98,17 @@ public class TemperatureService {
      * @param leaveResource
      */
     public void setL(LeaveResource leaveResource) {
-        WSAL wsal = wsalRepository.findAll().get(0);
+        WSAL wsal;
+        if (wsalRepository.findAll().iterator().hasNext())
+            wsal = wsalRepository.findAll().iterator().next();
+        else
+            wsal = new WSAL();
+
         wsal.setIsAntiFreeze(false);
         wsal.setIsLeave(true);
         wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
         wsal.setLeaveBackTemperature(leaveResource.getLeaveBackTemperature());
-        wsal.setLeaveEnd(MongoZonedDateTime.getMongoZonedDateTimeFromDate(leaveResource.getLeaveEnd()));
+        wsal.setLeaveEnd(leaveResource.getLeaveEnd());
         wsalRepository.save(wsal);
     }
 

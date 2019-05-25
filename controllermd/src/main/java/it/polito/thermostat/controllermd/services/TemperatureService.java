@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class TemperatureService {
@@ -55,11 +56,11 @@ public class TemperatureService {
 
     //@Scheduled(fixedRate = 3000)
     public void scheduleFixedRateTask() {
-        List<WSAL> checkWSAL = wsalRepository.findAll();
+        List<WSAL> checkWSAL = StreamSupport.stream(wsalRepository.findAll().spliterator(), false).collect(Collectors.toList());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
         {
             WSAL currentWSAL = checkWSAL.get(0);
-            List<Room> roomList = roomRepository.findAll();
+            List<Room> roomList = StreamSupport.stream(roomRepository.findAll().spliterator(), false).collect(Collectors.toList());
             if (currentWSAL.getIsLeave()) {
                 logger.info("Leave mode");
                 manageLeave(roomList.stream().flatMap(room -> room.getEsp8266List().stream()).collect(Collectors.toList()), currentWSAL);
@@ -77,7 +78,7 @@ public class TemperatureService {
     }
 
     private void manageLeave(List<ESP8266> esp8266List, WSAL currentWSAL) {
-        LocalDateTime leaveEnd = MongoZonedDateTime.getDateFromMongoZonedDateTime(currentWSAL.getLeaveEnd());
+        LocalDateTime leaveEnd = currentWSAL.getLeaveEnd();
         LocalDateTime now = LocalDateTime.now();
         Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveBackTemperature());
 
@@ -97,7 +98,7 @@ public class TemperatureService {
             manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
-            Program programRoom = programRepository.findByIdProgram(room.getIdRoom()).get();
+            Program programRoom = programRepository.findById(room.getIdRoom()).get();
             manageProgram(room.getEsp8266List(), programRoom, isSummer);
         }
     }

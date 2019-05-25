@@ -17,6 +17,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class MQTTservice {
@@ -51,7 +53,7 @@ public class MQTTservice {
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
 
-        esp8266Repository.findAll().stream().filter(ESP8266::getIsSensor).forEach(esp -> {
+        StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
             } catch (MqttException e) {
