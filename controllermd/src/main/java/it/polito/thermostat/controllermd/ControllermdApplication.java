@@ -24,13 +24,11 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.util.ResourceUtils;
 
 
 import javax.annotation.PostConstruct;
 
 
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -38,6 +36,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableScheduling
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${redis.online}")
+    Boolean isRedisOnline;
 
     @Value("${spring.redis.host}")
     String redisHost;
@@ -50,11 +51,17 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
-        redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
+        if (isRedisOnline) {
+            logger.info("Redis online database");
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
+            redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);
 
+        } else {
+            logger.info("Redis local database");
+            return new LettuceConnectionFactory();
+        }
+    }
 
 
     @Bean
@@ -105,10 +112,9 @@ public class ControllermdApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-logger.info(System.getProperty("os.name").toLowerCase());
+        logger.info(System.getProperty("os.name").toLowerCase());
 
 //        Program program = programRepository.findByIdProgram("winter").get();
-
 
 
 //        Room room = new Room();

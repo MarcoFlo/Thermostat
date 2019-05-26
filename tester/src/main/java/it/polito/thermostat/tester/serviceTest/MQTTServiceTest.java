@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,20 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class MQTTServiceTest {
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${mqtt.online}")
+    Boolean isMQTTOnline;
+    @Value("${cloudmqtt.broker}")
+    String cloudmqttBroker;
+    @Value("${cloudmqtt.user}")
+    String cloudmqttUser;
+    @Value("${cloudmqtt.pass}")
+    String cloudmqttPass;
+
+
+    @Value("${mosquitto.broker}")
+    String mosquittoBroker;
 
     @Autowired
     ESP8266Repository esp8266Repository;
@@ -36,14 +48,25 @@ public class MQTTServiceTest {
 
     @PostConstruct
     public void init() throws MqttException {
-        mqttClient = new MqttClient(localBroker, "mqttTester");
-
+        String localBroker = "tcp://" + calculateIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
-        options.setCleanSession(true);
+//      options.setCleanSession(true);
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
-        options.setCleanSession(true);
+
+        if (isMQTTOnline) {
+            logger.info("MQTT cloud Broker");
+            options.setUserName(cloudmqttUser);
+            options.setPassword(cloudmqttPass.toCharArray());
+            mqttClient = new MqttClient(cloudmqttBroker, "tester");
+        }
+        else
+        {
+            logger.info("MQTT local Broker");
+            mqttClient = new MqttClient(localBroker, "tester");
+
+        }
         mqttClient.connect(options);
     }
 

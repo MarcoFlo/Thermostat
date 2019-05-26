@@ -3,6 +3,7 @@ package it.polito.thermostat.wifi.services;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,19 @@ public class MQTTservice {
     private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${mqtt.online}")
+    Boolean isMQTTOnline;
+    @Value("${cloudmqtt.broker}")
+    String cloudmqttBroker;
+    @Value("${cloudmqtt.user}")
+    String cloudmqttUser;
+    @Value("${cloudmqtt.pass}")
+    String cloudmqttPass;
+
+
+    @Value("${mosquitto.broker}")
+    String mosquittoBroker;
+
     private IMqttClient mqttClient;
 
     @PostConstruct
@@ -27,7 +41,19 @@ public class MQTTservice {
 //      options.setCleanSession(true);
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
-        mqttClient = new MqttClient(localBroker, "wifiSpring");
+
+        if (isMQTTOnline) {
+            logger.info("MQTT cloud Broker");
+            options.setUserName(cloudmqttUser);
+            options.setPassword(cloudmqttPass.toCharArray());
+            mqttClient = new MqttClient(cloudmqttBroker, "wifi");
+        }
+        else
+        {
+            logger.info("MQTT local Broker");
+            mqttClient = new MqttClient(localBroker, "wifi");
+
+        }
         mqttClient.connect(options);
     }
 

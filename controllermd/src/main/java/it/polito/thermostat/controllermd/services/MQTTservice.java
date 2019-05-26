@@ -36,6 +36,8 @@ public class MQTTservice {
     @Autowired
     ConcurrentHashMap<String, SensorData> mapSensorData;
 
+    @Value("${mqtt.online}")
+    Boolean isMQTTOnline;
     @Value("${cloudmqtt.broker}")
     String cloudmqttBroker;
     @Value("${cloudmqtt.user}")
@@ -59,14 +61,15 @@ public class MQTTservice {
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
 
-        if (System.getProperty("os.name").toLowerCase().equals("linux")) {
+        if (isMQTTOnline) {
+            logger.info("MQTT cloud Broker");
             options.setUserName(cloudmqttUser);
             options.setPassword(cloudmqttPass.toCharArray());
             mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
         }
         else
         {
-            logger.info("localBroker");
+            logger.info("MQTT local Broker");
             mqttClient = new MqttClient(localBroker, "controllerMD");
 
         }
