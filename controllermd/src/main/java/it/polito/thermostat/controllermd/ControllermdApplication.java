@@ -105,7 +105,7 @@ public class ControllermdApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-
+logger.info(System.getProperty("os.name").toLowerCase());
 
 //        Program program = programRepository.findByIdProgram("winter").get();
 

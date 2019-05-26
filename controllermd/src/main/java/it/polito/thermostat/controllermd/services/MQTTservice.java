@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +18,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -36,7 +36,16 @@ public class MQTTservice {
     @Autowired
     ConcurrentHashMap<String, SensorData> mapSensorData;
 
-    String internetBroker = "tcp://test.mosquitto.org:1883";
+    @Value("${cloudmqtt.broker}")
+    String cloudmqttBroker;
+    @Value("${cloudmqtt.user}")
+    String cloudmqttUser;
+    @Value("${cloudmqtt.pass}")
+    String cloudmqttPass;
+
+
+    @Value("${mosquitto.broker}")
+    String mosquittoBroker;
 
     private IMqttClient mqttClient;
     private String esp8266Topic = "/esp8266/#";
@@ -45,11 +54,14 @@ public class MQTTservice {
     public void init() throws UnknownHostException, MqttException {
         String localBroker = "tcp://" + calculateIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
+        options.setUserName(cloudmqttUser);
+        options.setPassword(cloudmqttPass.toCharArray());
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
-        mqttClient = new MqttClient(localBroker, "controllerMD");
+        mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
+
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
 
