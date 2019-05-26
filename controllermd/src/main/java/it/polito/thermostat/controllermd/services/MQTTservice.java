@@ -51,17 +51,25 @@ public class MQTTservice {
     private String esp8266Topic = "/esp8266/#";
 
     @PostConstruct
-    public void init() throws UnknownHostException, MqttException {
+    public void init() throws MqttException {
         String localBroker = "tcp://" + calculateIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setUserName(cloudmqttUser);
-        options.setPassword(cloudmqttPass.toCharArray());
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
         options.setConnectionTimeout(10000);
         options.setKeepAliveInterval(10000);
-        mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
 
+        if (System.getProperty("os.name").toLowerCase().equals("linux")) {
+            options.setUserName(cloudmqttUser);
+            options.setPassword(cloudmqttPass.toCharArray());
+            mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
+        }
+        else
+        {
+            logger.info("localBroker");
+            mqttClient = new MqttClient(localBroker, "controllerMD");
+
+        }
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
 
