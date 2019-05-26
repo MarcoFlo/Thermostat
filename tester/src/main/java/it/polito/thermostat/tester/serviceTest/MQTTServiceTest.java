@@ -68,6 +68,7 @@ public class MQTTServiceTest {
 
         }
         mqttClient.connect(options);
+
     }
 
     @Async("threadPoolTaskExecutor")

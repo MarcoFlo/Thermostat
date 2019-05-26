@@ -13,12 +13,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 @RestController
 public class SettingController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+
     @Autowired
     WifiService wifiService;
 
@@ -82,7 +85,10 @@ public class SettingController {
      */
     @GetMapping("/setting/wifi/list")
     public List<WifiNetDTO> wifiList() {
-        return wifiService.getAvailableNet();
+        if (isWindows)
+            return Arrays.asList(new WifiNetDTO("NewIpNetwork", false), new WifiNetDTO("KnownIpNetwork", true));
+        else
+            return wifiService.getAvailableNet();
     }
 
     /**
@@ -93,7 +99,8 @@ public class SettingController {
      */
     @PostMapping("/setting/wifi/credentials")
     public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
-        wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
+        if (!isWindows)
+            wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
     }
 
     @GetMapping("/device_discovery")

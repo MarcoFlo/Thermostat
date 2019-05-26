@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -17,15 +18,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@SpringBootApplication
 @EnableScheduling
 @EnableAsync
+@SpringBootApplication
+@Component
 public class TesterApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    TestLauncher testLauncher;
 
     @Value("${redis.online}")
     Boolean isRedisOnline;
@@ -41,7 +43,7 @@ public class TesterApplication implements CommandLineRunner {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        if (isRedisOnline) {
+      if (isRedisOnline) {
             logger.info("Redis online database");
             RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
             redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
@@ -69,6 +71,11 @@ public class TesterApplication implements CommandLineRunner {
         executor.setThreadNamePrefix("Async-");
         return executor;
     }
+
+
+    @Autowired
+    TestLauncher testLauncher;
+
     public static void main(String[] args) {
         SpringApplication.run(TesterApplication.class, args);
     }
