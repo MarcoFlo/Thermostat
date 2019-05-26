@@ -14,18 +14,23 @@ import it.polito.thermostat.controllermd.services.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.util.ResourceUtils;
 
 
 import javax.annotation.PostConstruct;
 
 
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -34,10 +39,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${spring.redis.host}")
+    String redisHost;
+
+    @Value("${spring.redis.port}")
+    Integer redisPort;
+
+    @Value("${spring.redis.password}")
+    String redisPassword;
+
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory();
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
+        redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
+
+
 
     @Bean
     public RedisTemplate<?, ?> redisTemplate() {
@@ -86,7 +104,6 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
 
 
 

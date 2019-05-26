@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -69,5 +70,13 @@ public class Esp8266ManagementService {
 
         esp8266.setIdRoom(null);
         esp8266Repository.save(esp8266);
+    }
+
+    /**
+     * Retrive a list of free esp
+     * @return
+     */
+    public List<ESP8266> getEspFree() {
+        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).filter(esp8266 -> esp8266.getIdRoom() != null).collect(Collectors.toList());
     }
 }

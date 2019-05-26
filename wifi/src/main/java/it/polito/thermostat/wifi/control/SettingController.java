@@ -1,6 +1,7 @@
 package it.polito.thermostat.wifi.control;
 
 import it.polito.thermostat.wifi.DTO.WifiNetDTO;
+import it.polito.thermostat.wifi.entity.ESP8266;
 import it.polito.thermostat.wifi.entity.program.Program;
 import it.polito.thermostat.wifi.resources.AssociationResource;
 import it.polito.thermostat.wifi.resources.WifiNetResource;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -27,52 +29,75 @@ public class SettingController {
     TemperatureService temperatureService;
 
     /**
-     * Endpoint that allow us to set/delete an association between room-esp
-      * @param associationResource
+     * Retrive a list of free esp
+     *
+     * @return
      */
-    @PostMapping("/association")
-    public void postReservation(@RequestBody AssociationResource associationResource) {
-        if (associationResource.getAddBool()) {
-            esp8266ManagementService.setAssociation(associationResource.getIdEsp(), associationResource.getIdRoom());
-        } else {
-            esp8266ManagementService.deleteAssociation(associationResource.getIdEsp());
-        }
+    @GetMapping("/setting/espfree")
+    public List<ESP8266> getEspFree() {
+        return esp8266ManagementService.getEspFree();
     }
 
     /**
-     * Endpoint to save the new room setting
-     * @param program
+     * Endpoint that allow us to set/delete associations between room-esp
+     *
+     * @param associationList
      */
-    @PostMapping("/room_setting")
-    public void postProgram(@RequestBody Program program) {
-        temperatureService.saveProgram(program);
+    @PostMapping("/setting/association")
+    public void postAssociation(@RequestBody List<AssociationResource> associationList) {
+        Iterator<AssociationResource> iterator = associationList.iterator();
+        while (iterator.hasNext()) {
+            AssociationResource associationResource = iterator.next();
+            if (associationResource.getAddBool()) {
+                esp8266ManagementService.setAssociation(associationResource.getIdEsp(), associationResource.getIdRoom());
+            } else {
+                esp8266ManagementService.deleteAssociation(associationResource.getIdEsp());
+            }
+        }
     }
 
     /**
      * Endpoint to get the default room setting
      */
-    @PostMapping("/room_setting")
+    @GetMapping("/setting/default_program")
     public Program getDefaultProgram() {
         return temperatureService.getDefaultProgram();
     }
 
     /**
+     * Endpoint to save the new program
+     *
+     * @param program
+     */
+    @PostMapping("/setting/program")
+    public void postProgram(@RequestBody Program program) {
+        temperatureService.saveProgram(program);
+    }
+
+
+    /**
+     * Endpoint that allow us to get the list of available net
+     *
+     * @return
+     */
+    @GetMapping("/setting/wifi/list")
+    public List<WifiNetDTO> wifiList() {
+        return wifiService.getAvailableNet();
+    }
+
+    /**
      * Endpoint that allow us to connect to a net
      * Send the netPassword == null to connect to a known net
+     *
      * @param wifiNetResource
      */
-    @PostMapping("/wifi/credentials")
+    @PostMapping("/setting/wifi/credentials")
     public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
         wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
     }
 
-    /**
-     * Endpoint that allow us to get the list of available net
-     * @return
-     */
-    @GetMapping("/wifi/list")
-    public List<WifiNetDTO> wifiList() {
-        //TODO scegliere se questo o "wifiService.getAvailableNet()" che non itera
-        return wifiService.getAvailableNet();
+    @GetMapping("/device_discovery")
+    public String ping() {
+        return "iamrpi";
     }
 }
