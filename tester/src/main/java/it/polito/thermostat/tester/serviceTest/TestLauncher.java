@@ -14,15 +14,11 @@ public class TestLauncher {
     MQTTServiceTest mqttServiceTest;
 
 
-    public void launchAll()
-    {
+    public void launchAll() {
         try {
-            mqttServiceTest.newEspTest();
+            mqttServiceTest.createEsp();
         } catch (MqttException e) {
             logger.error("newEspTest - publish exception");
-        } catch (InterruptedException e) {
-            logger.error("newEspTest - thread sleep");
         }
     }
-
 }

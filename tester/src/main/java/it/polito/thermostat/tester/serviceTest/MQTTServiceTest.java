@@ -71,7 +71,7 @@ public class MQTTServiceTest {
 
     }
 
-    @Async("threadPoolTaskExecutor")
+//    @Async("threadPoolTaskExecutor")
     public void newEspTest() throws MqttException, InterruptedException {
         MqttMessage msg = new MqttMessage("sensor".getBytes());
         msg.setQos(2);
@@ -84,7 +84,6 @@ public class MQTTServiceTest {
 
         msg = new MqttMessage("heater".getBytes());
         msg.setQos(2);
-        msg.setRetained(true);
         mqttClient.publish("/esp8266/idTest", msg);
         Thread.sleep(500);
         check = esp8266Repository.findById("idTest");
@@ -94,16 +93,32 @@ public class MQTTServiceTest {
 
         msg = new MqttMessage("cooler".getBytes());
         msg.setQos(2);
-        msg.setRetained(true);
         mqttClient.publish("/esp8266/idTest", msg);
         Thread.sleep(500);
         check = esp8266Repository.findById("idTest");
         if (!check.isPresent() || check.get().getIsSensor() || !check.get().getIsCooler())
             logger.error("newEspTest cooler error");
-
         esp8266Repository.delete(check.get());
     }
 
+
+    public void createEsp() throws MqttException {
+        int random = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+        MqttMessage msg = new MqttMessage("sensor".getBytes());
+        msg.setQos(2);
+        mqttClient.publish("/esp8266/idTest"+random, msg);
+
+
+        msg = new MqttMessage("heater".getBytes());
+        msg.setQos(2);
+        mqttClient.publish("/esp8266/idTest"+random, msg);
+
+
+        msg = new MqttMessage("cooler".getBytes());
+        msg.setQos(2);
+        mqttClient.publish("/esp8266/idTest"+random, msg);
+
+    }
 
     @Scheduled(fixedRate = 1000)
     public void newSensorData() throws MqttException, InterruptedException {

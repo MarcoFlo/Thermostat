@@ -77,6 +77,6 @@ public class Esp8266ManagementService {
      * @return
      */
     public List<ESP8266> getEspFree() {
-        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).filter(esp8266 -> esp8266.getIdRoom() != null).collect(Collectors.toList());
+        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).filter(esp8266 -> esp8266.getIdRoom() == null).collect(Collectors.toList());
     }
 }
