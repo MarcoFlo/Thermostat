@@ -111,6 +111,11 @@ public class MQTTServiceTest {
             msg.setQos(2);
             id = ThreadLocalRandom.current().nextInt(0, 100 + 1);
             mqttClient.publish("/esp8266/idTest" + id, msg);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             logger.info("esp with id: " + esp8266Repository.findById("idTest" + id).get().getIdEsp() + " created");
         }
 
