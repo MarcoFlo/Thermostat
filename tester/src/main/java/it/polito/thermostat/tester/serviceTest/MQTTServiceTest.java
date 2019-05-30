@@ -45,6 +45,8 @@ public class MQTTServiceTest {
 
     String localBroker = "tcp://" + calculateIp() + ":1883";
     String espDataProducer = "espDataProducer";
+    String[] sensorType = {"sensor", "heater", "cooler"};
+
 
     @PostConstruct
     public void init() throws MqttException {
@@ -60,9 +62,7 @@ public class MQTTServiceTest {
             options.setUserName(cloudmqttUser);
             options.setPassword(cloudmqttPass.toCharArray());
             mqttClient = new MqttClient(cloudmqttBroker, "tester");
-        }
-        else
-        {
+        } else {
             logger.info("MQTT local Broker");
             mqttClient = new MqttClient(localBroker, "tester");
 
@@ -71,7 +71,7 @@ public class MQTTServiceTest {
 
     }
 
-//    @Async("threadPoolTaskExecutor")
+    //    @Async("threadPoolTaskExecutor")
     public void newEspTest() throws MqttException, InterruptedException {
         MqttMessage msg = new MqttMessage("sensor".getBytes());
         msg.setQos(2);
@@ -103,19 +103,16 @@ public class MQTTServiceTest {
 
 
     public void createEsp() throws MqttException {
-        MqttMessage msg = new MqttMessage("sensor".getBytes());
-        msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
+        MqttMessage msg;
+        int id;
 
-
-        msg = new MqttMessage("heater".getBytes());
-        msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
-
-
-        msg = new MqttMessage("cooler".getBytes());
-        msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
+        for (int i = 0; i < sensorType.length; i++) {
+            msg = new MqttMessage(sensorType[i].getBytes());
+            msg.setQos(2);
+            id = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+            mqttClient.publish("/esp8266/idTest" + id, msg);
+            logger.info("esp with id: " + esp8266Repository.findById("idTest" + id).get().getIdEsp() + " created");
+        }
 
     }
 
