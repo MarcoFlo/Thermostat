@@ -43,6 +43,7 @@ public class SettingController {
     @GetMapping("/setting/espfree")
     public List<ESP8266> getEspFree() {
         List<ESP8266> list = esp8266ManagementService.getEspFree();
+        logger.info("ciao");
         logger.info(list.size() + "size" + list.get(0).getIdEsp());
         list.forEach(esp -> logger.info(list.size() + "\t" + esp.getIdEsp() + "\t" + esp.getIdRoom()));
         return list;
