@@ -103,24 +103,23 @@ public class MQTTServiceTest {
 
 
     public void createEsp() throws MqttException {
-        int random = ThreadLocalRandom.current().nextInt(0, 100 + 1);
         MqttMessage msg = new MqttMessage("sensor".getBytes());
         msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+random, msg);
+        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
 
 
         msg = new MqttMessage("heater".getBytes());
         msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+random, msg);
+        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
 
 
         msg = new MqttMessage("cooler".getBytes());
         msg.setQos(2);
-        mqttClient.publish("/esp8266/idTest"+random, msg);
+        mqttClient.publish("/esp8266/idTest"+ThreadLocalRandom.current().nextInt(0, 100 + 1), msg);
 
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     public void newSensorData() throws MqttException, InterruptedException {
         setUpProducer();
         String supp = Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2);

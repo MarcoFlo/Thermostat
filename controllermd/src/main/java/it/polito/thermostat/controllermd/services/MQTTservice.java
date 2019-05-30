@@ -133,6 +133,7 @@ public class MQTTservice {
 
         esp8266Repository.save(esp8266);
 
+
         logger.info("New esp8266 idEsp ->" + esp8266.getIdEsp());
         logger.info("\tisSensor ->" + esp8266.getIsSensor());
         logger.info("\tisCooler ->" + esp8266.getIsCooler());

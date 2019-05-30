@@ -3,6 +3,7 @@ package it.polito.thermostat.wifi.control;
 import it.polito.thermostat.wifi.DTO.WifiNetDTO;
 import it.polito.thermostat.wifi.entity.ESP8266;
 import it.polito.thermostat.wifi.entity.program.Program;
+import it.polito.thermostat.wifi.repository.ESP8266Repository;
 import it.polito.thermostat.wifi.resources.AssociationResource;
 import it.polito.thermostat.wifi.resources.WifiNetResource;
 import it.polito.thermostat.wifi.services.Esp8266ManagementService;
@@ -31,6 +32,9 @@ public class SettingController {
     @Autowired
     TemperatureService temperatureService;
 
+    @Autowired
+    ESP8266Repository esp8266Repository;
+
     /**
      * Retrive a list of free esp
      *
@@ -39,7 +43,8 @@ public class SettingController {
     @GetMapping("/setting/espfree")
     public List<ESP8266> getEspFree() {
         List<ESP8266> list = esp8266ManagementService.getEspFree();
-        list.forEach(esp -> logger.info(esp.getIdEsp()));
+        logger.info(list.size() + "size" + list.get(0).getIdEsp());
+        list.forEach(esp -> logger.info(list.size() + "\t" + esp.getIdEsp() + "\t" + esp.getIdRoom()));
         return list;
     }
 
