@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import it.polito.thermostat.controllermd.object.SensorData;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
@@ -30,6 +31,7 @@ import javax.annotation.PostConstruct;
 
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.StreamSupport;
 
 
 @SpringBootApplication
@@ -75,7 +77,7 @@ public class ControllermdApplication implements CommandLineRunner {
     JsonHandlerService jsonHandlerService;
 
     @Autowired
-    RoomRepository roomRepository;
+    ESP8266Repository esp8266Repository;
 
     @Autowired
     ProgramRepository programRepository;
@@ -111,6 +113,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).forEach(esp ->logger.info(esp.getIdEsp()));
 
 //        Program program = programRepository.findByIdProgram("winter").get();
 
