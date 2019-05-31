@@ -1,7 +1,9 @@
 package it.polito.thermostat.wifi;
 
+import it.polito.thermostat.wifi.repository.ESP8266Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,13 +14,22 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 public class WifiApplication {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    ESP8266Repository esp8266Repository;
 
     @Value("${redis.online}")
     Boolean isRedisOnline;
@@ -62,6 +73,11 @@ public class WifiApplication {
         RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         return template;
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void prova() {
+        StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).forEach(esp -> logger.info(esp.getIdEsp()));
     }
 
     public static void main(String[] args) {
