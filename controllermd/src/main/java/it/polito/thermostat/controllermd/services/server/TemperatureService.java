@@ -1,5 +1,7 @@
 package it.polito.thermostat.controllermd.services.server;
 
+import it.polito.thermostat.controllermd.configuration.exception.ProgramNotExistException;
+import it.polito.thermostat.controllermd.configuration.exception.RoomNotExistException;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.WSAL;
 import it.polito.thermostat.controllermd.entity.program.Program;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class TemperatureService {
@@ -40,7 +43,7 @@ public class TemperatureService {
      * @param desiredTemperature
      */
     public void setManualRoom(String idRoom, Double desiredTemperature) {
-        Room room = roomRepository.findById(idRoom).get();
+        Room room = checkRoom(idRoom);
         room.setIsManual(true);
         room.setDesiredTemperature(desiredTemperature);
         roomRepository.save(room);
@@ -52,7 +55,7 @@ public class TemperatureService {
      * @param idRoom
      */
     public void setIsProgrammedRoom(String idRoom) {
-        Room room = roomRepository.findById(idRoom).get();
+        Room room = checkRoom(idRoom);
         room.setIsManual(false);
         roomRepository.save(room);
     }
@@ -129,7 +132,6 @@ public class TemperatureService {
             case AUGUST:
             case SEPTEMBER:
             case OCTOBER:
-                //summer
                 return programRepository.findById("summer").get();
 
             case NOVEMBER:
@@ -137,10 +139,25 @@ public class TemperatureService {
             case JANUARY:
             case FEBRUARY:
             case MARCH:
-                //winter
                 return programRepository.findById("winter").get();
+
             default:
                 return null;
         }
+    }
+
+    public Program getProgramRoom(String idRoom) {
+        Optional<Program> check = programRepository.findById(idRoom);
+        if (!check.isPresent())
+            throw new ProgramNotExistException("getProgramRoom");
+        return check.get();
+    }
+
+    private Room checkRoom(String idRoom)
+    {
+        Optional<Room> check = roomRepository.findById(idRoom);
+        if (!check.isPresent())
+            throw new RoomNotExistException("checkRoom");
+        return check.get();
     }
 }

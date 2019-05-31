@@ -1,6 +1,7 @@
 package it.polito.thermostat.controllermd.control;
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
+import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.object.WifiNetDTO;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
@@ -65,6 +66,7 @@ public class SettingController {
         Iterator<AssociationResource> iterator = associationList.iterator();
         while (iterator.hasNext()) {
             AssociationResource associationResource = iterator.next();
+            logger.info("I'm gonna save/delete this association:\n" + associationResource);
             if (associationResource.getAddBool()) {
                 esp8266ManagementService.setAssociation(associationResource.getIdEsp(), associationResource.getIdRoom());
             } else {
@@ -81,13 +83,20 @@ public class SettingController {
         return temperatureService.getDefaultProgram();
     }
 
+    @GetMapping("/setting/program")
+    public Program getProgram(@RequestBody String idRoom) {
+        logger.info("I'm trying to retrive a program for " + idRoom);
+        return temperatureService.getProgramRoom(idRoom);
+    }
+
     /**
      * Endpoint to save the new program
      *
      * @param program
      */
-    @PostMapping("/setting/program")
+    @PutMapping("/setting/program")
     public void postProgram(@RequestBody Program program) {
+        logger.info("I'm gonna save this program:\n" + program.toString());
         temperatureService.saveProgram(program);
     }
 
@@ -100,7 +109,7 @@ public class SettingController {
     @GetMapping("/setting/wifi/list")
     public List<WifiNetDTO> wifiList() {
         if (isWindows)
-            return Arrays.asList(new WifiNetDTO("NewIpNetwork", false), new WifiNetDTO("KnownIpNetwork", true));
+            return Arrays.asList(new WifiNetDTO("NewIpNetworkName", false), new WifiNetDTO("KnownIpNetworkName", true));
         else
             return wifiService.getAvailableNet();
     }
@@ -113,12 +122,16 @@ public class SettingController {
      */
     @PostMapping("/setting/wifi/credentials")
     public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
+        logger.info("I'm gonna connect to this net\n" + wifiNetResource.toString());
         if (!isWindows)
             wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
+        else
+            logger.info("This operation is not available on windows");
     }
 
     @GetMapping("/setting/device_discovery")
     public String ping() {
+        logger.info("Just received a ping, I'm gonna respond >iamrpi<");
         return "iamrpi";
     }
 

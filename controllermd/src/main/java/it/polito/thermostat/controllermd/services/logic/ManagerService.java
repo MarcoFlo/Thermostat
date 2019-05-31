@@ -10,6 +10,7 @@ import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
+import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ManagerService {
 
     @Autowired
     MQTTservice mqttService;
+
+    @Autowired
+    TemperatureService temperatureService;
 
     @Autowired
     ProgramRepository programRepository;
@@ -96,7 +100,15 @@ public class ManagerService {
             manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
-            Program programRoom = programRepository.findById(room.getIdRoom()).get();
+            Optional<Program> check = programRepository.findById(room.getIdRoom());
+
+            //Shouldn't be possible, but if we try to set a room without a program, programmed the system uses the default one
+            Program programRoom;
+            if (check.isPresent())
+                programRoom = check.get();
+            else
+                programRoom = temperatureService.getDefaultProgram();
+
             manageProgram(room.getEsp8266List(), programRoom, isSummer);
         }
     }
@@ -127,7 +139,7 @@ public class ManagerService {
 
         esp8266ListSeason.stream().forEach(esp8266 -> {
             SensorData sensorData = mapSensorData.get(esp8266.getIdEsp());
-            if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer*deleteBuffer)))
+            if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
                 mqttService.manageActuator(esp8266.getIdEsp(), !isSummer);
             else
                 mqttService.manageActuator(esp8266.getIdEsp(), isSummer);

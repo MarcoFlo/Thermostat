@@ -116,7 +116,7 @@ public class ControllermdApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 //        esp8266Repository.deleteAll();
-        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList()).toString());
+//        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList()).toString());
 
 //        Program program = programRepository.findByIdProgram("winter").get();
 
