@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class ManagerService {
     ConcurrentHashMap<String, SensorData> mapSensorData;
 
 
-    //@Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
         List<WSAL> checkWSAL = StreamSupport.stream(wsalRepository.findAll().spliterator(), false).collect(Collectors.toList());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
@@ -70,8 +71,6 @@ public class ManagerService {
                         , currentWSAL.getAntiFreezeTemperature(), false, true);
                 return;
             }
-
-
             roomList.stream().forEach(room -> manageRoom(room, currentWSAL.getIsSummer()));
         }
     }

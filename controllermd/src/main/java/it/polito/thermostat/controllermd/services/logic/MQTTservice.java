@@ -62,9 +62,9 @@ public class MQTTservice {
 
         if (isMQTTOnline) {
             logger.info("MQTT cloud Broker");
-            options.setUserName(cloudmqttUser);
-            options.setPassword(cloudmqttPass.toCharArray());
-            mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
+//            options.setUserName(cloudmqttUser);
+//            options.setPassword(cloudmqttPass.toCharArray());
+            mqttClient = new MqttClient(mosquittoBroker, "controllerMD");
         } else {
             logger.info("MQTT local Broker");
             mqttClient = new MqttClient(localBroker, "controllerMD");
@@ -129,8 +129,7 @@ public class MQTTservice {
             default:
                 logger.error("mqttService/esp8266Connection esp msg err");
         }
-        //TODO se c'è già non bisogna nullarli la room
-//        esp8266.setIdRoom("room");
+
         esp8266Repository.save(esp8266);
 
 

@@ -17,31 +17,7 @@ public class WifiService {
 
     @Autowired
     ExecuteShellComandService execService;
-
-
-
     Boolean wasAP;
-
-
-    public String getIP() {
-        if (!isWindows) {
-            StringBuilder result = new StringBuilder();
-            while (true) {
-                result.append(execService.execute("wpa_cli -iwlan0 status | grep ip_address"));
-                if (result.length() != 0)
-                    break;
-
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-
-                }
-            }
-            String[] arr = result.toString().split("=");
-            return arr[1].split("\n")[0];
-        }
-        return "windows no good";
-    }
 
     /**
      * return the available net iterating @count times to check the result with more results
@@ -73,6 +49,7 @@ public class WifiService {
             }
             return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet())).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
         }
+        logger.info("getAvailableNet doesn't work on windows");
         return null;
     }
 
@@ -110,20 +87,6 @@ public class WifiService {
 
     }
 
-    /**
-     * Se non ci sono reti note nei paraggi passa a in AP mode
-     * TODO lo fa da solo, cancellare
-     */
-    public void startupWifi() {
-        if (!isWindows) {
-            StringBuilder result = new StringBuilder();
-            result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
-            if (result.indexOf("id") == -1) {
-                switchToAP();
-            }
-        }
-    }
-
 
     private boolean connectNewNet(String essid, String pw) {
         if (!isWindows) {
@@ -136,6 +99,7 @@ public class WifiService {
 
             return handleConnectResult(netNumber);
         }
+        logger.info("connectNewNet doesn't work on windows");
         return false;
     }
 
@@ -150,6 +114,7 @@ public class WifiService {
             execService.execute("wpa_cli -iwlan0 disconnect | wpa_cli -iwlan0 select_network " + netNumber + " | wpa_cli -iwlan0 enable_network " + netNumber + " | wpa_cli -iwlan0 reassociate");
             return handleConnectResult(netNumber);
         }
+        logger.info("connectKnownNet doesn't work on windows");
         return false;
     }
 
@@ -171,6 +136,7 @@ public class WifiService {
                 return Integer.valueOf(result.substring(0, result.indexOf("\t")));
             }
         }
+        logger.info("isKnownNet doesn't work on windows");
         return -1;
     }
 
@@ -193,6 +159,7 @@ public class WifiService {
                 return -1;
             }
         }
+        logger.info("getCurrentNetNumber doesn't work on windows");
         return -1;
     }
 
@@ -223,6 +190,7 @@ public class WifiService {
                     logger.error("switchToAP error");
             }
         }
+        logger.info("switchToAp doesn't work on windows");
     }
 
     /**
@@ -251,12 +219,12 @@ public class WifiService {
                     logger.info("abbiamo provato a fare la up in switchTOStation " + i + " volte");
                     result.setLength(0);
                     result.append(execService.execute("sleep 0.25s | echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
-                    //logger.info(result.toString());
                 }
             } else {
                 wasAP = false;
             }
         }
+        logger.info("switchToStation doesn't work on windows");
     }
 
     /**
@@ -276,6 +244,7 @@ public class WifiService {
             else
                 return false;
         }
+        logger.info("isStationMode doesn't work on windows");
         return false;
     }
 
@@ -290,28 +259,34 @@ public class WifiService {
      * @return
      */
     private Boolean handleConnectResult(Integer netNumber) {
-        StringBuilder result = new StringBuilder();
-        result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+        if (!isWindows) {
 
-        logger.info(result.toString());
+            StringBuilder result = new StringBuilder();
+            result.append(execService.execute("echo albertengopi | sudo -S wpa_cli -iwlan0 status"));
+
+            logger.info(result.toString());
 
 
-        while (result.indexOf("SCANNING") != -1) {
-            result.setLength(0);
-            result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
-        }
-        if (result.indexOf("INACTIVE") != -1) {
-            execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
-            if (wasAP)
-                switchToAP();
-            logger.info("handleConnectResult -> credenziali sbagliate");
+            while (result.indexOf("SCANNING") != -1) {
+                result.setLength(0);
+                result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
+            }
+            if (result.indexOf("INACTIVE") != -1) {
+                execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
+                if (wasAP)
+                    switchToAP();
+                logger.info("handleConnectResult -> credenziali sbagliate");
+                return false;
+            }
+            if (result.indexOf("id") != -1) {
+                execService.execute(" wpa_cli -iwlan0 save_config");
+                logger.info("handleConnectResult credenziali ok");
+                return true;
+            }
+            logger.error("Unexpected result handleConnectResult" + result.toString());
             return false;
         }
-        if (result.indexOf("id") != -1) {
-            execService.execute(" wpa_cli -iwlan0 save_config");
-            logger.info("handleConnectResult credenziali ok");
-            return true;
-        }
+        logger.info("handleConnectResult doesn't work on windows");
         return false;
     }
 }

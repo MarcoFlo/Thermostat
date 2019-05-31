@@ -117,7 +117,7 @@ public class SettingController {
             wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
     }
 
-    @GetMapping("/device_discovery")
+    @GetMapping("/setting/device_discovery")
     public String ping() {
         return "iamrpi";
     }

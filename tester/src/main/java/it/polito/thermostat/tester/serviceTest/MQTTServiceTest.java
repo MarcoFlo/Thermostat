@@ -61,9 +61,9 @@ public class MQTTServiceTest {
 
         if (isMQTTOnline) {
             logger.info("MQTT cloud Broker");
-            options.setUserName(cloudmqttUser);
-            options.setPassword(cloudmqttPass.toCharArray());
-            mqttClient = new MqttClient(cloudmqttBroker, "tester");
+//            options.setUserName(cloudmqttUser);
+//            options.setPassword(cloudmqttPass.toCharArray());
+            mqttClient = new MqttClient(mosquittoBroker, "tester");
         } else {
             logger.info("MQTT local Broker");
             mqttClient = new MqttClient(localBroker, "tester");
@@ -107,6 +107,7 @@ public class MQTTServiceTest {
     public void createEsp() throws MqttException {
         MqttMessage msg;
         int id;
+        esp8266Repository.deleteAll();
 
         for (int i = 0; i < sensorType.length; i++) {
             msg = new MqttMessage(sensorType[i].getBytes());
@@ -120,8 +121,6 @@ public class MQTTServiceTest {
             }
             logger.info("esp with id: " + esp8266Repository.findById("idTest" + id).get().getIdEsp() + " created");
         }
-
-        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).collect(Collectors.toList()).toString());
     }
 
     @Scheduled(fixedRate = 10000)
