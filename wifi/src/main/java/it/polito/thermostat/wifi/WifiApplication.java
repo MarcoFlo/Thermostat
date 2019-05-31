@@ -1,35 +1,33 @@
 package it.polito.thermostat.wifi;
 
+import it.polito.thermostat.wifi.entity.ESP8266;
 import it.polito.thermostat.wifi.repository.ESP8266Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.domain.Example;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
 @SpringBootApplication
-@EnableAsync
 @EnableScheduling
-public class WifiApplication {
+public class WifiApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    ESP8266Repository esp8266Repository;
 
     @Value("${redis.online}")
     Boolean isRedisOnline;
@@ -43,16 +41,6 @@ public class WifiApplication {
     @Value("${spring.redis.password}")
     String redisPassword;
 
-    @Bean("threadPoolTaskExecutor")
-    public TaskExecutor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(20);
-        executor.setMaxPoolSize(1000);
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setThreadNamePrefix("Async-");
-        return executor;
-    }
-
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         if (isRedisOnline) {
@@ -63,8 +51,9 @@ public class WifiApplication {
 
         } else {
             logger.info("Redis local database");
-            return new LettuceConnectionFactory();
-        }
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("192.168.1.127");
+
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);        }
     }
 
 
@@ -75,12 +64,38 @@ public class WifiApplication {
         return template;
     }
 
-    @Scheduled(fixedRate = 10000)
-    public void prova() {
-        StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).forEach(esp -> logger.info(esp.getIdEsp()));
+    @Autowired
+    ESP8266Repository esp8266Repository;
+
+    @PostConstruct
+    public void init() {
+        logger.info("Loading default programs....");
+//        ESP8266  esp8266 = new ESP8266();
+//        esp8266.setIdEsp("idTest1000");
+//        esp8266.setIsCooler(true);
+//        esp8266.setIsSensor(false);
+//
+//esp8266Repository.save(esp8266);
+    logger.info("Loading default programs done");
     }
 
     public static void main(String[] args) {
         SpringApplication.run(WifiApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList()).toString());
+
+
+//        List<ESP8266> list = StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList());
+//        logger.info(list.toString());
+//        list.stream().forEach(
+//                esp -> {
+//                    if (esp != null)
+//                    logger.info(esp.getIdEsp());
+//
+//                }
+//        );
     }
 }

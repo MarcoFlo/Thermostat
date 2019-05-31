@@ -51,7 +51,9 @@ public class TesterApplication implements CommandLineRunner {
 
         } else {
             logger.info("Redis local database");
-            return new LettuceConnectionFactory();
+          RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("192.168.1.127");
+
+          return new LettuceConnectionFactory(redisStandaloneConfiguration);
         }
     }
 

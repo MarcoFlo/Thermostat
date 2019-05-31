@@ -7,11 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
-import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
-import it.polito.thermostat.controllermd.services.JsonHandlerService;
-import it.polito.thermostat.controllermd.services.MQTTservice;
-import it.polito.thermostat.controllermd.services.TemperatureService;
+import it.polito.thermostat.controllermd.services.logic.JsonHandlerService;
+import it.polito.thermostat.controllermd.services.logic.MQTTservice;
+import it.polito.thermostat.controllermd.services.logic.ManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ import javax.annotation.PostConstruct;
 
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
@@ -61,8 +61,9 @@ public class ControllermdApplication implements CommandLineRunner {
 
         } else {
             logger.info("Redis local database");
-            return new LettuceConnectionFactory();
-        }
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("192.168.1.127");
+
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);        }
     }
 
 
@@ -89,7 +90,7 @@ public class ControllermdApplication implements CommandLineRunner {
     WSALRepository wsalRepository;
 
     @Autowired
-    TemperatureService temperatureService;
+    ManagerService managerService;
 
     @Autowired
     MQTTservice mqtTservice;
@@ -113,7 +114,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).forEach(esp ->logger.info(esp.getIdEsp()));
+        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList()).toString());
 
 //        Program program = programRepository.findByIdProgram("winter").get();
 

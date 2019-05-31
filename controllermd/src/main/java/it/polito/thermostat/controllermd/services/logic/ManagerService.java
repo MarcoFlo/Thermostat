@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services;
+package it.polito.thermostat.controllermd.services.logic;
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.program.Program;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class TemperatureService {
+public class ManagerService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("#{T(java.lang.Double).parseDouble('${scaling.factor}')}")

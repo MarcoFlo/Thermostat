@@ -1,13 +1,12 @@
-package it.polito.thermostat.wifi.services;
+package it.polito.thermostat.controllermd.services.server;
 
-import it.polito.thermostat.wifi.entity.Room;
-import it.polito.thermostat.wifi.entity.ESP8266;
-import it.polito.thermostat.wifi.repository.ESP8266Repository;
-import it.polito.thermostat.wifi.repository.RoomRepository;
+import it.polito.thermostat.controllermd.entity.ESP8266;
+import it.polito.thermostat.controllermd.entity.Room;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -83,7 +82,7 @@ public class Esp8266ManagementService {
      * Retrive a list of free esp
      * @return
      */
-    public List<ESP8266> getEspFree() {
-        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).collect(Collectors.toList());
+    public List<String> getEspFree() {
+        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).filter(esp8266 -> esp8266.getIdRoom() == null).map(ESP8266::getIdEsp).collect(Collectors.toList());
     }
 }

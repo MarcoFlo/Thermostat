@@ -13,26 +13,26 @@ import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Controller
+//@Controller
 public class HomeController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     WifiService wifiService;
 
-
-    @GetMapping("/wifi")
-    public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
-        long start = System.nanoTime();
-        wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(WifiNetDTO::getEssid).collect(Collectors.toList()));
-        logger.info("Ellapsed time = " + TimeUnit.SECONDS.convert(( System.nanoTime() - start), TimeUnit.MILLISECONDS));
-
-//        TimeUnit.SECONDS.sleep(5);
-//        wifiService.switchToAP();
-//        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
 //
-//        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
-        return "wifi";
-    }
-
+//    @GetMapping("/wifi")
+//    public String wifiDebug(@ModelAttribute("wifiVM") WifiVM wifiVM) throws InterruptedException {
+//        long start = System.nanoTime();
+//        wifiVM.setWifiList(wifiService.getAvailableNet().stream().map(WifiNetDTO::getEssid).collect(Collectors.toList()));
+//        logger.info("Ellapsed time = " + TimeUnit.SECONDS.convert(( System.nanoTime() - start), TimeUnit.MILLISECONDS));
+//
+////        TimeUnit.SECONDS.sleep(5);
+////        wifiService.switchToAP();
+////        logger.info("New connection to hotspot -> " + wifiService.connectToNet("TISCALI-Moschettieri", "Ciao33trentini!"));
+////
+////        logger.info("New connection to hotspot -> " + wifiService.connectToNet("AndroidMA2", "montagna"));
+//        return "wifi";
+//    }
+//
 
 }

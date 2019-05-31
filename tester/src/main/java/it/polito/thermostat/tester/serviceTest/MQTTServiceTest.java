@@ -19,6 +19,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class MQTTServiceTest {
@@ -119,6 +121,7 @@ public class MQTTServiceTest {
             logger.info("esp with id: " + esp8266Repository.findById("idTest" + id).get().getIdEsp() + " created");
         }
 
+        logger.info(StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).collect(Collectors.toList()).toString());
     }
 
     @Scheduled(fixedRate = 10000)

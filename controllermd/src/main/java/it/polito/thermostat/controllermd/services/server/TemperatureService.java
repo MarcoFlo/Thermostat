@@ -1,23 +1,19 @@
-package it.polito.thermostat.wifi.services;
+package it.polito.thermostat.controllermd.services.server;
 
-import it.polito.thermostat.wifi.entity.Room;
-import it.polito.thermostat.wifi.entity.WSAL;
-import it.polito.thermostat.wifi.entity.program.Program;
-import it.polito.thermostat.wifi.repository.ESP8266Repository;
-import it.polito.thermostat.wifi.repository.ProgramRepository;
-import it.polito.thermostat.wifi.repository.RoomRepository;
-import it.polito.thermostat.wifi.repository.WSALRepository;
-import it.polito.thermostat.wifi.resources.LeaveResource;
+import it.polito.thermostat.controllermd.entity.Room;
+import it.polito.thermostat.controllermd.entity.WSAL;
+import it.polito.thermostat.controllermd.entity.program.Program;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.ProgramRepository;
+import it.polito.thermostat.controllermd.repository.RoomRepository;
+import it.polito.thermostat.controllermd.repository.WSALRepository;
+import it.polito.thermostat.controllermd.resources.LeaveResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
 
 @Service
 public class TemperatureService {

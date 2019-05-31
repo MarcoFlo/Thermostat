@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+//@RestController
 public class TemperatureController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -24,40 +24,40 @@ public class TemperatureController {
     @Autowired
     RoomRepository roomRepository;
 
-    /**
-     * Endpoint to change the current WSA(L), sending the string "winter", "summer", "antifreeze"
-     * @param wsa
-     */
-    @PostMapping("/temperature/wsa")
-    public void postWSA(@RequestBody String wsa) {
-        temperatureService.setWSA(wsa);
-    }
-
-    /**
-     * Endpoint to change the current (WSA)L
-     * @param leaveResource
-     */
-    @PostMapping("/temperature/leave")
-    public void postL(@RequestBody LeaveResource leaveResource) {
-
-        temperatureService.setL(leaveResource);
-    }
-
-    /**
-     * Endpoint to set a room manual
-     * @param roomManualResource
-     */
-    @PostMapping("/temperature/manual")
-    public void postManual(@RequestBody RoomManualResource roomManualResource) {
-        temperatureService.setManualRoom(roomManualResource.getIdRoom(), roomManualResource.getDesiredTemperature());
-    }
-
-    /**
-     * Endpoint to set a room programmed
-     * @param idRoom
-     */
-    @PostMapping("/temperature/programmed")
-    public void postProgram(@RequestBody String idRoom) {
-        temperatureService.setIsProgrammedRoom(idRoom);
-    }
+//    /**
+//     * Endpoint to change the current WSA(L), sending the string "winter", "summer", "antifreeze"
+//     * @param wsa
+//     */
+//    @PostMapping("/temperature/wsa")
+//    public void postWSA(@RequestBody String wsa) {
+//        temperatureService.setWSA(wsa);
+//    }
+//
+//    /**
+//     * Endpoint to change the current (WSA)L
+//     * @param leaveResource
+//     */
+//    @PostMapping("/temperature/leave")
+//    public void postL(@RequestBody LeaveResource leaveResource) {
+//
+//        temperatureService.setL(leaveResource);
+//    }
+//
+//    /**
+//     * Endpoint to set a room manual
+//     * @param roomManualResource
+//     */
+//    @PostMapping("/temperature/manual")
+//    public void postManual(@RequestBody RoomManualResource roomManualResource) {
+//        temperatureService.setManualRoom(roomManualResource.getIdRoom(), roomManualResource.getDesiredTemperature());
+//    }
+//
+//    /**
+//     * Endpoint to set a room programmed
+//     * @param idRoom
+//     */
+//    @PostMapping("/temperature/programmed")
+//    public void postProgram(@RequestBody String idRoom) {
+//        temperatureService.setIsProgrammedRoom(idRoom);
+//    }
 }

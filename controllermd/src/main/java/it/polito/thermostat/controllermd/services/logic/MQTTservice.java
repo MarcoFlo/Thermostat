@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services;
+package it.polito.thermostat.controllermd.services.logic;
 
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.StreamSupport;
@@ -30,7 +29,7 @@ public class MQTTservice {
     ESP8266Repository esp8266Repository;
 
     @Autowired
-    TemperatureService temperatureService;
+    ManagerService managerService;
 
     //The key is idESP
     @Autowired
@@ -66,9 +65,7 @@ public class MQTTservice {
             options.setUserName(cloudmqttUser);
             options.setPassword(cloudmqttPass.toCharArray());
             mqttClient = new MqttClient(cloudmqttBroker, "controllerMD");
-        }
-        else
-        {
+        } else {
             logger.info("MQTT local Broker");
             mqttClient = new MqttClient(localBroker, "controllerMD");
 
@@ -76,8 +73,10 @@ public class MQTTservice {
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
 
+
         StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
+                logger.info("Subscribed to "+esp.getIdEsp());
                 mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
             } catch (MqttException e) {
                 logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
@@ -130,7 +129,8 @@ public class MQTTservice {
             default:
                 logger.error("mqttService/esp8266Connection esp msg err");
         }
-
+        //TODO se c'è già non bisogna nullarli la room
+//        esp8266.setIdRoom("room");
         esp8266Repository.save(esp8266);
 
 

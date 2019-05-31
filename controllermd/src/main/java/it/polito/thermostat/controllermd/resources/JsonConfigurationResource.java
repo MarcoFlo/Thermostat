@@ -1,4 +1,4 @@
-package it.polito.thermostat.wifi.resources;
+package it.polito.thermostat.controllermd.resources;
 import lombok.Data;
 
 import java.util.Map;

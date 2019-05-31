@@ -1,6 +1,6 @@
-package it.polito.thermostat.wifi.services;
+package it.polito.thermostat.controllermd.services.server;
 
-import it.polito.thermostat.wifi.DTO.WifiNetDTO;
+import it.polito.thermostat.controllermd.object.WifiNetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +86,6 @@ public class WifiService {
      * @return
      */
     public String connectToNet(String essid, String pw) {
-        mqttService.sendWifiCredentials(essid, pw);
         switchToStation();
 
         if (pw == null) {
