@@ -1,7 +1,7 @@
 # Folder overview
   - controllermd contains the main code
   - tester contains the tester code
-  - extra contains the executable and the auto-generated documentation of the main code (start opening the index.html file)
+  - extra contains the executable and the auto-generated documentation of the main code
 
 # How to test
 You need to execute first the controllermd and then the tester.
@@ -18,7 +18,10 @@ First found, if you have problem cloning this repository check youtube or ask me
 https://docs.google.com/document/d/1TF6zZ8DTbSKHRjFNf6_r4kNfpuSn5rqgrSfVmJvNIGA/edit#heading=h.38xql5hyg87g
 
 # EXTRA
-Simple tool to test the http endpoint -> https://www.getpostman.com/downloads/
+If you want to check out the auto generated doc start from the index.html file
+
 To open a cmdline very fast go the folder and shift+right click and then choose Open PowerShell here  
 Keep the jar in different folder  
 If windows asks, allow access in private network  
+
+Simple tool to test the http endpoint -> https://www.getpostman.com/downloads/
