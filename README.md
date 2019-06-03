@@ -1,7 +1,7 @@
 # Folder overview
   - controllermd contains the main code
   - tester contains the tester code
-  - extra contains the executable and the auto-generated documentation of the main code
+  - extra contains the executable and the auto-generated documentation of the main code (start opening the index.html file)
 
 # How to test
 You need to execute first the controllermd and then the tester.
