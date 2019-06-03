@@ -22,9 +22,9 @@ public class TemperatureController {
     RoomRepository roomRepository;
 
     /**
-     * Endpoint to change the current WSA(L), sending the string "winter", "summer", "antifreeze"
+     * Endpoint to change the current WSA(L)
      *
-     * @param wsa
+     * @param wsa the string "winter", "summer", "antifreeze"
      */
     @PostMapping("/temperature/wsa")
     public void postWSA(@RequestBody String wsa) {
@@ -35,7 +35,7 @@ public class TemperatureController {
     /**
      * Endpoint to change the current (WSA)L
      *
-     * @param leaveResource
+     * @param leaveResource leave details
      */
     @PostMapping("/temperature/leave")
     public void postL(@RequestBody LeaveResource leaveResource) {
@@ -46,7 +46,7 @@ public class TemperatureController {
     /**
      * Endpoint to set a room manual
      *
-     * @param roomManualResource
+     * @param roomManualResource manual details
      */
     @PostMapping("/temperature/manual")
     public void postManual(@RequestBody RoomManualResource roomManualResource) {
@@ -57,7 +57,7 @@ public class TemperatureController {
     /**
      * Endpoint to set a room programmed
      *
-     * @param idRoom
+     * @param idRoom programemd room
      */
     @PostMapping("/temperature/programmed")
     public void postProgram(@RequestBody String idRoom) {

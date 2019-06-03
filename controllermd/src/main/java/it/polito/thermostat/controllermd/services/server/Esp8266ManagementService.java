@@ -25,14 +25,12 @@ public class Esp8266ManagementService {
     RoomRepository roomRepository;
 
 
-
     /**
      * Allow us to set an association between an esp and the choosen room
      * TODO set up control
      *
-     * @param idRoom
-     * @param idEsp
-     * @return
+     * @param idRoom idRooom to set
+     * @param idEsp  idEsp to set
      */
     public void setAssociation(String idEsp, String idRoom) {
         ESP8266 esp8266 = esp8266Repository.findById(idEsp).get();
@@ -63,8 +61,7 @@ public class Esp8266ManagementService {
      * Allow us to delete an association between an esp and the choosen room
      * TODO set up control
      *
-     * @param idEsp
-     * @return
+     * @param idEsp idEsp to delete
      */
     public void deleteAssociation(String idEsp) {
         ESP8266 esp8266 = esp8266Repository.findById(idEsp).get();
@@ -79,10 +76,9 @@ public class Esp8266ManagementService {
     }
 
     /**
-     * Retrive a list of free esp
-     * @return
+     * @return list of free esp
      */
     public List<String> getEspFree() {
-        return StreamSupport.stream(esp8266Repository.findAll().spliterator(),false).filter(esp8266 -> esp8266.getIdRoom() == null).map(ESP8266::getIdEsp).collect(Collectors.toList());
+        return StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(esp8266 -> esp8266.getIdRoom() == null).map(ESP8266::getIdEsp).collect(Collectors.toList());
     }
 }

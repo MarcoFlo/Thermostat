@@ -1,6 +1,7 @@
 package it.polito.thermostat.controllermd.services.server;
 
-import it.polito.thermostat.controllermd.object.WifiNetDTO;
+import it.polito.thermostat.controllermd.configuration.exception.WifiCredentialsException;
+import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,9 @@ public class WifiService {
     Boolean wasAP;
 
     /**
-     * return the available net iterating @count times to check the result with more results
-     *
-     * @return
-     * @throws InterruptedException
+     * @return the available net iterating @count times to check the result with more results
      */
-    public List<WifiNetDTO> getAvailableNet() {
+    public List<WifiNetResource> getAvailableNet() {
         if (!isWindows) {
             Map<Integer, List<String>> mapAvailableNet = new HashMap<>();
             StringBuilder result = new StringBuilder();
@@ -47,7 +45,7 @@ public class WifiService {
                     logger.error("wifiService/getAvailableNetIterato error\n" + e.toString());
                 }
             }
-            return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet())).stream().map(essid -> new WifiNetDTO(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
+            return mapAvailableNet.get(Collections.max(mapAvailableNet.keySet())).stream().map(essid -> new WifiNetResource(essid, isKnownNet(essid) > -1)).collect(Collectors.toList());
         }
         logger.info("getAvailableNet doesn't work on windows");
         return null;
@@ -58,9 +56,9 @@ public class WifiService {
      * Allow us to connect to a net
      * If the credentials are wrong and wasAP == true we go back to AP mode, so that the esp have a neto una loro rete
      *
-     * @param essid
-     * @param pw
-     * @return
+     * @param essid essid to connect
+     * @param pw    pw of the ap
+     * @return debugging string
      */
     public String connectToNet(String essid, String pw) {
         switchToStation();
@@ -68,19 +66,16 @@ public class WifiService {
         if (pw == null) {
             Integer knownNet;
             if ((knownNet = isKnownNet(essid)) != -1) {
-                if (!connectKnownNet(knownNet)) {
-                    logger.error("errore nella connectToNet/known");
-                    return "err connectToNet/known";
+                if (connectKnownNet(knownNet)) {
+                    logger.info("ConnectKnownNet done");
                 }
             } else {
                 logger.error("WifiService/conncetToNet it was not a known net");
             }
         } else {
-            if (!connectNewNet(essid, pw)) {
-                logger.error("errore nella connectToNet/new");
-                return "err connectToNet/known";
+            if (connectNewNet(essid, pw)) {
+                logger.info("ConnectNewNet done");
             }
-            logger.info("done");
         }
 
         return "connectToNet okay";
@@ -171,8 +166,6 @@ public class WifiService {
      * echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0
      * echo albertengopi | sudo -S systemctl restart dnsmasq.service
      * echo albertengopi | sudo -S systemctl restart hostapd.service
-     *
-     * @return
      */
     public void switchToAP() {
         if (!isWindows) {
@@ -276,7 +269,7 @@ public class WifiService {
                 if (wasAP)
                     switchToAP();
                 logger.info("handleConnectResult -> credenziali sbagliate");
-                return false;
+                throw new WifiCredentialsException("Credentials not valid");
             }
             if (result.indexOf("id") != -1) {
                 execService.execute(" wpa_cli -iwlan0 save_config");

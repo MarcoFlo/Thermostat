@@ -76,7 +76,7 @@ public class MQTTservice {
 
         StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
-                logger.info("Subscribed to "+esp.getIdEsp());
+                logger.info("Subscribed to " + esp.getIdEsp());
                 mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
             } catch (MqttException e) {
                 logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
@@ -86,10 +86,8 @@ public class MQTTservice {
 
 
     /**
-     * ci permette di gestire gli actuator
-     *
-     * @param idEsp
-     * @throws Exception
+     * @param idEsp          esp to controll
+     * @param commandBoolean "on" / "off"
      */
     public void manageActuator(String idEsp, Boolean commandBoolean) {
 

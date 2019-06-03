@@ -1,9 +1,6 @@
 package it.polito.thermostat.controllermd.control;
 
-import it.polito.thermostat.controllermd.entity.ESP8266;
-import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.Program;
-import it.polito.thermostat.controllermd.object.WifiNetDTO;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.resources.AssociationResource;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
@@ -47,9 +44,7 @@ public class SettingController {
     ESP8266Repository esp8266Repository;
 
     /**
-     * Retrive a list of free esp
-     *
-     * @return
+     * @return a list of free esp
      */
     @GetMapping("/setting/espfree")
     public List<String> getEspFree() {
@@ -59,7 +54,7 @@ public class SettingController {
     /**
      * Endpoint that allow us to set/delete associations between room-esp
      *
-     * @param associationList
+     * @param associationList list of associationResources
      */
     @PostMapping("/setting/association")
     public void postAssociation(@RequestBody List<AssociationResource> associationList) {
@@ -76,7 +71,7 @@ public class SettingController {
     }
 
     /**
-     * Endpoint to get the default room setting
+     * @return the default room setting
      */
     @GetMapping("/setting/default_program")
     public Program getDefaultProgram() {
@@ -92,7 +87,7 @@ public class SettingController {
     /**
      * Endpoint to save the new program
      *
-     * @param program
+     * @param program to save
      */
     @PutMapping("/setting/program")
     public void postProgram(@RequestBody Program program) {
@@ -102,14 +97,12 @@ public class SettingController {
 
 
     /**
-     * Endpoint that allow us to get the list of available net
-     *
-     * @return
+     * @return list of available net
      */
     @GetMapping("/setting/wifi/list")
-    public List<WifiNetDTO> wifiList() {
+    public List<WifiNetResource> wifiList() {
         if (isWindows)
-            return Arrays.asList(new WifiNetDTO("NewIpNetworkName", false), new WifiNetDTO("KnownIpNetworkName", true));
+            return Arrays.asList(new WifiNetResource("NewIpNetworkName", false), new WifiNetResource("KnownIpNetworkName", true));
         else
             return wifiService.getAvailableNet();
     }
@@ -118,7 +111,7 @@ public class SettingController {
      * Endpoint that allow us to connect to a net
      * Send the netPassword == null to connect to a known net
      *
-     * @param wifiNetResource
+     * @param wifiNetResource net credentials
      */
     @PostMapping("/setting/wifi/credentials")
     public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
@@ -129,6 +122,11 @@ public class SettingController {
             logger.info("This operation is not available on windows");
     }
 
+    /**
+     * Endpoint for the device discovery
+     *
+     * @return "iamrpi" when contacted
+     */
     @GetMapping("/setting/device_discovery")
     public String ping() {
         logger.info("Just received a ping, I'm gonna respond >iamrpi<");

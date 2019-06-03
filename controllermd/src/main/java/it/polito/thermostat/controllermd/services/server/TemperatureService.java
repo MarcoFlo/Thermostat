@@ -35,12 +35,11 @@ public class TemperatureService {
     WSALRepository wsalRepository;
 
 
-
     /**
      * Set the room in manual mode
      *
-     * @param idRoom
-     * @param desiredTemperature
+     * @param idRoom             room to set
+     * @param desiredTemperature temperature to set
      */
     public void setManualRoom(String idRoom, Double desiredTemperature) {
         Room room = checkRoom(idRoom);
@@ -52,7 +51,7 @@ public class TemperatureService {
     /**
      * Set the the room to program mode
      *
-     * @param idRoom
+     * @param idRoom room to program
      */
     public void setIsProgrammedRoom(String idRoom) {
         Room room = checkRoom(idRoom);
@@ -63,7 +62,7 @@ public class TemperatureService {
     /**
      * Memorize in the db if we are in WinterSummerAntifreeze
      *
-     * @param wsa
+     * @param wsa string "winter", ecc
      */
     public void setWSA(String wsa) {
         WSAL wsal;
@@ -94,7 +93,7 @@ public class TemperatureService {
     /**
      * Memorize into the db the leave details
      *
-     * @param leaveResource
+     * @param leaveResource leave details
      */
     public void setL(LeaveResource leaveResource) {
         WSAL wsal;
@@ -116,7 +115,7 @@ public class TemperatureService {
     /**
      * Save the program related to a room into the db
      *
-     * @param program
+     * @param program program to save
      */
     public void saveProgram(Program program) {
         programRepository.save(program);
@@ -153,8 +152,7 @@ public class TemperatureService {
         return check.get();
     }
 
-    private Room checkRoom(String idRoom)
-    {
+    private Room checkRoom(String idRoom) {
         Optional<Room> check = roomRepository.findById(idRoom);
         if (!check.isPresent())
             throw new RoomNotExistException("checkRoom");
