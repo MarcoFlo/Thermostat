@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.control;
+package it.polito.thermostat.controllermd.controller;
 
 import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
@@ -46,7 +46,7 @@ public class SettingController {
     /**
      * @return a list of free esp
      */
-    @GetMapping("/setting/espfree")
+    @GetMapping("/setting/esp/free")
     public List<String> getEspFree() {
         return esp8266ManagementService.getEspFree();
     }
@@ -56,7 +56,7 @@ public class SettingController {
      *
      * @param associationList list of associationResources
      */
-    @PostMapping("/setting/association")
+    @PostMapping("/setting/esp/association")
     public void postAssociation(@RequestBody List<AssociationResource> associationList) {
         Iterator<AssociationResource> iterator = associationList.iterator();
         while (iterator.hasNext()) {
@@ -89,7 +89,7 @@ public class SettingController {
      *
      * @param program to save
      */
-    @PutMapping("/setting/program")
+    @PostMapping("/setting/program")
     public void postProgram(@RequestBody Program program) {
         logger.info("I'm gonna save this program:\n" + program.toString());
         temperatureService.saveProgram(program);

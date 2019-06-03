@@ -1,8 +1,8 @@
-package it.polito.thermostat.controllermd.control;
+package it.polito.thermostat.controllermd.controller;
 
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.resources.LeaveResource;
-import it.polito.thermostat.controllermd.resources.RoomManualResource;
+import it.polito.thermostat.controllermd.resources.ManualResource;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +46,12 @@ public class TemperatureController {
     /**
      * Endpoint to set a room manual
      *
-     * @param roomManualResource manual details
+     * @param manualResource manual details
      */
     @PostMapping("/temperature/manual")
-    public void postManual(@RequestBody RoomManualResource roomManualResource) {
-        logger.info("I'm gonna set " + roomManualResource.getIdRoom() + " manual to " + roomManualResource.getDesiredTemperature() + "°");
-        temperatureService.setManualRoom(roomManualResource.getIdRoom(), roomManualResource.getDesiredTemperature());
+    public void postManual(@RequestBody ManualResource manualResource) {
+        logger.info("I'm gonna set " + manualResource.getIdRoom() + " manual to " + manualResource.getDesiredTemperature() + "°");
+        temperatureService.setManualRoom(manualResource.getIdRoom(), manualResource.getDesiredTemperature());
     }
 
     /**
