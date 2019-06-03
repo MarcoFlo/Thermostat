@@ -1,0 +1,45 @@
+{
+  "idProgram": "winter",
+  "weeklyMap": {
+    "1": {
+      "dailyMap": {
+        "wake": {
+          "time": "08:10",
+          "temperature": 24.1
+        },
+        "leave": {
+          "time": "09:10",
+          "temperature": 28.5
+        },
+        "back": {
+          "time": "18:05",
+          "temperature": 25.3
+        },
+        "sleep" : {
+          "time": "22:30",
+          "temperature": 25.7
+        }
+      }
+    },
+    "2": {
+      "dailyMap": {
+        "wake": {
+          "time": "09:20",
+          "temperature": 22.8
+        },
+        "leave": {
+          "time": "10:10",
+          "temperature": 28.7
+        },
+        "back": {
+          "time": "17:05",
+          "temperature": 21.0
+        },
+        "sleep" : {
+          "time": "23:30",
+          "temperature": 25.2
+        }
+      }
+    }
+  }
+}
