@@ -73,7 +73,6 @@ public class MQTTServiceTest {
 
     }
 
-    //    @Async("threadPoolTaskExecutor")
     public void newEspTest() throws MqttException, InterruptedException {
         MqttMessage msg = new MqttMessage("sensor".getBytes());
         msg.setQos(2);

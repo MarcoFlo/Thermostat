@@ -64,16 +64,6 @@ public class TesterApplication implements CommandLineRunner {
         return template;
     }
 
-    @Bean("threadPoolTaskExecutor")
-    public TaskExecutor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(20);
-        executor.setMaxPoolSize(1000);
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setThreadNamePrefix("Async-");
-        return executor;
-    }
-
 
     @Autowired
     TestLauncher testLauncher;
