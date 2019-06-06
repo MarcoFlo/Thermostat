@@ -42,7 +42,7 @@ public class ControllermdApplication implements CommandLineRunner {
     @Value("${spring.redis.port}")
     Integer redisPort;
 
-    @Value("${spring.redis.password}")
+    @Value("${spring.redis.pass}")
     String redisPassword;
 
     @Bean

@@ -36,14 +36,6 @@ public class MQTTservice {
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
-    @Value("${cloudmqtt.broker}")
-    String cloudmqttBroker;
-    @Value("${cloudmqtt.user}")
-    String cloudmqttUser;
-    @Value("${cloudmqtt.pass}")
-    String cloudmqttPass;
-
-
     @Value("${mosquitto.broker}")
     String mosquittoBroker;
 
@@ -61,8 +53,6 @@ public class MQTTservice {
 
         if (isMQTTOnline) {
             logger.info("MQTT cloud Broker");
-//            options.setUserName(cloudmqttUser);
-//            options.setPassword(cloudmqttPass.toCharArray());
             mqttClient = new MqttClient(mosquittoBroker, "controllerMD");
         } else {
             logger.info("MQTT local Broker");

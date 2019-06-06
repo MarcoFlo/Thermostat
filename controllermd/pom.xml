@@ -64,7 +64,11 @@
             <artifactId>spring-hateoas</artifactId>
             <version>0.25.1.RELEASE</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.60</version>
+        </dependency>
 
     </dependencies>
 
