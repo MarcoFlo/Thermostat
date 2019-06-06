@@ -2,8 +2,9 @@ package it.polito.thermostat.controllermd.services.logic;
 
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
-import it.polito.thermostat.controllermd.object.SensorData;
+import it.polito.thermostat.controllermd.entity.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.SensorDataRepository;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -31,9 +31,8 @@ public class MQTTservice {
     @Autowired
     ManagerService managerService;
 
-    //The key is idESP
     @Autowired
-    ConcurrentHashMap<String, SensorData> mapSensorData;
+    SensorDataRepository sensorDataRepository;
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
@@ -146,7 +145,7 @@ public class MQTTservice {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
-        mapSensorData.put(idEsp, sensorData);
+        sensorDataRepository.save(sensorData);
         logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
     }
 

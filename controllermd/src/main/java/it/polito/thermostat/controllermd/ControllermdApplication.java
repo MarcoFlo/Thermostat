@@ -4,7 +4,6 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import it.polito.thermostat.controllermd.object.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
@@ -27,11 +26,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 import javax.annotation.PostConstruct;
-
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @SpringBootApplication
@@ -95,11 +89,6 @@ public class ControllermdApplication implements CommandLineRunner {
     @Autowired
     MQTTservice mqtTservice;
 
-
-    @Bean
-    public ConcurrentHashMap<String, SensorData> sensorData() {
-        return new ConcurrentHashMap<>();
-    }
 
     @PostConstruct
     public void init() {

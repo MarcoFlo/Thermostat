@@ -1,9 +1,13 @@
-package it.polito.thermostat.controllermd.object;
+package it.polito.thermostat.controllermd.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
+@RedisHash("sensordata")
 public class SensorData {
+    @Id
     private String idEsp;
     private Double temperature;
     private Double humidity;

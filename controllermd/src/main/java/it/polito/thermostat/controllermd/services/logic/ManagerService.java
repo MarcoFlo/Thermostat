@@ -6,9 +6,10 @@ import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.WSAL;
 import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
-import it.polito.thermostat.controllermd.object.SensorData;
+import it.polito.thermostat.controllermd.entity.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
+import it.polito.thermostat.controllermd.repository.SensorDataRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -53,9 +53,8 @@ public class ManagerService {
     @Autowired
     WSALRepository wsalRepository;
 
-    //The key is idESP
     @Autowired
-    ConcurrentHashMap<String, SensorData> mapSensorData;
+    SensorDataRepository sensorDataRepository;
 
 
     @Scheduled(fixedRate = 1000)
@@ -138,11 +137,14 @@ public class ManagerService {
         List<ESP8266> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266.getIsCooler().equals(isSummer)).collect(Collectors.toList());
 
         esp8266ListSeason.stream().forEach(esp8266 -> {
-            SensorData sensorData = mapSensorData.get(esp8266.getIdEsp());
-            if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
-                mqttService.manageActuator(esp8266.getIdEsp(), !isSummer);
-            else
-                mqttService.manageActuator(esp8266.getIdEsp(), isSummer);
+            Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(esp8266.getIdEsp());
+            if (sensorDataCheck.isPresent()) {
+                SensorData sensorData = sensorDataCheck.get();
+                if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
+                    mqttService.manageActuator(esp8266.getIdEsp(), !isSummer);
+                else
+                    mqttService.manageActuator(esp8266.getIdEsp(), isSummer);
+            }
         });
     }
 }
