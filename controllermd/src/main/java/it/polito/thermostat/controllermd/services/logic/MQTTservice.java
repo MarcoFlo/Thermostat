@@ -36,7 +36,7 @@ public class MQTTservice {
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
-    @Value("${mosquitto.broker}")
+    @Value("${mosquitto.host}")
     String mosquittoBroker;
 
     private IMqttClient mqttClient;
@@ -61,7 +61,7 @@ public class MQTTservice {
         }
         mqttClient.connect(options);
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
-
+        logger.info("MQTTService connection done");
 
         StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
