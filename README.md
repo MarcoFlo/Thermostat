@@ -6,8 +6,8 @@
 
 # System requirements
 - Java
-- Mosquitto broker
-....?....
+- Mosquitto broker  
+- ....?....
 
 # How to test
 You need to execute first the controllermd and then the tester.
