@@ -41,9 +41,8 @@ public class MQTTdb {
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
         mqttClient.connect();
         mqttClient.subscribe(new NotificationTopic("pl19/notification", AWSIotQos.QOS1));
-
-        //mqttClient.publish("pl19/notification",AWSIotQos.QOS1, "prova");
     }
+
 
 
     public static class NotificationTopic extends AWSIotTopic {
@@ -55,11 +54,10 @@ public class MQTTdb {
 
         @Override
         public void onMessage(AWSIotMessage message) {
-            logger.info(message.getStringPayload());
+            //logger.info(message.getStringPayload());
 
         }
     }
-
 }
 
 
