@@ -9,12 +9,14 @@ import org.springframework.data.redis.core.RedisHash;
 public class SensorData {
     @Id
     private String idEsp;
+    private String timestamp;
     private Double temperature;
     private Double humidity;
     private Double apparentTemperature;
 
-    public SensorData(String idEsp, Double temperature, Double humidity) {
+    public SensorData(String idEsp, Double temperature, Double humidity, String timestamp) {
         this.idEsp = idEsp;
+        this.timestamp = timestamp;
         this.temperature = temperature;
         this.humidity = humidity;
         apparentTemperature = getApparentTemperature(temperature,humidity);

@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -125,10 +127,10 @@ public class MQTTServiceTest {
     @Scheduled(fixedRate = 10000)
     public void newSensorData() throws MqttException, InterruptedException {
         setUpProducer();
-        String supp = Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2);
+        String supp = Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         MqttMessage msg = new MqttMessage(supp.getBytes());
         msg.setQos(2);
-        mqttClient.publish("/" + espDataProducer, msg);
+        mqttClient.publish("/" + espDataProducer + "/sensor", msg);
     }
 
     private void setUpProducer() throws MqttException, InterruptedException {

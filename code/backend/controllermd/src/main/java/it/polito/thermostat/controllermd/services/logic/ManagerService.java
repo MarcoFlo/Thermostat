@@ -1,12 +1,9 @@
 package it.polito.thermostat.controllermd.services.logic;
 
-import it.polito.thermostat.controllermd.entity.ESP8266;
+import it.polito.thermostat.controllermd.entity.*;
 import it.polito.thermostat.controllermd.entity.program.Program;
-import it.polito.thermostat.controllermd.entity.Room;
-import it.polito.thermostat.controllermd.entity.WSAL;
 import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
-import it.polito.thermostat.controllermd.entity.SensorData;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.SensorDataRepository;
@@ -140,10 +137,12 @@ public class ManagerService {
             Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(esp8266.getIdEsp());
             if (sensorDataCheck.isPresent()) {
                 SensorData sensorData = sensorDataCheck.get();
+                CommandActuator commandActuator;
                 if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
-                    mqttService.manageActuator(esp8266.getIdEsp(), !isSummer);
+                    commandActuator = new CommandActuator(esp8266.getIdEsp(), !isSummer);
                 else
-                    mqttService.manageActuator(esp8266.getIdEsp(), isSummer);
+                    commandActuator = new CommandActuator(esp8266.getIdEsp(), isSummer);
+                mqttService.manageActuator(commandActuator);
             }
         });
     }

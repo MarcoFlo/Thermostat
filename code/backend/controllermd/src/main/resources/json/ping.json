@@ -1,0 +1,17 @@
+{
+  "event_id": 0,
+  "timestamp": "2019-06-09 10:27:40.137620",
+  "device_mac": "00:00:00:00:00:00",
+  "event": "{\"message\": \"Please reply.\", \"sequence\": 2565}"
+}
+
+
+{
+  "event_id": 0,
+  "timestamp": "2019-06-09 10:27:40.137620",
+  "device_mac": "00:00:00:00:00:00",
+  "event": {
+    "message": "Please reply",
+    "sequence": 2565
+  }
+}
