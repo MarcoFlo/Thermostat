@@ -1,6 +1,9 @@
 package it.polito.thermostat.controllermd.services.logic;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
+import it.polito.thermostat.controllermd.entity.CommandActuator;
 import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
@@ -34,6 +37,9 @@ public class MQTTservice {
     @Autowired
     SensorDataRepository sensorDataRepository;
 
+    @Autowired
+    MQTTAWService mqttawService;
+
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
     @Value("${mosquitto.host}")
@@ -44,7 +50,7 @@ public class MQTTservice {
 
     @PostConstruct
     public void init() throws MqttException {
-        String localBroker = "tcp://" + calculateIp() + ":1883";
+        String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
@@ -66,7 +72,7 @@ public class MQTTservice {
         StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 logger.info("Subscribed to " + esp.getIdEsp());
-                mqttClient.subscribe("/" + esp.getIdEsp(), this::sensorDataReceived);
+                mqttClient.subscribe("/" + esp.getIdEsp() + "/sensor", this::sensorDataReceived);
             } catch (MqttException e) {
                 logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
             }
@@ -75,17 +81,17 @@ public class MQTTservice {
 
 
     /**
-     * @param idEsp          esp to controll
-     * @param commandBoolean "on" / "off"
+     * @param commandActuator
      */
-    public void manageActuator(String idEsp, Boolean commandBoolean) {
+    public void manageActuator(CommandActuator commandActuator) {
 
-        String command = commandBoolean ? "on" : "off";
+        String command = commandActuator.getCommandBoolean() ? "on" : "off";
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
         //msg.setRetained(true);
         try {
-            mqttClient.publish("/" + idEsp, msg);
+            mqttClient.publish("/" + commandActuator.getIdEsp() + "/actuator", msg);
+            mqttawService.sendEvent(commandActuator, 11);
         } catch (MqttException e) {
             logger.error("MqttService/manageActuator - publish -> " + e.toString());
         }
@@ -103,7 +109,7 @@ public class MQTTservice {
             case "sensor":
                 esp8266.setIsSensor(true);
                 esp8266.setIsCooler(false);
-                mqttClient.subscribe("/" + esp8266.getIdEsp(), this::sensorDataReceived);
+                mqttClient.subscribe("/" + esp8266.getIdEsp() + "/sensor", this::sensorDataReceived);
                 break;
             case "cooler":
                 esp8266.setIsSensor(false);
@@ -119,6 +125,7 @@ public class MQTTservice {
 
         esp8266Repository.save(esp8266);
 
+        mqttawService.sendEvent(esp8266, 10);
 
         logger.info("New esp8266 idEsp ->" + esp8266.getIdEsp());
         logger.info("\tisSensor ->" + esp8266.getIsSensor());
@@ -134,42 +141,11 @@ public class MQTTservice {
     private void sensorDataReceived(String topic, MqttMessage message) {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
-        SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
+
+        SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]), data[2]);
         sensorDataRepository.save(sensorData);
-        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
+        mqttawService.sendEvent(sensorData, 12);
+        logger.info("New sensor data -> " + data[0] + "\t" + data[1] + "\t" + data[2]);
     }
 
-
-    private String calculateIp() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                if (networkInterface.isUp() &&
-                        !networkInterface.isLoopback() &&
-                        !networkInterface.isVirtual()) {
-
-                    String nameInterface;
-                    if (isWindows) {
-                        nameInterface = "3165";
-                    } else {
-                        nameInterface = "wlan0";
-                    }
-                    if (networkInterface.getDisplayName().contains(nameInterface)) {
-                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-                        while (addresses.hasMoreElements()) {
-                            InetAddress addr = addresses.nextElement();
-                            if (addr.getHostAddress().length() < 20)
-                                return addr.getHostAddress();
-                        }
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            logger.error("error MQTTService/getIP");
-        }
-
-        return "error";
-    }
 }
