@@ -47,14 +47,14 @@ public class MQTTServiceTest {
 
     private IMqttClient mqttClient;
 
-    String localBroker = "tcp://" + calculateIp() + ":1883";
+    String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
     String espDataProducer = "espDataProducer";
     String[] sensorType = {"sensor", "heater", "cooler"};
 
 
     @PostConstruct
     public void init() throws MqttException {
-        String localBroker = "tcp://" + calculateIp() + ":1883";
+        String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
@@ -140,38 +140,5 @@ public class MQTTServiceTest {
             mqttClient.publish("/esp8266/" + espDataProducer, msg);
             Thread.sleep(500);
         }
-    }
-
-    private String calculateIp() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                if (networkInterface.isUp() &&
-                        !networkInterface.isLoopback() &&
-                        !networkInterface.isVirtual()) {
-
-                    String nameInterface;
-                    if (isWindows) {
-                        nameInterface = "3165";
-                    } else {
-                        nameInterface = "wlan0";
-                    }
-                    if (networkInterface.getDisplayName().contains(nameInterface)) {
-                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-                        while (addresses.hasMoreElements()) {
-                            InetAddress addr = addresses.nextElement();
-                            if (addr.getHostAddress().length() < 20)
-                                return addr.getHostAddress();
-                        }
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            logger.error("error MQTTService/getIP");
-        }
-
-        return "error";
     }
 }
