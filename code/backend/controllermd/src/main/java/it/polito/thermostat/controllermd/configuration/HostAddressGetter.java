@@ -21,7 +21,7 @@ public class HostAddressGetter {
 
                 String nameInterface;
                 if (isWindows) {
-                    nameInterface = "3165";
+                    nameInterface = "Intel";
                 } else {
                     nameInterface = "wlan0";
                 }

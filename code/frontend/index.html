@@ -1,197 +1,244 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Nest Thermostat Control</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/my_style.css">
-      <link rel="stylesheet" href="css/bootstrap.min.css">     <!--   -->
+    <meta charset="UTF-8">
+    <title>Nest Thermostat Control</title>
+
+
+    <link rel="stylesheet" href="css/my_style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">     <!--   -->
 </head>
 
 <body>
-	<div id="mySidenav" class="sidenav">
-	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" ontouchstart="closeNav()">&times;</a>
-	  <a href="#" data-toggle="modal" data-target="#exampleModalCenter">Create Room</a>
-</button>
-	  <a href="#">Configuration-WiFi</a>
-	  <a href="#">Statistics</a>
-	  <a href="#">Anti-Freeze</a>
-	</div>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" ontouchstart="closeNav()">&times;</a>
+    <a href="#" data-toggle="modal" data-target="#exampleModalCenter">Create Room</a>
+    </button>
+    <a href="#">Configuration-WiFi</a>
+    <a href="#">Statistics</a>
+    <a href="#">Anti-Freeze</a>
+</div>
 
-	<div class="container">
-		<!-- Modal -->
-		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		  <div class="modal-dialog modal-dialog-centered" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Create Room</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        	<div class="accordion" id="accordionExample">
-					  <div class="card">
-					    <div class="card-header" id="headingOne">
-					      <h5 class="mb-0">
-					        <label for="name">Name :</label>
-							<input type="text" id="name" name="name" required size="10">
-					      </h5>
-					    </div>
-					  </div>
-					  <div class="card">
-					    <div class="card-header" id="headingTwo">
-					      <h5 class="mb-0">
-					        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-					          Select ESP
-					        </button>
-					      </h5>
-					    </div>
-					    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-					      <div class="card-body">
-					        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-					      </div>
-					    </div>
-					  </div>
-					  <div class="card">
-					    <div class="card-header" id="headingThree">
-					      <h5 class="mb-0">
-					        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-					          Set Timetable
-					        </button>
-					      </h5>
-					    </div>
-					    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-					      <div class="card-body">
-					      	<div class="row">
-					      	  <div class="col-sm-3">
-        							<button type="button" class="btn btn-default" id="anterior" value="0"><i class="icono-1" width="20%" ><img src="icons/left_new.png" height="50%" width="50%"></i></button>
-					      	  </div>
-							  <div class="col-sm-3">
-							  	<h6 id="profile">WAKE</h6>
-							  </div>
-							  <div class="col-sm-3">
-							 	<button type="button" class="btn btn-default" id="despues" value="1"><i class="icono-1" width="20%" ><img src="icons/right_new.png" height="50%" width="50%"></i></button>
-							  	
-							  </div>
-							  <div class="col-sm-3">
-							  	<button type="button" class="btn btn-secondary" id="week" value="0">Weekend</button>
-							  </div>
-							</div>
-							<div class="row">
-							  <div class="col-sm-1">
-							  	<button type="button" class="btn btn-outline-dark " id="minus" value="0">-</button>
-							  </div>
-							  <div class="col-sm-3">
-							  	<input type="text" name="hour"  id="hour" value="06:00" class="form-control" readonly>
-							  </div>
-							  <div class="col-sm-1">
-							  	<button type="button" class="btn btn-outline-dark" id="plus" value="1">+</button>
-							  </div>
-							  <div class="col-sm-1">
-							  	 <button type="button" class="btn btn-outline-dark" id="minus_temp" value="0">-</button>
-							  </div>
-							  <div class="col-sm-3">
-							  	<input type="text" name="temp" class="form-control" id="temp" min="10" max="25" step="1" value="21" readonly>
-							  </div>
-							  <div class="col-sm-1">
-							  <button type="button" class="btn btn-outline-dark" id="plus_temp" value="1">+</button>
-							  </div>
-							</div>
-					      </div>
-					    </div>
-					  </div>
-					</div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Save changes</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
 
-		<div class="row">
-	<!-- Use any element to open the sidenav -->
-		<span id="simbolo" class="col-sm-12 col-md-2 col-lg-2" onclick="openNav()" ontouchstart= "openNav()" >
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Create Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <label for="name">Name :</label>
+                                    <input type="text" id="name" name="name" required size="10">
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                                            data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        Select ESP
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                                 data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                    richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
+                                    brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
+                                    aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                    ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                                    farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them
+                                    accusamus labore sustainable VHS.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                            data-target="#collapseThree" aria-expanded="false"
+                                            aria-controls="collapseThree">
+                                        Set Timetable
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                                 data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-default" id="anterior" value="0"><i
+                                                    class="icono-1" width="20%"><img src="icons/left_new.png"
+                                                                                     height="50%" width="50%"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h6 id="profile">WAKE</h6>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-default" id="despues" value="1"><i
+                                                    class="icono-1" width="20%"><img src="icons/right_new.png"
+                                                                                     height="50%" width="50%"></i>
+                                            </button>
+
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-secondary" id="week" value="0">
+                                                Weekend
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <button type="button" class="btn btn-outline-dark " id="minus" value="0">-
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" name="hour" id="hour" value="06:00" class="form-control"
+                                                   readonly>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <button type="button" class="btn btn-outline-dark" id="plus" value="1">+
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <button type="button" class="btn btn-outline-dark" id="minus_temp"
+                                                    value="0">-
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" name="temp" class="form-control" id="temp" min="10"
+                                                   max="25" step="1" value="21" readonly>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <button type="button" class="btn btn-outline-dark" id="plus_temp" value="1">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <!-- Use any element to open the sidenav -->
+        <span id="simbolo" class="col-sm-12 col-md-2 col-lg-2" onclick="openNav()" ontouchstart="openNav()">
 			<svg width="30" height="30" id="icoOpen">
 	        <path d="M0,5 30,5" stroke="#000" stroke-width="5"/>
 	        <path d="M0,14 30,14" stroke="#000" stroke-width="5"/>
 	        <path d="M0,23 30,23" stroke="#000" stroke-width="5"/>
 	    	</svg>
 		</span>
-		<span id="arrows" class="col-sm-12 col-md-8 col-lg-8">
-			<h1>KITCHEN	</h1>
-			<i class="arrow left"></i>
-			<i class="arrow right"></i>
-			<div style="text-align:center;padding:1em 0;">  <iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=small&timezone=Europe%2FRome" width="100%" height="90" frameborder="0" seamless></iframe> </div>
-		</span>
-		<svg id="circle" class="col-sm-12 col-md-2 col-lg-2" width="100" height="100">
-			<circle id="Summer_circ" cx="10" cy="50" r="8" stroke="black" stroke-width="2" fill="white"/>
-	    	<circle id="Winter_circ" cx="30" cy="50" r="8" stroke="black" stroke-width="2" fill="white"/>
-	 	 	<circle id="Manual_circ" cx="50" cy="50" r="8" stroke="black" stroke-width="2" fill="white"/>
-	 	 	<circle id="anti_circ" cx="70" cy="50" r="8" stroke="black" stroke-width="2" fill="white"/>
-		</svg>
-	</div>
-	</div>
-  <div class='container'>
-	<div id='thermostat'></div>
-	<div id="buttons">
-		<button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
-		<button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
-		<button type="button" class="btn btn-secondary" id="Manual" value="0">Manual</button>
-	</div>
+    </div>
+    <div class="col">
+        <div style="text-align: center">KITCHEN</div>
+        <div class='container'>
 
-	<div id='controls'>
-		
-		<p>
-			Click and hold the dial above until a white ring appears (1 second), then drag up / down or left / right to change the target temperature.	
-		</p>
-		
-		<label><span>Target Temperature</span>
-			<input type='range' min='10' max='30' value='10' id='input_target_temperature' step='0.5' />
-		</label>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div id='thermostat'></div>
+                        <div id="buttons">
+                            <button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
+                            <button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
+                            <button type="button" class="btn btn-secondary" id="Manual" value="0">Manual</button>
+                        </div>
 
-			<label><span>Ambient Temperature</span>
-			<input type='range' min='-5' max='40' value='10' id='input_ambient_temperature' step='0.5' />
-		</label>
+                        <div id='controls'>
 
-			<label><span>State</span>
-			<select id='input_state'>
-				<option value='off'>Off</option>
-				<option value='heating'>Heating</option>
-				<option value='cooling'>Cooling</option>
-			</select>
-		</label>
+                            <p>
+                                Click and hold the dial above until a white ring appears (1 second), then drag up / down
+                                or left /
+                                right
+                                to change the target temperature.
+                            </p>
 
-			<label><span>Leaf</span>
-			<select id='input_leaf'>
-				<option value=''>No</option>
-				<option value='1'>Yes</option>
-			</select>
-		</label>
+                            <label><span>Target Temperature</span>
+                                <input type='range' min='10' max='30' value='10' id='input_target_temperature'
+                                       step='0.5'/>
+                            </label>
 
-			<label><span>Away</span>
-			<select id='input_away'>
-				<option value=''>No</option>
-				<option value='1'>Yes</option>
-			</select>
-		</label>
-	</div>
+                            <label><span>Ambient Temperature</span>
+                                <input type='range' min='-5' max='40' value='10' id='input_ambient_temperature'
+                                       step='0.5'/>
+                            </label>
 
-</div>
-  
-  
+                            <label><span>State</span>
+                                <select id='input_state'>
+                                    <option value='off'>Off</option>
+                                    <option value='heating'>Heating</option>
+                                    <option value='cooling'>Cooling</option>
+                                </select>
+                            </label>
 
-    <script  src="js/my_js.js"></script>
+                            <label><span>Leaf</span>
+                                <select id='input_leaf'>
+                                    <option value=''>No</option>
+                                    <option value='1'>Yes</option>
+                                </select>
+                            </label>
+
+                            <label><span>Away</span>
+                                <select id='input_away'>
+                                    <option value=''>No</option>
+                                    <option value='1'>Yes</option>
+                                </select>
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+
+    </div>
+
+
+    <script src="js/my_js.js"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
-	<script src="js/bootstrap.min.js" type="text/javascript"></script>
-
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
 
 
 </body>
 
 </html>
+
+

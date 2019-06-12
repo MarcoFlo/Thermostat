@@ -530,35 +530,6 @@ window.onload = function(){
 	var plus_temp = document.getElementById("plus_temp").onclick = temp;
 }	
 
-function change_color(){
-	var name= new String(this.id);
-	var value = this.value;
-	var array = ["Summer", "Winter", "Manual"];
-	for(x=0;x<array.length;x++){
-		if(value==0){
-			if(array[x] != name){
-				document.getElementById(name).className = "btn btn-primary";
-				document.getElementById(name).value = 1;
-				document.getElementById(array[x]).disabled = true;
-				document.getElementById(name+"_circ").setAttribute("fill", "#222");
-				if(name=="Summer")
-					nest.hvac_state = 'cooling';
-				else if(name=="Winter")
-					nest.hvac_state = 'heating';
-					
-					
-			}
-		}else if(value==1){
-			if(array[x] != name){
-				document.getElementById(name).className = "btn btn-secondary";
-				document.getElementById(name).value = 0;
-				document.getElementById(array[x]).disabled = false;
-				document.getElementById(name+"_circ").setAttribute("fill", "white");
-				nest.hvac_state = 'off';
-			}
-		}
-	}
-}
 function color(){
 	var val = this.value;
 	if(val==0){
