@@ -91,7 +91,7 @@ public class MQTTAWService {
                 mqttClient.publish(awsIotMessage);
 
             } catch (IOException | AWSIotException e) {
-                logger.error("Error NotificationTopic" + e.toString());
+                //logger.error("Error NotificationTopic" + e.toString());
             }
         }
     }

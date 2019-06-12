@@ -7,6 +7,7 @@ import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class TemperatureController {
      *
      * @param wsa the string "winter", "summer", "antifreeze"
      */
-    @PostMapping("/temperature/wsa")
+    @PostMapping(value = "/temperature/wsa")
     public void postWSA(@RequestBody String wsa) {
         logger.info("I'm gonna save this WSA config: " + wsa);
         temperatureService.setWSA(wsa);

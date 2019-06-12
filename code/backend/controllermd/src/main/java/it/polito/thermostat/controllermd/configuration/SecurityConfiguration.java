@@ -32,6 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "**").permitAll()//allow CORS option calls
                 .and()
+                .csrf().disable()
                 .authorizeRequests().anyRequest().permitAll();
     }
 

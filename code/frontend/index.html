@@ -13,11 +13,10 @@
 <body>
 
 
-
-<div class="container">
+<div class="container-fluid">
 
     <!-- Modal WIFI -->
-    <div class="modal"  id="ModalWifi" tabindex="-1" role="dialog">
+    <div class="modal" id="ModalWifi" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -42,24 +41,19 @@
         <a href="#" data-toggle="modal" data-target="#ModalWifi">Configuration-WiFi</a>
 
     </div>
-    <div class="col">
-        <div style="text-align: center">KITCHEN</div>
-        <div class='container'>
+    <div class="col bg-dark justify-content-center">
+        <div class="row text-light justify-content-center" style="text-align: center">KITCHEN</div>
+        <div class="row justify-content-center">
 
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                </ol>
+<!--                <ol class="carousel-indicators">-->
+<!--                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>-->
+<!--                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>-->
+<!--                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>-->
+<!--                </ol>-->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div id='thermostat'></div>
-                        <div id="buttons">
-                            <button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
-                            <button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
-                            <button type="button" class="btn btn-secondary" id="Manual" value="0">Manual</button>
-                        </div>
 
                         <div id='controls'>
 
@@ -118,14 +112,22 @@
         </div>
 
 
+        <div id="buttons">
+            <button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
+            <button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
+            <button type="button" class="btn btn-secondary" id="Manual" value="0">Manual</button>
+        </div>
+
+
     </div>
+</div>
 
 
-    <script src="js/my_js.js"></script>
-    <script src="js/juan.js"></script>
-    <script src="js/marco.js"></script>
-    <script src="js/jquery.js" type="text/javascript"></script>
-    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/my_js.js"></script>
+<script src="js/juan.js"></script>
+<script src="js/marco.js"></script>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
 
 
 </body>
