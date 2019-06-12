@@ -15,7 +15,7 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" ontouchstart="closeNav()">&times;</a>
     <a href="#" data-toggle="modal" data-target="#exampleModalCenter">Create Room</a>
     </button>
-    <a href="#">Configuration-WiFi</a>
+    <a href="#" data-toggle="modal" data-target="#ModalWifi">Configuration-WiFi</a>
     <a href="#">Statistics</a>
     <a href="#">Anti-Freeze</a>
 </div>
@@ -143,6 +143,28 @@
         </div>
     </div>
 
+    <!-- Modal WIFI -->
+    <div class="modal"  id="ModalWifi" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Wi-Fi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="list_wifi">Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="col">
         <!-- Use any element to open the sidenav -->
         <span id="simbolo" class="col-sm-12 col-md-2 col-lg-2" onclick="openNav()" ontouchstart="openNav()">
@@ -233,6 +255,8 @@
 
 
     <script src="js/my_js.js"></script>
+    <script src="js/juan.js"></script>
+    <script src="js/marco.js"></script>
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
 
