@@ -1,6 +1,7 @@
 package it.polito.thermostat.controllermd.controller;
 
 import com.google.zxing.WriterException;
+import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.server.QRService;
 import it.polito.thermostat.controllermd.services.server.WifiService;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,9 @@ public class DebugRestController {
     @Autowired
     QRService qrService;
 
+    @Autowired
+    WSALRepository wsalRepository;
+
 
     @GetMapping(value = "/debug", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] qr() throws IOException, WriterException {
@@ -32,4 +37,9 @@ public class DebugRestController {
     }
 
 
+    @PostMapping("/debug/wsal")
+    public void deleteWSAL()
+    {
+        wsalRepository.deleteAll();
+    }
 }

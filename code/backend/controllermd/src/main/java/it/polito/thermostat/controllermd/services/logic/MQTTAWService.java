@@ -4,8 +4,8 @@ import com.amazonaws.services.iot.client.*;
 import com.amazonaws.services.iot.client.sample.sampleUtil.SampleUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
-import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.resources.MQTTaws.EventAWS;
 import it.polito.thermostat.controllermd.resources.MQTTaws.PingAWS;
 import org.slf4j.Logger;
@@ -18,12 +18,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 import com.amazonaws.services.iot.client.sample.sampleUtil.SampleUtil.KeyStorePasswordPair;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Random;
 
 @Service
 @PropertySource("classpath:aws-iot-sdk-samples.properties")
@@ -37,7 +36,7 @@ public class MQTTAWService {
     @Value("${clientEndpoint}")
     String clientEndpoint;
 
-    @Value("${clientId}")
+    @Value("#{'${clientId}'}")
     String clientId;
 
     @Value("${certificateFile}")
@@ -51,6 +50,7 @@ public class MQTTAWService {
 
     @PostConstruct
     public void init() throws AWSIotException {
+        clientId += HostAddressGetter.getMAC().replace(":", "") + "-" + new Random().nextInt(100);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
         mqttClient.connect();
@@ -82,16 +82,15 @@ public class MQTTAWService {
 
         @Override
         public void onMessage(AWSIotMessage message) {
-            logger.info(message.getStringPayload());
             try {
                 PingAWS request = objectMapper.readValue(message.getStringPayload(), PingAWS.class);
-                PingAWS response = new PingAWS(request);
+                PingAWS response = new PingAWS(request.getEvent().getSequence());
                 AWSIotMessage awsIotMessage = new AWSIotMessage(notificationTopic, qos);
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(response));
-                mqttClient.publish(awsIotMessage);
-
-            } catch (IOException | AWSIotException e) {
-                //logger.error("Error NotificationTopic" + e.toString());
+                //mqttClient.publish(awsIotMessage);
+//                logger.info("This has been published" + awsIotMessage.getStringPayload());
+            } catch (IOException e) {
+                logger.error("Error NotificationTopic" + e.toString());
             }
         }
     }

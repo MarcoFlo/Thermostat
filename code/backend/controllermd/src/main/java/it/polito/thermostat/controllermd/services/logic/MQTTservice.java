@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.stream.StreamSupport;
 
@@ -142,7 +143,7 @@ public class MQTTservice {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
 
-        SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]), data[2]);
+        SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
         mqttawService.sendEvent(sensorData, 12);
         logger.info("New sensor data -> " + data[0] + "\t" + data[1] + "\t" + data[2]);

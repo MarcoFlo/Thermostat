@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.time.LocalDateTime;
+
 @Data
 @RedisHash("sensordata")
 public class SensorData {
@@ -14,9 +16,9 @@ public class SensorData {
     private Double humidity;
     private Double apparentTemperature;
 
-    public SensorData(String idEsp, Double temperature, Double humidity, String timestamp) {
+    public SensorData(String idEsp, Double temperature, Double humidity) {
         this.idEsp = idEsp;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now().toString();
         this.temperature = temperature;
         this.humidity = humidity;
         apparentTemperature = getApparentTemperature(temperature,humidity);

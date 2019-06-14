@@ -54,7 +54,7 @@ public class ManagerService {
     SensorDataRepository sensorDataRepository;
 
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
         List<WSAL> checkWSAL = StreamSupport.stream(wsalRepository.findAll().spliterator(), false).collect(Collectors.toList());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config

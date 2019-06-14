@@ -68,9 +68,13 @@ public class TemperatureService {
         WSAL wsal;
         if (wsalRepository.findAll().iterator().hasNext())
             wsal = wsalRepository.findAll().iterator().next();
-        else
+        else {
             wsal = new WSAL();
-
+            wsal.setIsAntiFreeze(false);
+            wsal.setIsSummer(false);
+            wsal.setIsLeave(false);
+            wsal.setIsWinter(false);
+        }
         switch (wsa) {
             case "winter":
                 wsal.setIsSummer(false);
@@ -86,7 +90,7 @@ public class TemperatureService {
             default:
                 logger.error("setWsa string not recognised");
         }
-        wsal.setCreationDate(LocalDateTime.now());
+        wsal.setCreationDate(LocalDateTime.now().toString());
         wsalRepository.save(wsal);
     }
 
@@ -107,7 +111,7 @@ public class TemperatureService {
         wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
         wsal.setLeaveBackTemperature(leaveResource.getLeaveBackTemperature());
         wsal.setLeaveEnd(leaveResource.getLeaveEnd());
-        wsal.setCreationDate(LocalDateTime.now());
+        wsal.setCreationDate(LocalDateTime.now().toString());
         wsalRepository.save(wsal);
     }
 
