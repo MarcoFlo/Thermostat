@@ -37,24 +37,31 @@ window.onload = function(){
             console.log(obj[0].essid);
             /*var array = obj.split("");*/
             console.log(obj.length);
-            if(obj.length>3){
-                var resta = obj.length - 3;
+            if(obj.length>1){
+                var resta = obj.length - 1;
                 var capa = document.getElementById("list-wifi");
                 for(i=1;i<=resta;i++){
                     var input = document.createElement("input");
-                    input.setAttribute("type", "checkbox");
-                    var aux = 3+i;
-                    input.setAttribute("id", ""+aux);
+                    input.setAttribute("type", "radio");
+                    var aux = 1+i;
+                    input.setAttribute("name", "wifi-1");
+                    var span = document.createElement("SPAN");
+                    span.setAttribute("id", "wifi-"+aux);
+                    var branch = document.createElement("br");
+                    capa.appendChild(input);
+                    capa.appendChild(span);
+                    capa.appendChild(branch);
                 }
             }
             for(i=0;i<obj.length;i++){
-                document.getElementById("wifi-1").innerHTML = obj[i].essid;
+                var aux = i+1;
+                document.getElementById("wifi-"+aux).innerHTML = obj[i].essid;
             }
             
 
         }
     };
-    xhttp_wifi.open("GET", "http://192.168.43.225:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp_wifi.send();
 }
 function change_color(){
