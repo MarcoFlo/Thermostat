@@ -196,24 +196,3 @@ i {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
 }
-
-
-#simbolo{
-  /*border-style: solid;*/
-}
-#circle{
-  /*border-style: solid;*/
-  text-align: center;
-  /*float: right;*/
-}
-
-#arrows{
-  text-align: center;
-  /*border-style: solid;*/
-}
-
-
-
-#buttons{
-  text-align: center;
-}
