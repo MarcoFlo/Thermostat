@@ -1,20 +1,5 @@
-window.onload = function(){
-    var summer =document.getElementById("Summer").onclick = change_color;
-    var summer =document.getElementById("Winter").onclick = change_color;
-    var summer =document.getElementById("Manual").onclick = change_color;
-
-   mqttLoad();
-    /*var week = document.getElementById("week").onclick = color;*/
-
-    /*var anterior = document.getElementById("anterior").onclick = profiles;
-    var despues = document.getElementById("despues").onclick = profiles;*/
-
-   /* var minus = document.getElementById("minus").onclick = hours;
-    var plus = document.getElementById("plus").onclick = hours;
-
-    var minus_temp = document.getElementById("minus_temp").onclick = temp;
-    var plus_temp = document.getElementById("plus_temp").onclick = temp;*/
-
+function requestEspFree()
+{
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -25,9 +10,12 @@ window.onload = function(){
 
         }
     };
-    xhttp.open("GET", "http://192.168.43.225:8080/setting/esp/free", true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp.open("GET", "http://localhost:8080/setting/esp/free", true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp.send();
 
+}
+
+function requestWifiList() {
     var xhttp_wifi = new XMLHttpRequest();
     xhttp_wifi.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -59,13 +47,18 @@ window.onload = function(){
                 var aux = i+1;
                 document.getElementById("wifi-"+aux).innerHTML = obj[i].essid;
             }
-            
+
 
         }
     };
     xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp_wifi.send();
+
+
+
 }
+
+
 function change_color(){
     var name= new String(this.id);
     var value = this.value;
