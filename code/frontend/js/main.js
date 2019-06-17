@@ -1,4 +1,8 @@
 window.onload = function(){
+    var summer =document.getElementById("Summer").onclick = change_color;
+    var summer =document.getElementById("Winter").onclick = change_color;
+    var summer =document.getElementById("Manual").onclick = change_color;
+
     mqttLoad();
     requestWifiList();
     requestEspFree();
