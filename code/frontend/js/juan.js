@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 window.onload = function(){
 
 
@@ -17,10 +16,8 @@ window.onload = function(){
     var minus_temp = document.getElementById("minus_temp").onclick = temp;
     var plus_temp = document.getElementById("plus_temp").onclick = temp;*/
 
-=======
 function requestEspFree()
 {
->>>>>>> 139a3e24ac4242ec1b2539508a0d4477313d40d9
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
