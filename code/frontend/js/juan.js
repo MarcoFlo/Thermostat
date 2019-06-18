@@ -5,6 +5,8 @@ window.onload = function(){
     var summer =document.getElementById("Summer").onclick = change_color;
     var summer =document.getElementById("Winter").onclick = change_color;
     var summer =document.getElementById("Manual").onclick = change_color;
+
+    requestWifiList();
     /*var week = document.getElementById("week").onclick = color;*/
 
     /*var anterior = document.getElementById("anterior").onclick = profiles;
@@ -15,7 +17,7 @@ window.onload = function(){
 
     var minus_temp = document.getElementById("minus_temp").onclick = temp;
     var plus_temp = document.getElementById("plus_temp").onclick = temp;*/
-
+}
 function requestEspFree()
 {
     var xhttp = new XMLHttpRequest();
