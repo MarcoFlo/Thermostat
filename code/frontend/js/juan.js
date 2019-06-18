@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 window.onload = function(){
 
 
@@ -16,6 +17,10 @@ window.onload = function(){
     var minus_temp = document.getElementById("minus_temp").onclick = temp;
     var plus_temp = document.getElementById("plus_temp").onclick = temp;*/
 
+=======
+function requestEspFree()
+{
+>>>>>>> 139a3e24ac4242ec1b2539508a0d4477313d40d9
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -26,9 +31,12 @@ window.onload = function(){
 
         }
     };
-    xhttp.open("GET", "http://192.168.43.225:8080/setting/esp/free", true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp.open("GET", "http://localhost:8080/setting/esp/free", true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp.send();
 
+}
+
+function requestWifiList() {
     var xhttp_wifi = new XMLHttpRequest();
     xhttp_wifi.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -60,13 +68,18 @@ window.onload = function(){
                 var aux = i+1;
                 document.getElementById("wifi-"+aux).innerHTML = obj[i].essid;
             }
-            
+
 
         }
     };
     xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp_wifi.send();
+
+
+
 }
+
+
 function change_color(){
     var name= new String(this.id);
     var value = this.value;
