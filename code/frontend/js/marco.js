@@ -1,8 +1,7 @@
 function mqttLoad() {
-
     let sensorTopic = "/id-esp/sensor";
 // Create a client instance
-    client = new Paho.MQTT.Client('localhost', 9001, '/ws', 'frontend');
+    var client = new Paho.MQTT.Client('localhost', 9001, '/ws', 'frontend');
 
 // set callback handlers
     client.onConnectionLost = onConnectionLost;
@@ -17,7 +16,7 @@ function mqttLoad() {
         // Once a connection has been made, make a subscription and send a message.
         console.log("onConnect");
         client.subscribe(sensorTopic);
-        message = new Paho.MQTT.Message("prova");
+        let message = new Paho.MQTT.Message("prova");
         message._setDestinationName(sensorTopic);
         client.send(message);
     }
