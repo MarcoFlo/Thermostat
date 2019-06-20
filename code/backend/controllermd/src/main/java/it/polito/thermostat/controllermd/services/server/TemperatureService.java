@@ -115,47 +115,6 @@ public class TemperatureService {
         wsalRepository.save(wsal);
     }
 
-
-    /**
-     * Save the program related to a room into the db
-     *
-     * @param program program to save
-     */
-    public void saveProgram(Program program) {
-        programRepository.save(program);
-    }
-
-
-    public Program getDefaultProgram() {
-        switch (LocalDateTime.now().getMonth()) {
-            case APRIL:
-            case MAY:
-            case JUNE:
-            case JULY:
-            case AUGUST:
-            case SEPTEMBER:
-            case OCTOBER:
-                return programRepository.findById("summer").get();
-
-            case NOVEMBER:
-            case DECEMBER:
-            case JANUARY:
-            case FEBRUARY:
-            case MARCH:
-                return programRepository.findById("winter").get();
-
-            default:
-                return null;
-        }
-    }
-
-    public Program getProgramRoom(String idRoom) {
-        Optional<Program> check = programRepository.findById(idRoom);
-        if (!check.isPresent())
-            throw new ProgramNotExistException("getProgramRoom");
-        return check.get();
-    }
-
     private Room checkRoom(String idRoom) {
         Optional<Room> check = roomRepository.findById(idRoom);
         if (!check.isPresent())

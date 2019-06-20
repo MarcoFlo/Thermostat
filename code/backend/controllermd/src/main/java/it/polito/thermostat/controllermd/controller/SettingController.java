@@ -1,10 +1,13 @@
 package it.polito.thermostat.controllermd.controller;
 
+import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.resources.AssociationResource;
+import it.polito.thermostat.controllermd.resources.RoomResource;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import it.polito.thermostat.controllermd.services.server.Esp8266ManagementService;
+import it.polito.thermostat.controllermd.services.server.SettingService;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import it.polito.thermostat.controllermd.services.server.WifiService;
 import org.slf4j.Logger;
@@ -43,6 +46,9 @@ public class SettingController {
     @Autowired
     ESP8266Repository esp8266Repository;
 
+    @Autowired
+    SettingService settingService;
+
     /**
      * @return a list of free esp
      */
@@ -71,30 +77,39 @@ public class SettingController {
     }
 
     /**
+     * Endpoint to save a room
+     *
+     * @param roomResource
+     */
+    @PostMapping("/setting/room")
+    public void postRoom(@RequestBody RoomResource roomResource) {
+        settingService.saveRoom(roomResource);
+    }
+
+    /**
+     * Endpoint to delete a room
+     *
+     * @param idRoom
+     */
+    @PostMapping("/setting/room")
+    public void postRoom(@RequestBody String idRoom) {
+        settingService.deleteRoom(idRoom);
+    }
+
+
+    /**
      * @return the default room setting
      */
     @GetMapping("/setting/default_program")
     public Program getDefaultProgram() {
-        return temperatureService.getDefaultProgram();
+        return settingService.getDefaultProgram();
     }
 
     @GetMapping("/setting/program")
     public Program getProgram(@RequestBody String idRoom) {
         logger.info("I'm trying to retrive a program for " + idRoom);
-        return temperatureService.getProgramRoom(idRoom);
+        return settingService.getProgramRoom(idRoom);
     }
-
-    /**
-     * Endpoint to save the new program
-     *
-     * @param program to save
-     */
-    @PostMapping("/setting/program")
-    public void postProgram(@RequestBody Program program) {
-        logger.info("I'm gonna save this program:\n" + program.toString());
-        temperatureService.saveProgram(program);
-    }
-
 
     /**
      * @return list of available net

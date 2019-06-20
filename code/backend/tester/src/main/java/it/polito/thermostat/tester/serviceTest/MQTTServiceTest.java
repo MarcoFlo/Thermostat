@@ -138,7 +138,7 @@ public class MQTTServiceTest {
         int i = 0;
         for (ESP8266 esp8266 : savedEsp) {
             if (esp8266.getIsSensor()) {
-                roomRepository.save(new Room(roomName[i], Collections.singletonList(esp8266.getIdEsp()), false, 5.0));
+                roomRepository.save(new Room(roomName[i], Collections.singletonList(esp8266.getIdEsp()), false, 18.0));
                 i++;
             }
         }

@@ -5,6 +5,7 @@ import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
 import it.polito.thermostat.controllermd.repository.*;
+import it.polito.thermostat.controllermd.services.server.SettingService;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,9 @@ public class ManagerService {
 
     @Autowired
     ESP8266Repository esp8266Repository;
+
+    @Autowired
+    SettingService settingService;
 
 
 //    @Scheduled(fixedRate = 1000)
@@ -103,7 +107,7 @@ public class ManagerService {
             if (check.isPresent())
                 programRoom = check.get();
             else
-                programRoom = temperatureService.getDefaultProgram();
+                programRoom = settingService.getDefaultProgram();
 
             HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
