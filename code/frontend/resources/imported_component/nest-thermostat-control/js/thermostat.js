@@ -382,6 +382,7 @@ var thermostatDial = (function() {
 		
 		var startDelay;
 		function dragStart(ev) {
+			ev.preventDefault();
 			startDelay = setTimeout(function() {
 				setClass(svg, 'dial--edit', true);
 				_drag.inProgress = true;
@@ -392,6 +393,7 @@ var thermostatDial = (function() {
 		};
 		
 		function dragEnd (ev) {
+			ev.preventDefault();
 			clearTimeout(startDelay);
 			setClass(svg, 'dial--edit', false);
 			if (!_drag.inProgress) return;
@@ -427,15 +429,25 @@ var thermostatDial = (function() {
 			self.target_temperature = roundHalf(_drag.startTemperature+dValue);
 		}
 		
-		svg.addEventListener('mousedown',dragStart);
-		svg.addEventListener('touchstart',dragStart);
-		
-		svg.addEventListener('mouseup',dragEnd);
-		svg.addEventListener('mouseleave',dragEnd);
-		svg.addEventListener('touchend',dragEnd);
-		
-		svg.addEventListener('mousemove',dragMove);
-		svg.addEventListener('touchmove',dragMove);
+		// svg.addEventListener('mousedown',dragStart);
+		// svg.addEventListener('touchstart',dragStart);
+		//
+		// svg.addEventListener('mouseup',dragEnd);
+		// svg.addEventListener('mouseleave',dragEnd);
+		// svg.addEventListener('touchend',dragEnd);
+		//
+		// svg.addEventListener('mousemove',dragMove);
+		// svg.addEventListener('touchmove',dragMove);
+
+		document.getElementById("main-container").addEventListener('mousedown',dragStart);
+		document.getElementById("main-container").addEventListener('touchstart',dragStart);
+
+		document.getElementById("main-container").addEventListener('mouseup',dragEnd);
+		document.getElementById("main-container").addEventListener('mouseleave',dragEnd);
+		document.getElementById("main-container").addEventListener('touchend',dragEnd);
+
+		document.getElementById("main-container").addEventListener('mousemove',dragMove);
+		document.getElementById("main-container").addEventListener('touchmove',dragMove);
 		//
 		
 		/*
