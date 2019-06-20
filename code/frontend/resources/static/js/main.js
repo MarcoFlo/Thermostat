@@ -3,17 +3,16 @@ window.onload = function(){
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = change_color;
 
-
-
+    //to disable long press -> right click in chromium
     window.oncontextmenu = function() { return false; };
-    // window.addEventListener("contextmenu", function(e) { e.preventDefault(); })
-
 
     mqttLoad();
     requestWifiList();
     requestEspFree();
 
-    nest.ambient_temperature = 18;
+    //debug
+    setMqttRoom("Kitchen");
+
     /*var week = document.getElementById("week").onclick = color;*/
 
     /*var anterior = document.getElementById("anterior").onclick = profiles;

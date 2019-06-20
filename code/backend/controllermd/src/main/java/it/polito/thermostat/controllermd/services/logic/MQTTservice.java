@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
@@ -154,18 +155,18 @@ public class MQTTservice {
         //write into the db the sensor data
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
+        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
 
         updateClientData(idEsp, sensorData);
-
         mqttawService.sendEvent(sensorData, 12);
-        logger.info("New sensor data -> " + data[0] + "\t" + data[1] + "\t" + data[2]);
     }
 
     private void updateClientData(String idEsp, SensorData sensorData) throws MqttException {
-        Optional<Room> checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+        Optional<Room> checkRoom = ((List<Room>) roomRepository.findAllById(Arrays.asList("Kitchen", "Bathroom", "Living"))).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
         if (checkRoom.isPresent()) {
             Room room = checkRoom.get();
             ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getDesiredTemperature(), sensorData.getApparentTemperature());
+            logger.info(thermostatClientResource.toString());
             MqttMessage msg = new MqttMessage(thermostatClientResource.toString().getBytes());
             msg.setQos(2);
             mqttClient.publish("/temperature/" + room.getIdRoom(), msg);
