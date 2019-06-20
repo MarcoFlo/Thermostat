@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SettingService {
@@ -25,16 +27,18 @@ public class SettingService {
     @Autowired
     ProgramRepository programRepository;
 
-    public void saveRoom(RoomResource roomResource)
-    {
+    public void saveRoom(RoomResource roomResource) {
         roomRepository.save(new Room(roomResource));
 
         programRepository.save(roomResource.getProgram());
     }
 
-    public void deleteRoom(String idRoom)
-    {
+    public void deleteRoom(String idRoom) {
         roomRepository.deleteById(idRoom);
+    }
+
+    public List<String> getListRoom() {
+        return ((List<Room>) roomRepository.findAll()).stream().map(room -> room.getIdRoom()).collect(Collectors.toList());
     }
 
     public Program getProgramRoom(String idRoom) {

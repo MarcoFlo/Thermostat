@@ -62,6 +62,8 @@ public class SettingController {
      *
      * @param associationList list of associationResources
      */
+
+
     @PostMapping("/setting/esp/association")
     public void postAssociation(@RequestBody List<AssociationResource> associationList) {
         Iterator<AssociationResource> iterator = associationList.iterator();
@@ -91,9 +93,18 @@ public class SettingController {
      *
      * @param idRoom
      */
-    @PostMapping("/setting/room")
+    @DeleteMapping("/setting/room")
     public void postRoom(@RequestBody String idRoom) {
         settingService.deleteRoom(idRoom);
+    }
+
+    /**
+     * List of saved room
+     * @return
+     */
+    @GetMapping("/setting/room")
+    public List<String> getListRoom() {
+        return settingService.getListRoom();
     }
 
 
