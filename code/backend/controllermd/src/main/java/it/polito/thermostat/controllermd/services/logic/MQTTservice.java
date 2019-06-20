@@ -25,6 +25,7 @@ import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -154,18 +155,21 @@ public class MQTTservice {
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
 
-        updateClientData(idEsp,sensorData);
+        updateClientData(idEsp, sensorData);
 
         mqttawService.sendEvent(sensorData, 12);
         logger.info("New sensor data -> " + data[0] + "\t" + data[1] + "\t" + data[2]);
     }
 
-    private void updateClientData(String idEsp, SensorData  sensorData) throws MqttException {
-        Room room = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst().get();
-        ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getDesiredTemperature(),sensorData.getApparentTemperature());
-        MqttMessage msg = new MqttMessage(thermostatClientResource.toString().getBytes());
-        msg.setQos(2);
-        mqttClient.publish("/temperature/"+room.getIdRoom(), msg);
-    }
+    private void updateClientData(String idEsp, SensorData sensorData) throws MqttException {
+        Optional<Room> checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+        if (checkRoom.isPresent()) {
+            Room room = checkRoom.get();
+            ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getDesiredTemperature(), sensorData.getApparentTemperature());
+            MqttMessage msg = new MqttMessage(thermostatClientResource.toString().getBytes());
+            msg.setQos(2);
+            mqttClient.publish("/temperature/" + room.getIdRoom(), msg);
 
+        }
+    }
 }
