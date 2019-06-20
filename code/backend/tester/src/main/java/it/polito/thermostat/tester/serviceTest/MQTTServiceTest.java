@@ -116,22 +116,24 @@ public class MQTTServiceTest {
         esp8266Repository.deleteAll();
         List<ESP8266> savedEsp = new LinkedList<>();
 
-        for (int i = 0; i < sensorType.length; i++) {
-            msg = new MqttMessage(sensorType[i].getBytes());
-            msg.setQos(2);
-            id = ThreadLocalRandom.current().nextInt(0, 100 + 1);
-            mqttClient.publish("/esp8266/idTest" + id, msg);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (int j = 0; j < roomName.length; j++) {
+            for (String s : sensorType) {
+                msg = new MqttMessage(s.getBytes());
+                msg.setQos(2);
+                id = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+                mqttClient.publish("/esp8266/idTest" + id, msg);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                ESP8266 esp8266 = esp8266Repository.findById("idTest" + id).get();
+                savedEsp.add(esp8266);
+                logger.info("esp with id: " + esp8266.getIdEsp() + " created");
             }
-            ESP8266 esp8266 = esp8266Repository.findById("idTest" + id).get();
-            savedEsp.add(esp8266);
-            logger.info("esp with id: " + esp8266.getIdEsp() + " created");
         }
-
         associateEspToRoom(savedEsp);
+
     }
 
     private void associateEspToRoom(List<ESP8266> savedEsp) {
@@ -143,7 +145,7 @@ public class MQTTServiceTest {
                 i++;
             }
         }
-   }
+    }
 
     @Scheduled(fixedRate = 10000)
     public void newSensorData() throws MqttException, InterruptedException {
