@@ -1,0 +1,43 @@
+</!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Summer</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="../static/css/style_profiles.css">
+    <link rel="stylesheet" href="../static/css/bootstrap/bootstrap.min.css">
+    <script src="../static/js/jquery.js" type="text/javascript"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../static/js/profiles.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="page">
+		<form name="formulario" id="formulario" method="post" action="">
+		<label for="name">Name :</label>
+		<input type="text" id="name" name="name" required size="10">
+		<h3>Monday - Friday</h3>
+		
+		<label>WAKE</label><button type="button" class="btn btn-outline-dark" id="minus_wake">-</button><input type="text" name="wake_1"  value="06:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_wake">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_wake">-</button> <input type="text" name="temp_wake" min="10" max="25" step="1" value="21" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_wake">+</button><br>
+
+		<label>LEAVE</label><button type="button" class="btn btn-outline-dark" id="minus_leave">-</button><input type="text" name="leave_1" min="08:00" max="17:00" step="3600" value="08:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_leave">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_leave">-</button> <input type="text" name="temp_leave" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_leave">+</button><br>
+
+		<label>RETURN</label><button type="button" class="btn btn-outline-dark" id="minus_return">-</button><input type="text" name="return_1" min="17:00" max="22:00" step="3600" value="17:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_return">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_return">-</button> <input type="text" name="temp_return" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_return">+</button><br>
+
+		<label>SLEEP</label><button type="button" class="btn btn-outline-dark" id="minus_sleep">-</button><input type="text" name="sleep_1" min="00:00" max="23:00" step="3600" value="22:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_sleep">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_sleep">-</button> <input type="text" name="temp_sleep" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_sleep">+</button><br>
+	
+
+		<h3>Saturday - Sunday</h3>
+		<label>WAKE </label><button type="button" class="btn btn-outline-dark" id="minus_wakef">-</button><input type="text" name="fwake_1" min="06:00" max="09:00" step="3600" value="06:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_wakef">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_wakef">-</button><input type="text" name="ftemp_wake" min="10" max="25" step="1" value="21" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_wakef">+</button><br>
+
+		<label>LEAVE </label><button type="button" class="btn btn-outline-dark" id="minus_leavef">-</button><input type="text" name="fleave_1" min="08:00" max="17:00" step="3600" value="08:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_leavef">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_leavef">-</button><input type="text" name="ftemp_leave" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_leavef">+</button><br>
+
+		<label>RETURN</label><button type="button" class="btn btn-outline-dark" id="minus_returnf">-</button><input type="text" name="freturn_1" min="17:00" max="22:00" step="3600" value="17:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_returnf">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_returnf">-</button><input type="text" name="ftemp_return" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_returnf">+</button><br>
+
+		<label>SLEEP  </label><button type="button" class="btn btn-outline-dark" id="minus_sleepf">-</button><input type="text" name="fsleep_1" min="00:00" max="23:00" step="3600" value="22:00" readonly><button type="button" class="btn btn-outline-dark" id="plus_sleepf">+</button> <button type="button" class="btn btn-outline-dark" id="minus_temp_sleepf">-</button><input type="text" name="ftemp_sleep" min="10" max="25" step="1" value="22" readonly><button type="button" class="btn btn-outline-dark" id="plus_temp_sleepf">+</button><br>
+		
+		<button type="submit" class="btn btn-dark" id="submit">SAVE</button>		
+		</form>
+	
+</div>
+</body>
+</html>
