@@ -1,7 +1,9 @@
 package it.polito.thermostat.tester.serviceTest;
 
 import it.polito.thermostat.tester.entity.ESP8266;
+import it.polito.thermostat.tester.entity.Room;
 import it.polito.thermostat.tester.repository.ESP8266Repository;
+import it.polito.thermostat.tester.repository.RoomRepository;
 import org.apache.commons.math3.util.Precision;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -18,8 +20,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Enumeration;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -45,11 +46,15 @@ public class MQTTServiceTest {
     @Autowired
     ESP8266Repository esp8266Repository;
 
+    @Autowired
+    RoomRepository roomRepository;
+
     private IMqttClient mqttClient;
 
     String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
     String espDataProducer = "espDataProducer";
     String[] sensorType = {"sensor", "heater", "cooler"};
+    String[] roomName = {"Kitchen", "Bathroom", "Living"};
 
 
     @PostConstruct
@@ -109,6 +114,7 @@ public class MQTTServiceTest {
         MqttMessage msg;
         int id;
         esp8266Repository.deleteAll();
+        List<ESP8266> savedEsp = new LinkedList<>();
 
         for (int i = 0; i < sensorType.length; i++) {
             msg = new MqttMessage(sensorType[i].getBytes());
@@ -120,9 +126,24 @@ public class MQTTServiceTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            logger.info("esp with id: " + esp8266Repository.findById("idTest" + id).get().getIdEsp() + " created");
+            ESP8266 esp8266 = esp8266Repository.findById("idTest" + id).get();
+            savedEsp.add(esp8266);
+            logger.info("esp with id: " + esp8266.getIdEsp() + " created");
         }
+
+        associateEspToRoom(savedEsp);
     }
+
+    private void associateEspToRoom(List<ESP8266> savedEsp) {
+        roomRepository.deleteAll();
+        int i = 0;
+        for (ESP8266 esp8266 : savedEsp) {
+            if (esp8266.getIsSensor()) {
+                roomRepository.save(new Room(roomName[i], Collections.singletonList(esp8266.getIdEsp()), false, 0.0));
+                i++;
+            }
+        }
+   }
 
     @Scheduled(fixedRate = 10000)
     public void newSensorData() throws MqttException, InterruptedException {
