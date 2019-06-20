@@ -109,7 +109,7 @@ function change_color(){
                 else if(name=="Winter")
                     nest.hvac_state = 'heating';
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'localhost:8080/temperature/wsa', true);
+                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
 
                     //Send the proper header information along with the request
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
