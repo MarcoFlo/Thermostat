@@ -57,13 +57,12 @@ public class SettingController {
         return esp8266ManagementService.getEspFree();
     }
 
+
     /**
      * Endpoint that allow us to set/delete associations between room-esp
      *
      * @param associationList list of associationResources
      */
-
-
     @PostMapping("/setting/esp/association")
     public void postAssociation(@RequestBody List<AssociationResource> associationList) {
         Iterator<AssociationResource> iterator = associationList.iterator();
