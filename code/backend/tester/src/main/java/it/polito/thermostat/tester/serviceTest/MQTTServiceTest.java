@@ -51,15 +51,15 @@ public class MQTTServiceTest {
 
     private IMqttClient mqttClient;
 
-    String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
-    String espDataProducer = "espDataProducer";
     String[] sensorType = {"sensor", "heater", "cooler"};
     String[] roomName = {"Kitchen", "Bathroom", "Living"};
 
+    List<ESP8266> savedEsp;
 
     @PostConstruct
     public void init() throws MqttException {
-        String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
+        savedEsp = new LinkedList<>();
+
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
@@ -68,12 +68,10 @@ public class MQTTServiceTest {
 
         if (isMQTTOnline) {
             logger.info("MQTT cloud Broker");
-//            options.setUserName(cloudmqttUser);
-//            options.setPassword(cloudmqttPass.toCharArray());
             mqttClient = new MqttClient(mosquittoBroker, "tester");
         } else {
             logger.info("MQTT local Broker");
-            mqttClient = new MqttClient(localBroker, "tester");
+            mqttClient = new MqttClient("tcp://" + HostAddressGetter.getIp() + ":1883", "tester");
 
         }
         mqttClient.connect(options);
@@ -110,11 +108,10 @@ public class MQTTServiceTest {
     }
 
 
-    public void createEsp() throws MqttException {
+    public void createEspAndRoom() throws MqttException {
         MqttMessage msg;
         int id;
         esp8266Repository.deleteAll();
-        List<ESP8266> savedEsp = new LinkedList<>();
 
         for (int j = 0; j < roomName.length; j++) {
             for (String s : sensorType) {
@@ -141,27 +138,22 @@ public class MQTTServiceTest {
         int i = 0;
         for (ESP8266 esp8266 : savedEsp) {
             if (esp8266.getIsSensor()) {
-                roomRepository.save(new Room(roomName[i], Collections.singletonList(esp8266.getIdEsp()), false, 0.0));
+                roomRepository.save(new Room(roomName[i], Collections.singletonList(esp8266.getIdEsp()), false, 5.0));
                 i++;
             }
         }
     }
 
     @Scheduled(fixedRate = 10000)
-    public void newSensorData() throws MqttException, InterruptedException {
-        setUpProducer();
-        String supp = Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-        MqttMessage msg = new MqttMessage(supp.getBytes());
-        msg.setQos(2);
-        mqttClient.publish("/" + espDataProducer + "/sensor", msg);
-    }
-
-    private void setUpProducer() throws MqttException, InterruptedException {
-        if (!esp8266Repository.findById(espDataProducer).isPresent()) {
-            MqttMessage msg = new MqttMessage("sensor".getBytes());
-            msg.setQos(2);
-            mqttClient.publish("/esp8266/" + espDataProducer, msg);
-            Thread.sleep(500);
+    public void newSensorData() throws MqttException {
+        for (ESP8266 esp8266 : savedEsp) {
+            if (esp8266.getIsSensor()) {
+                String supp = Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(0, 100), 2) + "_" + LocalDateTime.now().withNano(1000000).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+                MqttMessage msg = new MqttMessage(supp.getBytes());
+                msg.setQos(2);
+                mqttClient.publish("/" + esp8266.getIdEsp() + "/sensor", msg);
+            }
         }
     }
+
 }
