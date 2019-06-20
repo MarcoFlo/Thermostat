@@ -36,13 +36,13 @@ public class Esp8266ManagementService {
         ESP8266 esp8266 = esp8266Repository.findById(idEsp).get();
 
         Room room;
-        List<ESP8266> esp8266List;
+        List<String> esp8266List;
         //The esp was already associated to some room
         if (!esp8266.getIdRoom().equals(idRoom) && esp8266.getIdRoom() != null) {
             //remove esp from the old room
             room = roomRepository.findById(esp8266.getIdRoom()).get();
             esp8266List = room.getEsp8266List();
-            room.setEsp8266List(esp8266List.stream().filter(esp -> !esp.getIdEsp().equals(idEsp)).collect(Collectors.toList()));
+            room.setEsp8266List(esp8266List.stream().filter(id -> !id.equals(idEsp)).collect(Collectors.toList()));
             roomRepository.save(room);
         }
 
@@ -51,7 +51,7 @@ public class Esp8266ManagementService {
         esp8266Repository.save(esp8266);
         room = roomRepository.findById(idRoom).get();
         esp8266List = room.getEsp8266List();
-        esp8266List.add(esp8266);
+        esp8266List.add(esp8266.getIdEsp());
         room.setEsp8266List(esp8266List);
         roomRepository.save(room);
 
@@ -67,8 +67,8 @@ public class Esp8266ManagementService {
         ESP8266 esp8266 = esp8266Repository.findById(idEsp).get();
 
         Room room = roomRepository.findById(esp8266.getIdRoom()).get();
-        List<ESP8266> esp8266List = room.getEsp8266List();
-        room.setEsp8266List(esp8266List.stream().filter(esp -> !esp.getIdEsp().equals(idEsp)).collect(Collectors.toList()));
+        List<String> esp8266List = room.getEsp8266List();
+        room.setEsp8266List(esp8266List.stream().filter(id -> !id.equals(idEsp)).collect(Collectors.toList()));
         roomRepository.save(room);
 
         esp8266.setIdRoom(null);

@@ -5,9 +5,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import it.polito.thermostat.controllermd.entity.CommandActuator;
 import it.polito.thermostat.controllermd.entity.ESP8266;
+import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.SensorData;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.SensorDataRepository;
+import it.polito.thermostat.controllermd.resources.ThermostatClientResource;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -40,6 +44,9 @@ public class MQTTservice {
 
     @Autowired
     MQTTAWService mqttawService;
+
+    @Autowired
+    RoomRepository roomRepository;
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
@@ -139,14 +146,26 @@ public class MQTTservice {
      * @param topic
      * @param message
      */
-    private void sensorDataReceived(String topic, MqttMessage message) {
+    private void sensorDataReceived(String topic, MqttMessage message) throws MqttException {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
 
+        //write into the db the sensor data
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
+
+        updateClientData(idEsp,sensorData);
+
         mqttawService.sendEvent(sensorData, 12);
         logger.info("New sensor data -> " + data[0] + "\t" + data[1] + "\t" + data[2]);
+    }
+
+    private void updateClientData(String idEsp, SensorData  sensorData) throws MqttException {
+        Room room = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst().get();
+        ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getDesiredTemperature(),sensorData.getApparentTemperature());
+        MqttMessage msg = new MqttMessage(thermostatClientResource.toString().getBytes());
+        msg.setQos(2);
+        mqttClient.publish("/temperature/"+room.getIdRoom(), msg);
     }
 
 }

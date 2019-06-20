@@ -11,7 +11,7 @@ import java.util.List;
 public class Room {
     @Id
     private String idRoom;
-    private List<ESP8266> esp8266List;
+    private List<String> esp8266List;
     private Boolean isManual;
     private Double desiredTemperature;
 }

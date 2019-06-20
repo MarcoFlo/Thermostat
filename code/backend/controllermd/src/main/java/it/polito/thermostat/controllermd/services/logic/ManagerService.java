@@ -4,10 +4,7 @@ import it.polito.thermostat.controllermd.entity.*;
 import it.polito.thermostat.controllermd.entity.program.Program;
 import it.polito.thermostat.controllermd.entity.program.DailyProgram;
 import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
-import it.polito.thermostat.controllermd.repository.ProgramRepository;
-import it.polito.thermostat.controllermd.repository.RoomRepository;
-import it.polito.thermostat.controllermd.repository.SensorDataRepository;
-import it.polito.thermostat.controllermd.repository.WSALRepository;
+import it.polito.thermostat.controllermd.repository.*;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +50,9 @@ public class ManagerService {
     @Autowired
     SensorDataRepository sensorDataRepository;
 
+    @Autowired
+    ESP8266Repository esp8266Repository;
+
 
 //    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
@@ -75,7 +75,7 @@ public class ManagerService {
         }
     }
 
-    private void manageLeave(List<ESP8266> esp8266List, WSAL currentWSAL) {
+    private void manageLeave(List<String> esp8266List, WSAL currentWSAL) {
         LocalDateTime leaveEnd = currentWSAL.getLeaveEnd();
         LocalDateTime now = LocalDateTime.now();
         Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveBackTemperature());
@@ -105,15 +105,12 @@ public class ManagerService {
             else
                 programRoom = temperatureService.getDefaultProgram();
 
-            manageProgram(room.getEsp8266List(), programRoom, isSummer);
-        }
+            HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
+            room.setDesiredTemperature(hourlyProgram.getTemperature());
+            roomRepository.save(room);
+            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, true);        }
     }
 
-
-    private void manageProgram(List<ESP8266> esp8266List, Program programRoom, Boolean isSummer) {
-        HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
-        manageESP(esp8266List, hourlyProgram.getTemperature(), isSummer, true);
-    }
 
     private HourlyProgram findNearestTimeSlot(Program programRoom) {
         DailyProgram dailyProgram;
@@ -129,19 +126,19 @@ public class ManagerService {
         return programResult;
     }
 
-    private void manageESP(List<ESP8266> esp8266List, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
+    private void manageESP(List<String> esp8266List, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
         int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
-        List<ESP8266> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266.getIsCooler().equals(isSummer)).collect(Collectors.toList());
+        List<String> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
 
-        esp8266ListSeason.stream().forEach(esp8266 -> {
-            Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(esp8266.getIdEsp());
+        esp8266ListSeason.stream().forEach(idEsp -> {
+            Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idEsp);
             if (sensorDataCheck.isPresent()) {
                 SensorData sensorData = sensorDataCheck.get();
                 CommandActuator commandActuator;
                 if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
-                    commandActuator = new CommandActuator(esp8266.getIdEsp(), !isSummer);
+                    commandActuator = new CommandActuator(idEsp, !isSummer);
                 else
-                    commandActuator = new CommandActuator(esp8266.getIdEsp(), isSummer);
+                    commandActuator = new CommandActuator(idEsp, isSummer);
                 mqttService.manageActuator(commandActuator);
             }
         });
