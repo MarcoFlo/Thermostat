@@ -122,7 +122,7 @@ public class MQTTServiceTest {
 
                 mqttClient.publish("/esp8266/idTest" + id, msg);
                 if (s.equals("sensor")) {
-                    roomRepository.save(new Room(roomName[j], Collections.singletonList("idTest" + id), false, 18.0));
+                    roomRepository.save(new Room(roomName[j], Collections.singletonList("idTest" + id), true, 18.0));
                     logger.info("Room " + roomName[j] + " created " + id);
                 }
                 savedEsp.add("idTest" + id);
