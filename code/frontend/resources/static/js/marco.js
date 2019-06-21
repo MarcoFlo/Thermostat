@@ -62,7 +62,8 @@ function onMessageArrived(message) {
     switch (message._getDestinationName()) {
         case "/temperature/" + currentRoom: {
             var thermostatClientResource = JSON.parse(message.payloadString);
-            nest.target_temperature = thermostatClientResource.desiredTemperature;
+            if (thermostatClientResource.desiredTemperature !== -1)
+                nest.target_temperature = thermostatClientResource.desiredTemperature;
             nest.ambient_temperature = thermostatClientResource.currentApparentTemperature;
             break;
         }

@@ -2,6 +2,7 @@ package it.polito.thermostat.controllermd.services.logic;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import it.polito.thermostat.controllermd.entity.CommandActuator;
 import it.polito.thermostat.controllermd.entity.ESP8266;
@@ -34,6 +35,8 @@ public class MQTTservice {
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     ESP8266Repository esp8266Repository;
@@ -148,7 +151,7 @@ public class MQTTservice {
      * @param topic
      * @param message
      */
-    private void sensorDataReceived(String topic, MqttMessage message) throws MqttException {
+    private void sensorDataReceived(String topic, MqttMessage message) throws MqttException, JsonProcessingException {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
 
@@ -161,13 +164,13 @@ public class MQTTservice {
         mqttawService.sendEvent(sensorData, 12);
     }
 
-    private void updateClientData(String idEsp, SensorData sensorData) throws MqttException {
+    private void updateClientData(String idEsp, SensorData sensorData) throws MqttException, JsonProcessingException {
         Optional<Room> checkRoom = ((List<Room>) roomRepository.findAllById(Arrays.asList("Kitchen", "Bathroom", "Living"))).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
         if (checkRoom.isPresent()) {
             Room room = checkRoom.get();
-            ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getDesiredTemperature(), sensorData.getApparentTemperature());
+            ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getIsManual() ? -1 : room.getDesiredTemperature(), sensorData.getApparentTemperature());
             logger.info(thermostatClientResource.toString());
-            MqttMessage msg = new MqttMessage(thermostatClientResource.toString().getBytes());
+            MqttMessage msg = new MqttMessage(objectMapper.writeValueAsString(thermostatClientResource).getBytes());
             msg.setQos(2);
             mqttClient.publish("/temperature/" + room.getIdRoom(), msg);
 
