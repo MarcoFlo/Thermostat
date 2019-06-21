@@ -436,7 +436,7 @@ var thermostatDial = (function () {
                 dxy = (Math.abs(dy) > Math.abs(dx)) ? dy : dx;
             }
             ;
-            var dValue = (dxy * getSizeRatio()) / (options.diameter * 5) * properties.rangeValue;
+            var dValue = (dxy * getSizeRatio()) / (options.diameter * 2) * properties.rangeValue;
             self.target_temperature = roundHalf(_drag.startTemperature + dValue);
         }
 

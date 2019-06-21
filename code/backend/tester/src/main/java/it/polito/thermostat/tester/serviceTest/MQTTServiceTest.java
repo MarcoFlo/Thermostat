@@ -138,6 +138,9 @@ public class MQTTServiceTest {
             msg = new MqttMessage(sensorType[i].getBytes());
             msg.setQos(2);
             mqttClient.publish("/esp8266/" + rpiEsp.get(i), msg);
+            logger.info("esp with id: " + rpiEsp.get(i) + " created");
+
+            savedEsp.add(rpiEsp.get(i));
         }
         createRoom(mainRoomName, rpiEsp);
 
@@ -146,7 +149,7 @@ public class MQTTServiceTest {
     public void createSecondaryEspAndRoom() throws MqttException {
         MqttMessage msg;
         String idEsp;
-        List<String> espRoomList = new LinkedList<>();
+        List<String> espRoomList;
 
 
         // create normal esp
@@ -241,7 +244,7 @@ public class MQTTServiceTest {
             if (checkEsp.isPresent()) {
                 ESP8266 esp8266 = checkEsp.get();
                 if (esp8266.getIsSensor()) {
-                    String supp = Precision.round(ThreadLocalRandom.current().nextDouble(10, 30), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(10, 30), 2);
+                    String supp = Precision.round(ThreadLocalRandom.current().nextDouble(10, 30), 2) + "_" + Precision.round(ThreadLocalRandom.current().nextDouble(40, 80), 2);
                     MqttMessage msg = new MqttMessage(supp.getBytes());
                     msg.setQos(2);
                     mqttClient.publish("/" + idEsp + "/sensor", msg);
