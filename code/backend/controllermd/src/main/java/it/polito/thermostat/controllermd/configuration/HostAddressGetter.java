@@ -1,12 +1,14 @@
 package it.polito.thermostat.controllermd.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
 public class HostAddressGetter {
-
     private static String getB(String address) throws SocketException {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
@@ -48,6 +50,8 @@ public class HostAddressGetter {
                 }
             }
         }
+        System.err.println("Host address error, report to admin");
+        System.exit(-1);
         return null;
     }
 
@@ -55,7 +59,9 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                return getB("mac");
+                String result = getB("mac");
+                System.out.println("Mac: "+ result);
+                return result;
             } catch (SocketException e) {
                 i++;
             }
@@ -68,7 +74,9 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                return getB("ip");
+                String result = getB("ip");
+                System.out.println("Ip: "+ result);
+                return result;
             } catch (SocketException e) {
                 i++;
             }
