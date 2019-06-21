@@ -25,7 +25,7 @@
     
       The tester at every execution will:
       - delete the old esp
-      - create 3 new one (sensor, cooler, heater) for each room (Kitchen,Living and Bathroom)
+      - create 3 new one (sensor, cooler, heater) for each room (MainRoom, Kitchen,Living and Bathroom)
       - produce data every 10 seconds
 
  
