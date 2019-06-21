@@ -1,5 +1,6 @@
-var currentRoom;
+var currentRoom = 0;
 var client;
+var room_list = ["Main Room", "Second room"];
 
 
 function mqttLoad() {
@@ -21,10 +22,9 @@ function mqttLoad() {
 // called when the client connects
 function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
-    console.log("Client connecte");
+    console.log("Client connected");
+    setMqttRoom(0);
 
-    //debug todo
-    setMqttRoom("Kitchen");
     // client.subscribe(sensorTopic);
     // let message = new Paho.MQTT.Message("prova");
     // message._setDestinationName(sensorTopic);
@@ -40,8 +40,8 @@ function onConnectionLost(responseObject) {
 
 
 function setMqttRoom(idRoom) {
-    client.unsubscribe("/temperature/" + currentRoom);
-    client.subscribe("/temperature/" + idRoom);
+    client.unsubscribe("/temperature/" + room_list[currentRoom]);
+    client.subscribe("/temperature/" + room_list[idRoom]);
     currentRoom = idRoom;
 }
 
@@ -60,4 +60,22 @@ function onMessageArrived(message) {
 
 
     }
+}
+
+
+function changeRoom(ev) {
+    switch (ev.target.id) {
+        case "right_arrow" : {
+            console.log("right arrow");
+            currentRoom = (currentRoom + 1) % room_list.length;
+        }
+            break;
+        case "left_arrow" : {
+            console.log("left arrow");
+            currentRoom = Math.abs(((currentRoom - 1) % room_list.length));
+        }
+            break;
+    }
+    document.getElementById("room_name").innerText = room_list[currentRoom];
+    setMqttRoom(currentRoom);
 }

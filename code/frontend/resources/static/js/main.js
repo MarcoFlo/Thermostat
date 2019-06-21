@@ -3,6 +3,11 @@ window.onload = function(){
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = change_color;
 
+
+    document.getElementById("right_arrow").addEventListener('click', changeRoom);
+    document.getElementById("left_arrow").addEventListener('click', changeRoom);
+    document.getElementById("room_name").innerText = room_list[0];
+
     //to disable long press -> right click in chromium
     window.oncontextmenu = function() { return false; };
 
