@@ -1,6 +1,6 @@
-var currentRoom = 0;
+var currentRoom;
 var client;
-var room_list = ["Main Room", "Second room"];
+var room_list;
 
 
 function mqttLoad() {
@@ -23,7 +23,7 @@ function mqttLoad() {
 function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("Client connected");
-    setMqttRoom(0);
+    requestRoom();
 
     // client.subscribe(sensorTopic);
     // let message = new Paho.MQTT.Message("prova");
@@ -43,6 +43,8 @@ function setMqttRoom(idRoom) {
     client.unsubscribe("/temperature/" + room_list[currentRoom]);
     client.subscribe("/temperature/" + room_list[idRoom]);
     currentRoom = idRoom;
+    document.getElementById("room_name").innerText = room_list[currentRoom];
+
 }
 
 // called when a message arrives
@@ -62,20 +64,36 @@ function onMessageArrived(message) {
     }
 }
 
+function requestRoom() {
+
+
+    var xhttp_room = new XMLHttpRequest();
+    xhttp_room.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            room_list = JSON.parse(xhttp_room.responseText);
+            setMqttRoom(room_list.indexOf("Main Room"));
+        }
+    };
+    xhttp_room.open("GET", "http://localhost:8080/setting/room", true);
+    xhttp_room.send();
+
+
+}
 
 function changeRoom(ev) {
-    switch (ev.target.id) {
-        case "right_arrow" : {
-            console.log("right arrow");
-            currentRoom = (currentRoom + 1) % room_list.length;
+    if (currentRoom !== undefined) {
+        switch (ev.target.id) {
+            case "right_arrow" : {
+                console.log("right arrow");
+                currentRoom = (currentRoom + 1) % room_list.length;
+            }
+                break;
+            case "left_arrow" : {
+                console.log("left arrow");
+                currentRoom = Math.abs(((currentRoom - 1) % room_list.length));
+            }
+                break;
         }
-            break;
-        case "left_arrow" : {
-            console.log("left arrow");
-            currentRoom = Math.abs(((currentRoom - 1) % room_list.length));
-        }
-            break;
+        setMqttRoom(currentRoom);
     }
-    document.getElementById("room_name").innerText = room_list[currentRoom];
-    setMqttRoom(currentRoom);
 }
