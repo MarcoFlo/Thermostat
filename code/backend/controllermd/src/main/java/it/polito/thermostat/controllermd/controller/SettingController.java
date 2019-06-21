@@ -83,6 +83,7 @@ public class SettingController {
      */
     @PostMapping("/setting/room")
     public void postRoom(@RequestBody RoomResource roomResource) {
+        logger.info("Room " + roomResource.getIdRoom() + " will be saved");
         settingService.saveRoom(roomResource);
     }
 
@@ -98,6 +99,7 @@ public class SettingController {
 
     /**
      * List of saved room
+     *
      * @return
      */
     @GetMapping("/setting/room")
@@ -111,13 +113,15 @@ public class SettingController {
      */
     @GetMapping("/setting/default_program")
     public Program getDefaultProgram() {
+        logger.info("/setting/default_program contacted");
         return settingService.getDefaultProgram();
     }
 
     @GetMapping("/setting/program")
     public Program getProgram(@RequestBody String idRoom) {
         logger.info("I'm trying to retrive a program for " + idRoom);
-        return settingService.getProgramRoom(idRoom);
+        Program result = settingService.getProgramRoom(idRoom);
+        return result;
     }
 
     /**

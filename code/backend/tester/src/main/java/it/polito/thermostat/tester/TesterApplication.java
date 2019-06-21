@@ -1,5 +1,6 @@
 package it.polito.thermostat.tester;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.tester.serviceTest.TestLauncher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,11 @@ public class TesterApplication implements CommandLineRunner {
 
     @Value("${spring.redis.password}")
     String redisPassword;
+
+    @Bean
+    public ObjectMapper mapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {

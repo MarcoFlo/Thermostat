@@ -16,7 +16,9 @@ public class TestLauncher {
 
     public void launchAll() {
         try {
-            mqttServiceTest.createEspAndRoom();
+            mqttServiceTest.createMainRoom();
+            mqttServiceTest.createSecondaryEspAndRoom();
+
         } catch (MqttException e) {
             logger.error("newEspTest - publish exception");
         }

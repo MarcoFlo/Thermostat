@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.configuration;
+package it.polito.thermostat.tester.configuration;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -6,11 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class CustomDateDeserializer extends StdDeserializer<LocalTime> {
     private String pattern = "HH:mm";
@@ -24,7 +21,7 @@ public class CustomDateDeserializer extends StdDeserializer<LocalTime> {
     public LocalTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         String time = jsonParser.getText();
         if (time.length() > 5)
-            time.substring(0,time.length() - 3);
+            time = time.substring(0,time.length() - 3);
         return LocalTime.parse(time, dateTimeFormatter);
     }
 

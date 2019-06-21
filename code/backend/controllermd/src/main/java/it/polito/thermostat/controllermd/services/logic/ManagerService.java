@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,6 +33,14 @@ public class ManagerService {
     @Value("#{T(java.lang.Double).parseDouble('${temperature.buffer}')}")
     Double temperatureBuffer;
 
+    @Value("${main.room.name}")
+    String mainRoomName;
+    @Value("${main.room.sensor}")
+    String mainRoomSensor;
+    @Value("${main.room.actuator.cooler}")
+    String mainRoomCooler;
+    @Value("${main.room.actuator.heater}")
+    String mainRoomHeater;
 
     @Autowired
     MQTTservice mqttService;
@@ -58,7 +67,13 @@ public class ManagerService {
     SettingService settingService;
 
 
-//    @Scheduled(fixedRate = 1000)
+    @PostConstruct
+    public void init() {
+        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
+        logger.info("Main room saved");
+    }
+
+    //    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
         List<WSAL> checkWSAL = StreamSupport.stream(wsalRepository.findAll().spliterator(), false).collect(Collectors.toList());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
@@ -112,7 +127,8 @@ public class ManagerService {
             HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
             roomRepository.save(room);
-            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, true);        }
+            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, true);
+        }
     }
 
 
@@ -131,20 +147,22 @@ public class ManagerService {
     }
 
     private void manageESP(List<String> esp8266List, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
-        int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
-        List<String> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
+        if (!esp8266List.isEmpty()) {
+            int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
+            List<String> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
 
-        esp8266ListSeason.stream().forEach(idEsp -> {
-            Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idEsp);
-            if (sensorDataCheck.isPresent()) {
-                SensorData sensorData = sensorDataCheck.get();
-                CommandActuator commandActuator;
-                if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
-                    commandActuator = new CommandActuator(idEsp, !isSummer);
-                else
-                    commandActuator = new CommandActuator(idEsp, isSummer);
-                mqttService.manageActuator(commandActuator);
-            }
-        });
+            esp8266ListSeason.stream().forEach(idEsp -> {
+                Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idEsp);
+                if (sensorDataCheck.isPresent()) {
+                    SensorData sensorData = sensorDataCheck.get();
+                    CommandActuator commandActuator;
+                    if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
+                        commandActuator = new CommandActuator(idEsp, !isSummer);
+                    else
+                        commandActuator = new CommandActuator(idEsp, isSummer);
+                    mqttService.manageActuator(commandActuator);
+                }
+            });
+        }
     }
 }

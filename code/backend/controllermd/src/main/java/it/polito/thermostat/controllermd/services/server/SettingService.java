@@ -49,6 +49,7 @@ public class SettingService {
     }
 
     public Program getDefaultProgram() {
+        Optional<Program> check;
         switch (LocalDateTime.now().getMonth()) {
             case APRIL:
             case MAY:
@@ -57,18 +58,24 @@ public class SettingService {
             case AUGUST:
             case SEPTEMBER:
             case OCTOBER:
-                return programRepository.findById("summer").get();
-
+                check = programRepository.findById("summer");
+                break;
             case NOVEMBER:
             case DECEMBER:
             case JANUARY:
             case FEBRUARY:
             case MARCH:
-                return programRepository.findById("winter").get();
-
+                check = programRepository.findById("winter");
+                break;
             default:
-                return null;
+                check = null;
         }
+        if (check.isPresent())
+            return check.get();
+        else
+            logger.error("get default program error");
+        return null;
+
     }
 
 }

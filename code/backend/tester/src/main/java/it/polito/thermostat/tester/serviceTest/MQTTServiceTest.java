@@ -1,10 +1,13 @@
 package it.polito.thermostat.tester.serviceTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import it.polito.thermostat.tester.resource.RoomResource;
 import it.polito.thermostat.tester.entity.ESP8266;
 import it.polito.thermostat.tester.entity.Room;
+import it.polito.thermostat.tester.entity.program.Program;
 import it.polito.thermostat.tester.repository.ESP8266Repository;
 import it.polito.thermostat.tester.repository.RoomRepository;
-import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.apache.commons.math3.util.Precision;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
@@ -15,8 +18,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,23 +45,42 @@ public class MQTTServiceTest {
     @Value("${mosquitto.broker}")
     String mosquittoBroker;
 
+    @Value("${main.room.name}")
+    String mainRoomName;
+    @Value("${main.room.sensor}")
+    String mainRoomSensor;
+    @Value("${main.room.actuator.cooler}")
+    String mainRoomCooler;
+    @Value("${main.room.actuator.heater}")
+    String mainRoomHeater;
+
+
     @Autowired
     ESP8266Repository esp8266Repository;
 
     @Autowired
     RoomRepository roomRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+
     private IMqttClient mqttClient;
 
     String[] sensorType = {"sensor", "heater", "cooler"};
     String[] roomName = {"Kitchen", "Bathroom", "Living"};
+    List<String> rpiEsp;
 
     List<String> savedEsp;
 
 
     @PostConstruct
     public void init() throws MqttException {
+        esp8266Repository.deleteAll();
+        roomRepository.deleteAll();
+        rpiEsp = Arrays.asList(mainRoomSensor, mainRoomHeater, mainRoomCooler);
         savedEsp = new LinkedList<>();
+        objectMapper.registerModule(new JavaTimeModule());
 
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
@@ -104,32 +130,106 @@ public class MQTTServiceTest {
     }
 
 
-    public void createEspAndRoom() throws MqttException {
+    public void createMainRoom() throws MqttException {
         MqttMessage msg;
-        int id = -1;
-        esp8266Repository.deleteAll();
-        roomRepository.deleteAll();
+
+        //create rpi esp
+        for (int i = 0; i < rpiEsp.size(); i++) {
+            msg = new MqttMessage(sensorType[i].getBytes());
+            msg.setQos(2);
+            mqttClient.publish("/esp8266/" + rpiEsp.get(i), msg);
+        }
+        createRoom(mainRoomName, rpiEsp);
+
+    }
+
+    public void createSecondaryEspAndRoom() throws MqttException {
+        MqttMessage msg;
+        String idEsp;
+        List<String> espRoomList = new LinkedList<>();
 
 
+        // create normal esp
         for (int j = 0; j < roomName.length; j++) {
+            espRoomList = new LinkedList<>();
             for (String s : sensorType) {
                 msg = new MqttMessage(s.getBytes());
                 msg.setQos(2);
                 do {
-                    id = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+                    idEsp = "idTest" + ThreadLocalRandom.current().nextInt(0, 100 + 1);
                 }
-                while (savedEsp.contains("idTest" + id));
+                while (savedEsp.contains(idEsp));
 
-                mqttClient.publish("/esp8266/idTest" + id, msg);
-                if (s.equals("sensor")) {
-                    roomRepository.save(new Room(roomName[j], Collections.singletonList("idTest" + id), true, 18.0));
-                    logger.info("Room " + roomName[j] + " created " + id);
-                }
-                savedEsp.add("idTest" + id);
+                mqttClient.publish("/esp8266/"+idEsp, msg);
+                logger.info("esp with id: " + idEsp + " created");
 
-                logger.info("esp with id: " + "idTest" + id + " created");
+                savedEsp.add(idEsp);
+                espRoomList.add(idEsp);
             }
+            createRoom(roomName[j], espRoomList);
         }
+
+    }
+
+
+    private void createRoom(String idRoom, List<String> espList) {
+        URL url = null;
+        Program defaultProgram = null;
+
+        try {
+            url = new URL("http://localhost:8080/setting/default_program");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoInput(true);
+
+            if (con.getResponseCode() != 200) {
+                System.err.println("The server is not working as expected -> default program");
+                System.exit(-1);
+
+            }
+
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            defaultProgram = objectMapper.readValue(response.toString(), Program.class);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        }
+
+        try {
+            url = new URL("http://localhost:8080/setting/room");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+            DataOutputStream writer = new DataOutputStream(con.getOutputStream());
+            RoomResource roomResource = new RoomResource(idRoom, espList, defaultProgram);
+
+            writer.writeBytes(objectMapper.writeValueAsString(roomResource));
+            writer.flush();
+            writer.close();
+
+            if (con.getResponseCode() != 200) {
+                System.err.println("The server is not working as expected -> new room");
+                System.exit(-1);
+            }
+            logger.info("Room " + idRoom + " created");
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+
+        }
+
 
     }
 

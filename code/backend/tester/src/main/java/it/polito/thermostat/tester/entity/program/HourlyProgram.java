@@ -1,14 +1,12 @@
-package it.polito.thermostat.controllermd.entity.program;
+package it.polito.thermostat.tester.entity.program;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import it.polito.thermostat.controllermd.configuration.CustomDateDeserializer;
-import it.polito.thermostat.controllermd.configuration.CustomTimeSerializer;
+import it.polito.thermostat.tester.configuration.CustomDateDeserializer;
+import it.polito.thermostat.tester.configuration.CustomTimeSerializer;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Data
 public class HourlyProgram {

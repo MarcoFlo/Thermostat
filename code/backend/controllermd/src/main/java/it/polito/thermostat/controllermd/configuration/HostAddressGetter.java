@@ -59,9 +59,7 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                String result = getB("mac");
-                System.out.println("Mac: "+ result);
-                return result;
+                return getB("mac");
             } catch (SocketException e) {
                 i++;
             }
@@ -74,9 +72,7 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                String result = getB("ip");
-                System.out.println("Ip: "+ result);
-                return result;
+                return  getB("ip");
             } catch (SocketException e) {
                 i++;
             }

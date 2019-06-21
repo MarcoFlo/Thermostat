@@ -24,6 +24,6 @@ public class Room {
         this.idRoom = roomResource.getIdRoom();
         this.esp8266List = roomResource.getEsp8266List();
         isManual = false;
-        desiredTemperature = 18.0;
+        desiredTemperature = -1.0;
     }
 }
