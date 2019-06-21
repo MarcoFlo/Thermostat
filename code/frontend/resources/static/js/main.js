@@ -10,8 +10,7 @@ window.onload = function(){
     requestWifiList();
     requestEspFree();
 
-    //debug
-    setMqttRoom("Kitchen");
+
 
     /*var week = document.getElementById("week").onclick = color;*/
 

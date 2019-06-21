@@ -484,22 +484,22 @@ var thermostatDial = (function() {
 
 var nest = new thermostatDial(document.getElementById('thermostat'),{
 	onSetTargetTemperature: function(v) {
-		document.getElementById('input_target_temperature').value = +v;
+		// document.getElementById('input_target_temperature').value = +v;
 	}
 });
 
-document.getElementById('input_target_temperature').addEventListener('input',function() {
-	nest.target_temperature = this.value;
-});
-document.getElementById('input_ambient_temperature').addEventListener('input',function() {
-	nest.ambient_temperature = this.value;
-});
-document.getElementById('input_state').addEventListener('change',function() {
-	nest.hvac_state = this.value;
-});
-document.getElementById('input_leaf').addEventListener('change',function() {
-	nest.has_leaf = this.value;
-});
-document.getElementById('input_away').addEventListener('change',function() {
-	nest.away = this.value;
-});
+// document.getElementById('input_target_temperature').addEventListener('input',function() {
+// 	nest.target_temperature = this.value;
+// });
+// document.getElementById('input_ambient_temperature').addEventListener('input',function() {
+// 	nest.ambient_temperature = this.value;
+// });
+// document.getElementById('input_state').addEventListener('change',function() {
+// 	nest.hvac_state = this.value;
+// });
+// document.getElementById('input_leaf').addEventListener('change',function() {
+// 	nest.has_leaf = this.value;
+// });
+// document.getElementById('input_away').addEventListener('change',function() {
+// 	nest.away = this.value;
+// });

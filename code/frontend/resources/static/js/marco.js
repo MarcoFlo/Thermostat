@@ -22,6 +22,9 @@ function mqttLoad() {
 function onConnect() {
     // Once a connection has been made, make a subscription and send a message.
     console.log("Client connecte");
+
+    //debug todo
+    setMqttRoom("Kitchen");
     // client.subscribe(sensorTopic);
     // let message = new Paho.MQTT.Message("prova");
     // message._setDestinationName(sensorTopic);
@@ -36,23 +39,34 @@ function onConnectionLost(responseObject) {
 }
 
 
-
 function handleNewThermostatClientResource(message) {
+    console.log(message.payloadString);
+
     var thermostatClientResource = JSON.parse(message.payloadString);
     console.log(thermostatClientResource);
-    nest.target_temperature = thermostatClientResource.desiredTemperature
+    nest.target_temperature = thermostatClientResource.desiredTemperature;
     nest.ambient_temperature = thermostatClientResource.currentApparentTemperature;
 
 }
 
-function setMqttRoom(idRoom: String)
-{
-    client.unsubscribe({topic: "/temperature/"+currentRoom});
-    client.subscribe("/temperature/"+idRoom, {onSuccess: handleNewThermostatClientResource});
+function setMqttRoom(idRoom) {
+    client.unsubscribe("/temperature/" + currentRoom);
+    client.subscribe("/temperature/" + idRoom);
     currentRoom = idRoom;
 }
 
 // called when a message arrives
 function onMessageArrived(message) {
-    console.log("onMessageArrived:" + message.payloadString);
+    console.log("onMessageArrived:\n\tTopic -> " + message._getDestinationName() + "\n\tMessage -> " + message.payloadString);
+
+    switch (message._getDestinationName()) {
+        case "/temperature/" + currentRoom: {
+            var thermostatClientResource = JSON.parse(message.payloadString);
+            nest.target_temperature = thermostatClientResource.desiredTemperature;
+            nest.ambient_temperature = thermostatClientResource.currentApparentTemperature;
+            break;
+        }
+
+
+    }
 }
