@@ -10,11 +10,26 @@
 - ....?....
 
 # How to test
-You need to execute first the controllermd and then the tester.
-The tester at every execution will delete the old esp and create 3 new one (sensor, cooler, heater) + one standard espDataProducer that will produce data every 10 seconds
+- Open a cmd and run "net stop mosquitto"
+- Add this line to the end of "C:\Program Files\mosquitto\mosquitto.conf":  
 
-Open a cmd and run "java -jar controllermd-0.0.1-SNAPSHOT.jar"  
-The open an other cmd and run "java -jar "tester-0.0.1-SNAPSHOT.jar"
+      listener 1883
+      listener 9001
+      protocol websockets
+- Restart the system
+- execute the controllermd  
+    Open a cmd and run "java -jar controllermd-0.0.1-SNAPSHOT.jar" 
+  
+- execute the tester   
+    Open an other cmd and run "java -jar "tester-0.0.1-SNAPSHOT.jar
+    
+      The tester at every execution will:
+      - delete the old esp
+      - create 3 new one (sensor, cooler, heater) for each room (Kitchen,Living and Bathroom)
+      - produce data every 10 seconds
+
+ 
+
 
 
 # How to set up github
