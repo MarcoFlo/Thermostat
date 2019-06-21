@@ -39,16 +39,6 @@ function onConnectionLost(responseObject) {
 }
 
 
-function handleNewThermostatClientResource(message) {
-    console.log(message.payloadString);
-
-    var thermostatClientResource = JSON.parse(message.payloadString);
-    console.log(thermostatClientResource);
-    nest.target_temperature = thermostatClientResource.desiredTemperature;
-    nest.ambient_temperature = thermostatClientResource.currentApparentTemperature;
-
-}
-
 function setMqttRoom(idRoom) {
     client.unsubscribe("/temperature/" + currentRoom);
     client.subscribe("/temperature/" + idRoom);
@@ -57,7 +47,7 @@ function setMqttRoom(idRoom) {
 
 // called when a message arrives
 function onMessageArrived(message) {
-    console.log("onMessageArrived:\n\tTopic -> " + message._getDestinationName() + "\n\tMessage -> " + message.payloadString);
+    // console.log("onMessageArrived:\n\tTopic -> " + message._getDestinationName() + "\n\tMessage -> " + message.payloadString);
 
     switch (message._getDestinationName()) {
         case "/temperature/" + currentRoom: {
