@@ -69,16 +69,17 @@ function change_color() {
                 document.getElementById(array[x]).disabled = true;
 
                 var xhr = new XMLHttpRequest();
-                xhr.setRequestHeader("Content-Type", "application/json");
 
                 if (name === "Summer") {
                     nest.hvac_state = 'cooling';
                     xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("summer");
                 } else if (name === "Winter") {
                     nest.hvac_state = 'heating';
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("winter");
                 }
             }
