@@ -1,7 +1,10 @@
+var obj;
 window.onload = function(){
     document.getElementById("Summer").onclick = change_color;
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = change_color;
+
+    document.getElementById("connect").onclick = connect;
 
    /* document.getElementById("list-wifi").onclick = function(){
         alert(this.id);
@@ -15,10 +18,13 @@ window.onload = function(){
             /*console.log(xhttp.responseText);*/
             var texto = document.getElementById("text");
             texto.value = "";
-            var obj = JSON.parse(xhttp_wifi.responseText);
+            obj = JSON.parse(xhttp_wifi.responseText);
             var key = obj[0].isKnown; 
             if( key == 1){
+                document.getElementById("cont-text").style.visibility = "hidden";
                 texto.value= "1234"; 
+            }else{
+                document.getElementById("cont-text").style.visibility = "visible";
             }
         }
         };

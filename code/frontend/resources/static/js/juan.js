@@ -20,7 +20,7 @@ function requestWifiList() {
         if (this.readyState == 4 && this.status == 200) {
             // Typical action to be performed when the document is ready:
             /*console.log(xhttp.responseText);*/
-            var obj = JSON.parse(xhttp_wifi.responseText);
+            obj = JSON.parse(xhttp_wifi.responseText);
 
             console.log(obj[0].essid);
             /*var array = obj.split("");*/
@@ -46,7 +46,10 @@ function requestWifiList() {
                         texto.value = "";
                         var key = obj[this.value-1].isKnown; 
                         if( key == 1){
+                            document.getElementById("cont-text").style.visibility = "hidden";
                             texto.value= "1234";    
+                        }else{
+                            document.getElementById("cont-text").style.visibility = "visible";
                         }
                         //}
                     };
@@ -113,3 +116,23 @@ function change_color() {
     }
 }
 
+function connect(){
+    var wifi_selected = document.getElementsByName("wifi-1");
+    //alert(wifi_selected.length);
+    for(i=1;i<=wifi_selected.length;i++){
+        if(wifi_selected[i-1].checked){
+             var xhr = new XMLHttpRequest();
+             //obj[i-1].essid = "nana";
+             //alert(obj[i-1].essid);
+             if(!obj[i-1].isKnown){
+                var texto = document.getElementById("text").value;
+                obj[i-1].netPassword = texto;
+            }
+            //alert(obj[i-1].netPassword);
+            var jsonSend = JSON.stringify(obj[i-1]);
+            xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(jsonSend);
+        }
+    }
+}
