@@ -20,7 +20,6 @@ function requestWifiList() {
         if (this.readyState == 4 && this.status == 200) {
             // Typical action to be performed when the document is ready:
             /*console.log(xhttp.responseText);*/
-            console.log("fd33");
             var obj = JSON.parse(xhttp_wifi.responseText);
 
             console.log(obj[0].essid);
@@ -28,12 +27,32 @@ function requestWifiList() {
             console.log(obj.length);
             if (obj.length > 1) {
                 var resta = obj.length - 1;
-                var capa = document.getElementById("list-wifi");
+                var capa = document.getElementById("options-wifi");
                 for (i = 1; i <= resta; i++) {
                     var input = document.createElement("input");
                     input.setAttribute("type", "radio");
                     var aux = 1 + i;
                     input.setAttribute("name", "wifi-1");
+                    input.setAttribute("value", ""+aux);
+                    input.setAttribute("id", "wifi-list-"+aux);
+                    input.onclick= function(){
+                        //var xhttp_wifi = new XMLHttpRequest();
+                        //xhttp_wifi.onreadystatechange = function () {
+                         //   if (this.readyState == 4 && this.status == 200) {
+                            // Typical action to be performed when the document is ready:
+                            /*console.log(xhttp.responseText);*/
+                        //    var obj = JSON.parse(xhttp_wifi.responseText);
+                        var texto = document.getElementById("text");
+                        texto.value = "";
+                        var key = obj[this.value-1].isKnown; 
+                        if( key == 1){
+                            texto.value= "1234";    
+                        }
+                        //}
+                    };
+                    //xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
+                    //xhttp_wifi.send();
+                    //};
                     var span = document.createElement("SPAN");
                     span.setAttribute("id", "wifi-" + aux);
                     var branch = document.createElement("br");
