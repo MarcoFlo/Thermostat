@@ -30,3 +30,4 @@ HELP.md
 
 ### mqtt ###
 .lck
+./**/.msg

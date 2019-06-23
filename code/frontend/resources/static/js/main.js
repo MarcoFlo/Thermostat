@@ -6,9 +6,6 @@ window.onload = function(){
 
     document.getElementById("connect").onclick = connect;
 
-   /* document.getElementById("list-wifi").onclick = function(){
-        alert(this.id);
-    }  */
 
     document.getElementById("wifi-list-1").onclick = function(){
         var xhttp_wifi = new XMLHttpRequest();
@@ -28,7 +25,7 @@ window.onload = function(){
             }
         }
         };
-        xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
+        xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true);
         xhttp_wifi.send();
     };
 
