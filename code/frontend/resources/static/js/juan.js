@@ -26,12 +26,12 @@ function requestWifiList() {
             /*var array = obj.split("");*/
             console.log(obj.length);
             if (obj.length > 1) {
-                var resta = obj.length - 1;
+                //var resta = obj.length - 1;
                 var capa = document.getElementById("options-wifi");
-                for (i = 1; i <= resta; i++) {
+                for (i = 1; i <= obj.length; i++) {
                     var input = document.createElement("input");
                     input.setAttribute("type", "radio");
-                    var aux = 1 + i;
+                    var aux = i;
                     input.setAttribute("name", "wifi-1");
                     input.setAttribute("value", ""+aux);
                     input.setAttribute("id", "wifi-list-"+aux);
