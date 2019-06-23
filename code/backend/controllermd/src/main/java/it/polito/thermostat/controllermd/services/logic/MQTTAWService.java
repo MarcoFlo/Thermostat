@@ -63,7 +63,7 @@ public class MQTTAWService {
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         try {
             awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
-            logger.info("This event will be published" + awsIotMessage.getStringPayload());
+//            logger.info("This event will be published" + awsIotMessage.getStringPayload());
             mqttClient.publish(awsIotMessage);
         } catch (AWSIotException | JsonProcessingException e) {
             logger.error("Error eventTopic" + e.toString());

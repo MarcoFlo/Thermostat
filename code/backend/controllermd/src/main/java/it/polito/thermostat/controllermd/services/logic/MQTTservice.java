@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -52,6 +53,9 @@ public class MQTTservice {
 
     @Autowired
     RoomRepository roomRepository;
+
+    @Autowired
+    Environment environment;
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
@@ -165,12 +169,18 @@ public class MQTTservice {
     }
 
     private void updateClientData(String idEsp, SensorData sensorData) throws MqttException, JsonProcessingException {
-        Optional<Room> checkRoom = ((List<Room>) roomRepository.findAllById(Arrays.asList("Kitchen", "Bathroom", "Living"))).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+        Optional<Room> checkRoom;
+        if (environment.getActiveProfiles()[0].equals("dev"))
+            checkRoom = ((List<Room>) roomRepository.findAllById(Arrays.asList("Kitchen", "Bathroom", "Living", "MainRoom"))).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+        else
+            checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+
         if (checkRoom.isPresent()) {
             Room room = checkRoom.get();
             ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getIsManual() ? -1 : room.getDesiredTemperature(), sensorData.getApparentTemperature());
             MqttMessage msg = new MqttMessage(objectMapper.writeValueAsString(thermostatClientResource).getBytes());
             msg.setQos(2);
+            msg.setRetained(true);
             mqttClient.publish("/temperature/" + room.getIdRoom(), msg);
 
         }
