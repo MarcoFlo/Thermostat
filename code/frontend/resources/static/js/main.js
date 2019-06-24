@@ -7,7 +7,6 @@ window.onload = function(){
     document.getElementById("connect").onclick = connect;
 
 
-
     document.getElementById("right_arrow").addEventListener('click', changeRoom);
     document.getElementById("left_arrow").addEventListener('click', changeRoom);
 

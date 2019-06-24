@@ -30,11 +30,12 @@ function requestWifiList() {
                 var capa = document.getElementById("options-wifi");
                 for (i = 1; i <= obj.length; i++) {
                     var input = document.createElement("input");
-                    input.setAttribute("type", "radio");
+                    input.setAttribute("type", "button");
+                    input.setAttribute("class", "btn btn-secondary");
                     var aux = i;
                     input.setAttribute("name", "wifi-1");
-                    input.setAttribute("value", ""+aux);
-                    input.setAttribute("id", "wifi-list-"+aux);
+                    input.setAttribute("value", ""+obj[i-1].essid);
+                    input.setAttribute("id", ""+aux);
                     input.onclick= function(){
                         //var xhttp_wifi = new XMLHttpRequest();
                         //xhttp_wifi.onreadystatechange = function () {
@@ -44,30 +45,31 @@ function requestWifiList() {
                         //    var obj = JSON.parse(xhttp_wifi.responseText);
                         var texto = document.getElementById("text");
                         texto.value = "";
-                        var key = obj[this.value-1].isKnown; 
+                        var key = obj[this.id-1].isKnown; 
                         if( key == 1){
                             document.getElementById("cont-text").style.visibility = "hidden";
                             texto.value= "1234";    
                         }else{
                             document.getElementById("cont-text").style.visibility = "visible";
+                            $('#text').trigger('click');
                         }
                         //}
                     };
                     //xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
                     //xhttp_wifi.send();
                     //};
-                    var span = document.createElement("SPAN");
-                    span.setAttribute("id", "wifi-" + aux);
-                    var branch = document.createElement("br");
+                    //var span = document.createElement("SPAN");
+                    //span.setAttribute("id", "wifi-" + aux);
+                    //var branch = document.createElement("br");
                     capa.appendChild(input);
-                    capa.appendChild(span);
-                    capa.appendChild(branch);
+                    //capa.appendChild(span);
+                    //capa.appendChild(branch);
                 }
             }
-            for (i = 0; i < obj.length; i++) {
+            /*for (i = 0; i < obj.length; i++) {
                 var aux = i + 1;
                 document.getElementById("wifi-" + aux).innerHTML = obj[i].essid;
-            }
+            }*/
 
 
         }

@@ -3036,7 +3036,7 @@ http://www.opensource.org/licenses/mit-license.php
 		// option is true.
 		appendLocally: false,
 		// When appendLocally is false, the keyboard will be appended to this object
-		appendTo: 'body',
+		appendTo: '#cont-text',
 
 		// Wrap all <br>s inside of a contenteditable in a div; without wrapping, the caret
 		// position will not be accurate
@@ -3075,7 +3075,7 @@ http://www.opensource.org/licenses/mit-license.php
 		resetDefault: true,
 
 		// Event (namespaced) on the input to reveal the keyboard. To disable it, just set it to ''.
-		openOn: 'focus',
+		openOn: 'click',
 
 		// enable the keyboard on readonly inputs
 		activeOnReadonly: false,
