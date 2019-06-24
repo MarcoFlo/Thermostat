@@ -43,6 +43,10 @@ function requestWifiList() {
                             // Typical action to be performed when the document is ready:
                             /*console.log(xhttp.responseText);*/
                         //    var obj = JSON.parse(xhttp_wifi.responseText);
+                        for (i = 1; i <= obj.length; i++) {
+                            document.getElementById(i).className = "btn btn-secondary";
+                        }
+                        document.getElementById(this.id).className = "btn btn-primary";
                         var texto = document.getElementById("text");
                         texto.value = "";
                         var key = obj[this.id-1].isKnown; 
