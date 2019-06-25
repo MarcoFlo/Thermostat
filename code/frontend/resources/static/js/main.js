@@ -2,7 +2,7 @@ var obj;
 window.onload = function(){
     document.getElementById("Summer").onclick = change_color;
     document.getElementById("Winter").onclick = change_color;
-    document.getElementById("Manual").onclick = change_color;
+    document.getElementById("Manual").onclick = manual;
 
     document.getElementById("connect").onclick = connect;
 
