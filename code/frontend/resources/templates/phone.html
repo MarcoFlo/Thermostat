@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <title>Nest Thermostat Control</title>
 
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="../static/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/all.min.css">
     <script src="../static/js/jquery.js"></script>
-    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.css">
 
     <link rel="stylesheet" href="../imported_component/keyboard/docs/css/font-awesome.min.css">
@@ -68,55 +68,29 @@
                      data-parent="#accordionExample">
                     <div class="card-body">
                         <div class="container">
-
-                            <div class="row">
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-default" id="left_arrow_timetable" value="0">
-                                        <i class="fa fa-chevron-left"></i>
-                                    </button>
-                                </div>
-                                <div class="col-3">
-                                    <h6 id="profile">WAKE</h6>
-                                </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-default" id="right_arrow_timetable" value="0">
-                                        <i class="fa fa-chevron-right"></i>
-                                    </button>
-                                </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-secondary" id="weekend_button" value="0">
-                                        Weekend
-                                    </button>
-                                </div>
+                            <div class="row pt-2 pb-3">
+                                <select class="form-control" id="time-slice-select">
+                                    <option>Wake</option>
+                                    <option>Leave</option>
+                                    <option>Return</option>
+                                    <option>Sleep</option>
+                                </select>
                             </div>
 
                             <div class="row">
-                                <div>
-
-                                    <input id="demo-input"/>
-                                    <span>
-                                                                            <i class="fa glyphicon-time"></i>
-
+                                <div class="col py-2 pl-0 pr-2 input-group clockpicker" id="start-time">
+                                    <span class="input-group-addon input-group-prepend ">
+                                        <i class="input-group-text fa fa-clock"></i>
                                     </span>
-
-
+                                    <input id="start-time-input" placeholder="Start time" class="form-control"/>
+                                </div>
+                                <div class="col py-2 pl-2 pr-0 input-group clockpicker" id="end-time">
+                                    <span class="input-group-addon input-group-prepend ">
+                                        <i class="input-group-text fa fa-clock"></i>
+                                    </span>
+                                    <input id="end-time-input" placeholder="End time" class="form-control"/>
                                 </div>
 
-
-                                <div class="col-1">
-                                    <button type="button" class="btn btn-outline-dark" id="minus_temp"
-                                            value="0">-
-                                    </button>
-                                </div>
-                                <div class="col-3">
-                                    <input type="text" name="temp" class="form-control" id="temp" min="10"
-                                           max="25" step="1" value="21" readonly>
-                                </div>
-                                <div class="col-1">
-                                    <button type="button" class="btn btn-outline-dark" id="plus_temp" value="1">
-                                        +
-                                    </button>
-                                </div>
                             </div>
 
                         </div>
@@ -138,21 +112,8 @@
 <script type="text/javascript" src="../imported_component/clockpicker/assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="../imported_component/clockpicker/assets/js/bootstrap.min.js"></script>
 <script src="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
-<script type="text/javascript">
-    $('#demo-input').change(function () {
-        // TODO: time changed
-        console.log(this.value);
-    });
-    $('#demo-input').clockpicker({
-        autoclose: true
-    });
-
-    // if (something) {
-    //     // Manual operations (after clockpicker is initialized).
-    //     $('#demo-input').clockpicker('show') // Or hide, remove ...
-    //         .clockpicker('toggleView', 'minutes');
-    // }
-</script>
+<script type="text/javascript" src="../static/js/bootstrap/bootstrap.min.js"></script>
+<script src="../static/js/timeSelector.js"></script>
 </body>
 
 </html>
