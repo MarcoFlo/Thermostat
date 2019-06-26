@@ -63,48 +63,37 @@
                 </div>
                 <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
                      data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="row pt-2 pb-3">
-                                <select class="form-control" id="time-slice-select">
-                                    <option>Wake</option>
-                                    <option>Leave</option>
-                                    <option>Return</option>
-                                    <option>Sleep</option>
-                                </select>
+                    <div class="card-body container p-0">
+                        <div class="row pt-2 pb-3">
+                            <select class="form-control" id="time-slice-select">
+                                <option>Wake</option>
+                                <option>Leave</option>
+                                <option>Return</option>
+                                <option>Sleep</option>
+                            </select>
+                        </div>
+
+                        <div class="row pt-2 m-0 w-100 input-group clockpicker" id="start-time">
+
+                            <div class="input-group-addon input-group-prepend ">
+                                <i class="input-group-text fa fa-clock"></i>
                             </div>
+                            <input id="start-time-input" placeholder="Start time" class="form-control"
+                                   aria-describedby="start-time-help-block"/>
+                            <small class="d-none" id="start-time-help-block"></small>
+                        </div>
 
-                            <div class="row">
-                                <div class="col py-2 pl-0 pr-2 input-group clockpicker" id="start-time">
 
-                                    <!--                                    <div class="row">-->
-                                    <span class="input-group-addon input-group-prepend ">
-                                        <i class="input-group-text fa fa-clock"></i>
-                                    </span>
-                                    <!--                                    </div>-->
-
-                                    <!--                                    <div class="row">-->
-                                    <input id="start-time-input" placeholder="Start time" class="form-control"
-                                           aria-describedby="start-time-help-block"/>
-                                    <!--                                    </div>-->
-
-                                    <!--                                    <div class="row">-->
-                                    <small id="start-time-help-block" class="form-text text-warning"></small>
-                                    <!--                                    </div>-->
-                                </div>
-                            </div>
-
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
+
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+
+
             </div>
-
-
-        </div>
     </form>
 
 </div>

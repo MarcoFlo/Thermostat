@@ -15,10 +15,17 @@ $('#start-time-input').change(function () {
     if (checkTimeBoundary(time_slice_select_index, start_time)) {
         console.log("Selected time okay");
         sliceMap.set(time_slice_select, start_time);
+
+        this.classList.remove('border-danger');
         start_time_help_block.innerHTML = "";
+        start_time_help_block.className = "d-none";
+
     } else {
         console.log("Selected time not okay");
+        this.classList.add('border-danger');
+
         start_time_help_block.innerHTML = getSliceErrorString(time_slice_select, time_slice_select_index);
+        start_time_help_block.className = "alert alert-warning w-100 p-1";
     }
 
 });
@@ -74,7 +81,7 @@ function getSliceAfter(current_slice_index) {
 function getSliceErrorString(time_slice_select, time_slice_select_index) {
     var before = getSliceBefore(time_slice_select_index);
     var after = getSliceAfter(time_slice_select_index);
-    var result = "The value for " + time_slice_select;
+    var result = "The " + time_slice_select.toLowerCase() + " time";
 
     if (before !== undefined) {
         before = before.toTimeString();
