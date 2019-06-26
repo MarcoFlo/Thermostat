@@ -2,40 +2,46 @@ var sliceArr = ["Wake", "Leave", "Return", "Sleep"];
 var sliceMap = new Map();
 
 $('#start-time-input').change(function () {
-    // TODO: time changed
-    console.log("start time -> " + this.value);
-    var start_time = new Date("2019-01-01T" + this.value);
-    console.log(start_time);
     var start_time_help_block = document.getElementById("start-time-help-block");
 
-    var time_slice_select = document.getElementById("time-slice-select").value;
-    var time_slice_select_index = sliceArr.indexOf(time_slice_select);
+    if (this.value.length === 5 && this.value.indexOf(":") === 2) {
+        var start_time = new Date("2019-01-01T" + this.value);
+        console.log(start_time);
+
+        var time_slice_select = document.getElementById("time-slice-select").value;
+        var time_slice_select_index = sliceArr.indexOf(time_slice_select);
 
 
-    if (checkTimeBoundary(time_slice_select_index, start_time)) {
-        console.log("Selected time okay");
-        sliceMap.set(time_slice_select, start_time);
+        if (checkTimeBoundary(time_slice_select_index, start_time)) {
+            console.log("Selected time okay");
+            sliceMap.set(time_slice_select, start_time);
 
-        this.classList.remove('border-danger');
-        start_time_help_block.innerHTML = "";
-        start_time_help_block.className = "d-none";
+            this.classList.remove('border-danger');
+            start_time_help_block.innerHTML = "";
+            start_time_help_block.className = "d-none";
+
+        } else {
+            console.log("Selected time not okay");
+            this.classList.add('border-danger');
+
+            start_time_help_block.innerHTML = getSliceErrorString(time_slice_select, time_slice_select_index);
+            start_time_help_block.className = "alert alert-warning p-1 w-100";
+        }
 
     } else {
-        console.log("Selected time not okay");
+
         this.classList.add('border-danger');
 
-        start_time_help_block.innerHTML = getSliceErrorString(time_slice_select, time_slice_select_index);
-        start_time_help_block.className = "alert alert-warning w-100 p-1";
+        start_time_help_block.innerHTML = "Insert a valid time: HH:mm";
+        start_time_help_block.className = "alert alert-warning p-1 w-100";
     }
+
 
 });
 
 $('.clockpicker').clockpicker({
     align: 'left',
     donetext: 'Done',
-    beforeDone: function () {
-        console.log("before done");
-    }
 });
 
 function checkTimeBoundary(current_slice_index, current_start_time) {
