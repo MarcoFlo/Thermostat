@@ -88,14 +88,14 @@ function requestWifiList() {
 function change_color() {
     var name = this.id;
     var value = this.value;
-    var array = ["Summer", "Winter", "Manual"];
+    var array = ["Summer", "Winter"];
     for (var x = 0; x < array.length; x++) {
         if (value == 0) {
             if (array[x] != name) {
                 document.getElementById(name).className = "btn btn-primary";
                 document.getElementById(name).value = 1;
-                document.getElementById(array[x]).disabled = true;
-
+                document.getElementById(array[x]).className = "btn btn-secondary";
+                document.getElementById(array[x]).value = 0;
                 var xhr = new XMLHttpRequest();
 
                 if (name === "Summer") {
@@ -115,8 +115,21 @@ function change_color() {
             if (array[x] != name) {
                 document.getElementById(name).className = "btn btn-secondary";
                 document.getElementById(name).value = 0;
-                document.getElementById(array[x]).disabled = false;
-                nest.hvac_state = 'off';
+                document.getElementById(array[x]).className = "btn btn-primary";
+                document.getElementById(array[x]).value = 1;
+                //nest.hvac_state = 'off';
+                if (array[x] === "Summer") {
+                    nest.hvac_state = 'cooling';
+                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.send("summer");
+                } else if (array[x] === "Winter") {
+                    nest.hvac_state = 'heating';
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.send("winter");
+                }
             }
         }
     }
@@ -140,5 +153,18 @@ function connect(){
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(jsonSend);
         }
+    }
+}
+
+function manual(){
+    var name = this.id;
+    var value = this.value;
+    if (value == 0) {
+        document.getElementById(name).className = "btn btn-primary";
+        document.getElementById(name).value = 1;
+    }
+    else if (value == 1) {
+        document.getElementById(name).className = "btn btn-secondary";
+        document.getElementById(name).value = 0;
     }
 }
