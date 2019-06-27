@@ -1,13 +1,20 @@
 window.onload = function () {
-    document.getElementById("save").onclick = savePhoneForm;
-    document.getElementById("reset").onclick = resetPhoneForm;
+    document.getElementById("save").addEventListener("click", savePhoneForm);
+    document.getElementById("reset").addEventListener("click", resetPhoneForm);
+
+    document.getElementById("weekend").addEventListener("click", toggleButton);
+
+    document.getElementById("time-slice-select").addEventListener("change", saveHourlyData);
+    document.getElementById("weekend").addEventListener("click", saveHourlyData);
+
+
     requestListFreeEsp();
 
 
 };
 
 
-function toggleEspButton() {
+function toggleButton() {
     if (this.classList.contains("btn-secondary"))
         this.className = "btn btn-primary";
     else
@@ -30,7 +37,7 @@ function requestListFreeEsp() {
                 button.setAttribute("type", "button");
                 button.setAttribute("class", "btn btn-secondary");
                 button.setAttribute("name", "esp-button");
-                button.onclick = toggleEspButton;
+                button.onclick = toggleButton;
                 button.innerHTML = espList[i];
                 button.setAttribute("id", espList[i]);
 
@@ -46,10 +53,16 @@ function requestListFreeEsp() {
 
 function resetPhoneForm() {
     console.log("resetting the form");
-    sliceMap = new Map();
+    sliceList = [new Map(), new Map()];
     document.getElementById("roomName").value = "";
     document.getElementById("start-time-input").value = "";
+    document.getElementById("weekend").className = "btn btn-secondary";
+    document.getElementById("time-slice-select").value = sliceArr[0];
 
+    document.getElementById("start-time-input").classList.remove('border-danger');
+    var start_time_help_block = document.getElementById("start-time-help-block");
+    start_time_help_block.innerHTML = "";
+    start_time_help_block.className = "d-none";
 
     var espButtonList = document.getElementById("esp-container").children;
     for (var i = 0; i < espButtonList.length; i++)
@@ -66,10 +79,12 @@ function savePhoneForm() {
             espSelected.push(espButtonList[i].children[0].id);
         }
     }
-    console.log(espSelected[0]);
-    console.log(JSON.stringify({idRoom: room_name, esp8266List: espSelected}));
+    console.log(sliceList[0].get("Wake"));
+    // console.log(sliceList[1].toString());
 
-    if (room_name !== "" && espSelected.length !== 0 && sliceMap.size === 4) {
+    console.log(JSON.stringify({idRoom: room_name, esp8266List: espSelected, weeklyList: sliceList}));
+
+    if (room_name !== "" && espSelected.length !== 0 && sliceList[0].size === 4 && sliceList[1].size === 4) {
 
         var xhttp_room = new XMLHttpRequest();
         xhttp_room.open("POST", "http://localhost:8080/setting/room", true);
@@ -78,6 +93,23 @@ function savePhoneForm() {
         xhttp_room.send();
 
 
+    } else {
+        var roomFormError = document.createElement("h6");
+        roomFormError.setAttribute("class", "alert alert-warning p-0 px-2 m-0 text-center");
+        roomFormError.setAttribute("id", "room-form-error");
+        roomFormError.innerHTML = "Fill all the field";
+        document.getElementById("save-div").append(roomFormError);
+        setTimeout(function () {
+            $("#room-form-error").delay(3000).remove()
+        }, 3000);
     }
-
 }
+
+
+function Program(idProgram, weeklyMap, age, gender, interests) {
+
+    // property and method definitions
+    this.idProgram = idProgram;
+    this.weeklyMap = weeklyMap;
+}
+

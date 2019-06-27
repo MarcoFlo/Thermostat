@@ -1,9 +1,7 @@
 package it.polito.thermostat.controllermd.services.logic;
 
 import it.polito.thermostat.controllermd.entity.*;
-import it.polito.thermostat.controllermd.entity.program.Program;
-import it.polito.thermostat.controllermd.entity.program.DailyProgram;
-import it.polito.thermostat.controllermd.entity.program.HourlyProgram;
+import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.*;
 import it.polito.thermostat.controllermd.services.server.SettingService;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
@@ -11,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -124,7 +121,7 @@ public class ManagerService {
             else
                 programRoom = settingService.getDefaultProgram();
 
-            HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
+            Program.HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
             roomRepository.save(room);
             manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, true);
@@ -132,14 +129,14 @@ public class ManagerService {
     }
 
 
-    private HourlyProgram findNearestTimeSlot(Program programRoom) {
-        DailyProgram dailyProgram;
+    private Program.HourlyProgram findNearestTimeSlot(Program programRoom) {
+        Program.DailyProgram dailyProgram;
         if (LocalDate.now().getDayOfWeek().getValue() <= 5)//lunedi - venerdì
-            dailyProgram = programRoom.getWeeklyMap().get(1);
+            dailyProgram = programRoom.getWeeklyList().get(1);
         else
-            dailyProgram = programRoom.getWeeklyMap().get(2);
+            dailyProgram = programRoom.getWeeklyList().get(2);
 
-        HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
+        Program.HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
                 .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(LocalTime.now()))
                 .min(Comparator.comparing(o -> o.getTime()))
                 .get();

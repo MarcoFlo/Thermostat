@@ -2,7 +2,7 @@ package it.polito.thermostat.controllermd.services.server;
 
 import it.polito.thermostat.controllermd.configuration.exception.ProgramNotExistException;
 import it.polito.thermostat.controllermd.entity.Room;
-import it.polito.thermostat.controllermd.entity.program.Program;
+import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.resources.RoomResource;

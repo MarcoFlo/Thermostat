@@ -1,6 +1,6 @@
 package it.polito.thermostat.controllermd.controller;
 
-import it.polito.thermostat.controllermd.entity.program.Program;
+import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.resources.AssociationResource;
 import it.polito.thermostat.controllermd.resources.RoomResource;

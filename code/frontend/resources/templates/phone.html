@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <title>Nest Thermostat Control</title>
 
-<!--    <script src="../static/js/bootstrap/bootstrap.min.js"></script>-->
+    <!--    <script src="../static/js/bootstrap/bootstrap.min.js"></script>-->
 
     <link rel="stylesheet" href="../static/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/all.min.css">
     <script src="../static/js/jquery.js"></script>
     <link rel="stylesheet" type="text/css" href="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.css">
+
 
     <link rel="stylesheet" href="../imported_component/keyboard/docs/css/font-awesome.min.css">
 
@@ -65,13 +66,18 @@
                      data-parent="#accordionExample">
                     <div class="card-body container my-2">
 
-                        <div class="form-group">
-                            <select class="form-control" id="time-slice-select">
-                                <option>Wake</option>
-                                <option>Leave</option>
-                                <option>Return</option>
-                                <option>Sleep</option>
-                            </select>
+                        <div class="form-group row">
+                            <div class="col">
+                                <select class="form-control" id="time-slice-select">
+                                    <option>Wake</option>
+                                    <option>Leave</option>
+                                    <option>Return</option>
+                                    <option>Sleep</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" id="weekend" class="btn btn-secondary">Weekend</button>
+                            </div>
                         </div>
 
                         <div class="row  m-0 input-group clockpicker" id="start-time">
@@ -82,20 +88,27 @@
                                    aria-describedby="start-time-help-block"/>
                             <small class="d-none" id="start-time-help-block"></small>
                         </div>
+                        <div  class="row m-0 pt-2 input-group">
+                            <input type="number" id="temperature" value="20.0" data-decimals="1" min="5" max="30" step="0.1"/>
 
-
+                        </div>
                     </div>
-
                 </div>
-
-
             </div>
 
             <div class="card">
-                <div class="card-header modal-footer" id="headingThree">
-                    <button id="reset" type="button" class="btn btn-secondary">Reset</button>
-                    <button id="save" type="button" class="btn btn-primary">Save changes</button>
+                <div class="card-header" id="headingThree">
+                    <div class="row float-right">
+                        <div class="col float-right m-1 p-0">
+                            <button id="reset" type="button" class="btn btn-secondary m-1">Reset</button>
+                        </div>
+                        <div id="save-div" class="col float-right p-0 m-1">
+                            <button id="save" type="button" class="btn btn-primary m-1">Save changes</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
     </form>
 
 </div>
@@ -106,6 +119,12 @@
 <script src="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap/bootstrap.min.js"></script>
 <script src="../static/js/timeSelector.js"></script>
+
+<script src="../imported_component/bootstrap-input-spinner-master/src/bootstrap-input-spinner.js"></script>
+
+<script>
+    $("input[type='number']").inputSpinner()
+</script>
 </body>
 
 </html>

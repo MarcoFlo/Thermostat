@@ -1,6 +1,6 @@
 package it.polito.thermostat.controllermd.resources;
 
-import it.polito.thermostat.controllermd.entity.program.Program;
+import it.polito.thermostat.controllermd.entity.Program;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,59 +1,110 @@
 var sliceArr = ["Wake", "Leave", "Return", "Sleep"];
-var sliceMap = new Map();
+var sliceList = [new Map(), new Map()];
+var time_slice_select = sliceArr[0];
+$('#start-time-input').change(checkClockValidity);
 
-$('#start-time-input').change(function () {
+
+function getWeekPos() {
+    var weekPos = 0;
+    if (document.getElementById("weekend").classList.contains("btn-primary"))
+        weekPos = 1;
+
+    return weekPos;
+}
+
+function checkClockValidity() {
+
     var start_time_help_block = document.getElementById("start-time-help-block");
+    var clock = document.getElementById("start-time-input");
 
-    if (this.value.length === 5 && this.value.indexOf(":") === 2) {
-        var start_time = new Date("2019-01-01T" + this.value);
-        console.log(start_time);
+    if (clock.value.length === 5 && clock.value.indexOf(":") === 2) {
+        var start_time = new Date("2019-01-01T" + clock.value);
 
-        var time_slice_select = document.getElementById("time-slice-select").value;
         var time_slice_select_index = sliceArr.indexOf(time_slice_select);
+        var weekPos = getWeekPos();
 
 
-        if (checkTimeBoundary(time_slice_select_index, start_time)) {
+        if (checkTimeBoundary(time_slice_select_index, start_time, weekPos)) {
             console.log("Selected time okay");
-            sliceMap.set(time_slice_select, start_time);
 
-            this.classList.remove('border-danger');
+            clock.classList.remove('border-danger');
             start_time_help_block.innerHTML = "";
             start_time_help_block.className = "d-none";
+            return true;
 
         } else {
             console.log("Selected time not okay");
-            this.classList.add('border-danger');
 
+            clock.classList.add('border-danger');
             start_time_help_block.innerHTML = getSliceErrorString(time_slice_select, time_slice_select_index);
             start_time_help_block.className = "alert alert-warning p-1 w-100";
+            return false;
         }
-
-    } else {
-
-        this.classList.add('border-danger');
-
+    } else if (clock.value.length > 0) {
+        console.log("invalid hour");
+        clock.classList.add('border-danger');
         start_time_help_block.innerHTML = "Insert a valid time: HH:mm";
         start_time_help_block.className = "alert alert-warning p-1 w-100";
+        return false;
     }
 
+}
 
-});
+function saveHourlyData() {
+    var clock = document.getElementById("start-time-input");
+    if (checkClockValidity() === true) {
+        var weekPos = getWeekPos();
+        var start_time = new Date("2019-01-01T" + clock.value);
+
+        var val = new HourlyProgram(start_time, document.getElementById("temperature").value);
+        sliceList[weekPos].set(time_slice_select, val);
+        console.log("Saved -> " + JSON.stringify(val));
+    }
+    time_slice_select = document.getElementById("time-slice-select").value;
+
+    resetClockTemperature();
+
+}
+
 
 $('.clockpicker').clockpicker({
     align: 'left',
     donetext: 'Done',
 });
 
-function checkTimeBoundary(current_slice_index, current_start_time) {
-    var before = getSliceBefore(current_slice_index);
-    var after = getSliceAfter(current_slice_index);
+
+function resetClockTemperature() {
+    console.log("reset clock & temperature");
+    var weekPos = getWeekPos();
+    console.log(time_slice_select);
+
+    var resetValue = sliceList[weekPos].get(time_slice_select);
+    var clock = document.getElementById("start-time-input");
+    clock.classList.remove('border-danger');
+
+    var start_time_help_block = document.getElementById("start-time-help-block");
+    start_time_help_block.innerHTML = "";
+    start_time_help_block.className = "d-none";
+
+    if (resetValue !== undefined) {
+        clock.value = getTimeFromDate(resetValue.time);
+        $('#temperature').val(resetValue.temperature);
+    } else {
+        clock.value = "";
+        $('#temperature').val(20);
+    }
+
+}
+
+function checkTimeBoundary(current_slice_index, current_start_time, weekPos) {
+    var before = getSliceBefore(current_slice_index, weekPos);
+    var after = getSliceAfter(current_slice_index, weekPos);
     if (current_slice_index === 0)
-        before = sliceMap.get(sliceArr[sliceArr.length]);
+        before = sliceList[weekPos].get(sliceArr[sliceArr.length]);
 
     if (current_slice_index === sliceArr.length)
-        after = sliceMap.get(sliceArr[0]);
+        after = sliceList[weekPos].get(sliceArr[0]);
 
-    console.log(current_start_time.getTime());
     if (before !== undefined)
         console.log("before -> " + before);
     if (after !== undefined)
@@ -66,27 +117,32 @@ function checkTimeBoundary(current_slice_index, current_start_time) {
         return false;
 }
 
-function getSliceBefore(current_slice_index) {
+function getSliceBefore(current_slice_index, weekPos) {
 
-    var before = sliceMap.get(sliceArr[current_slice_index - 1]);
+    var before = sliceList[weekPos].get(sliceArr[current_slice_index - 1]);
     if (current_slice_index === 0)
-        before = sliceMap.get(sliceArr[sliceArr.length]);
+        before = sliceList[weekPos].get(sliceArr[sliceArr.length]);
 
-    return before;
+    return before !== undefined ? before.time : undefined;
 
 }
 
-function getSliceAfter(current_slice_index) {
-    var after = sliceMap.get(sliceArr[current_slice_index + 1]);
+function getSliceAfter(current_slice_index, weekPos) {
+    var after = sliceList[weekPos].get(sliceArr[current_slice_index + 1]);
     if (current_slice_index === sliceArr.length)
-        after = sliceMap.get(sliceArr[0]);
+        after = sliceList[weekPos].get(sliceArr[0]);
 
-    return after;
+    return after !== undefined ? after.time : undefined;
 }
 
 function getSliceErrorString(time_slice_select, time_slice_select_index) {
-    var before = getSliceBefore(time_slice_select_index);
-    var after = getSliceAfter(time_slice_select_index);
+    var weekPos = 0;
+    if (document.getElementById("weekend").classList.contains("btn-primary"))
+        weekPos = 1;
+
+    console.log(weekPos);
+    var before = getSliceBefore(time_slice_select_index, weekPos);
+    var after = getSliceAfter(time_slice_select_index, weekPos);
     var result = "The " + time_slice_select.toLowerCase() + " time";
 
     if (before !== undefined) {
@@ -103,4 +159,14 @@ function getSliceErrorString(time_slice_select, time_slice_select_index) {
         }
     }
     return result;
+}
+
+
+function HourlyProgram(time, temperature) {
+    this.time = time;
+    this.temperature = temperature;
+}
+
+function getTimeFromDate(date) {
+    return date.toTimeString().substring(0,5);
 }

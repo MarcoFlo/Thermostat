@@ -1,7 +1,7 @@
 package it.polito.thermostat.controllermd.services.logic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polito.thermostat.controllermd.entity.program.Program;
+import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class JsonHandlerService {
             try {
                 program = objectMapper.readValue(ResourceUtils.getFile("./defaultPrograms/" + deafultProgramsName[i] + "Default.json"), Program.class);
                 programRepository.save(program);
-                logger.info(program.toString());
+                logger.info(objectMapper.writeValueAsString(program));
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.error("JsonHandlerService/readPrograms -> File not present");
