@@ -96,10 +96,11 @@ function change_color() {
                 document.getElementById(name).value = 1;
                 document.getElementById(array[x]).className = "btn btn-secondary";
                 document.getElementById(array[x]).value = 0;
-                var xhr = new XMLHttpRequest();
+               // var xhr = new XMLHttpRequest();
 
                 if (name === "Summer") {
                     nest.hvac_state = 'cooling';
+                    var xhr = new XMLHttpRequest();
                     xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("summer");
@@ -120,6 +121,7 @@ function change_color() {
                 //nest.hvac_state = 'off';
                 if (array[x] === "Summer") {
                     nest.hvac_state = 'cooling';
+                    var xhr = new XMLHttpRequest();
                     xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("summer");
@@ -159,12 +161,27 @@ function connect(){
 function manual(){
     var name = this.id;
     var value = this.value;
+    var xhr = new XMLHttpRequest();
+    var idRoom = $($('h1').contents()[0]).text();
+    var desiredTemperature = nest.target_temperature;
+    var obj = { idRoom: idRoom, desiredTemperature: desiredTemperature };
+    //alert(obj.idRoom);
+    //alert(obj.desiredTemperature);
+    //alert(desiredTemperature);
+    //alert(as);
     if (value == 0) {
         document.getElementById(name).className = "btn btn-primary";
         document.getElementById(name).value = 1;
+        var jsonSend = JSON.stringify(obj);
+        xhr.open("POST", 'http://localhost:8080/temperature/manual', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(jsonSend);
     }
     else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary";
         document.getElementById(name).value = 0;
+        xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(idRoom);
     }
 }
