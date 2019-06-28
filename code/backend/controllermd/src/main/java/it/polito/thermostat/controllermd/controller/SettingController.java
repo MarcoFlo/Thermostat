@@ -84,6 +84,7 @@ public class SettingController {
     @PostMapping("/setting/room")
     public void postRoom(@RequestBody RoomResource roomResource) {
         logger.info("Room " + roomResource.getIdRoom() + " will be saved");
+        logger.info(roomResource.toString());
         settingService.saveRoom(roomResource);
     }
 

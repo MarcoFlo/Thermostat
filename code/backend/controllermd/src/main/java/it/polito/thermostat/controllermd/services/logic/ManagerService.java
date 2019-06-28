@@ -39,6 +39,7 @@ public class ManagerService {
     @Value("${main.room.actuator.heater}")
     String mainRoomHeater;
 
+
     @Autowired
     MQTTservice mqttService;
 
@@ -67,6 +68,7 @@ public class ManagerService {
     @PostConstruct
     public void init() {
         roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
+        //TODO bisogna crearli anche come esp
         logger.info("Main room saved");
     }
 
