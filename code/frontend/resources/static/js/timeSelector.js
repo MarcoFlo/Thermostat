@@ -1,6 +1,7 @@
 var sliceArr = ["Wake", "Leave", "Return", "Sleep"];
 var sliceList = [new Map(), new Map()];
 var time_slice_select = sliceArr[0];
+var week_pos = 0;
 $('#start-time-input').change(checkClockValidity);
 
 
@@ -53,14 +54,14 @@ function checkClockValidity() {
 function saveHourlyData() {
     var clock = document.getElementById("start-time-input");
     if (checkClockValidity() === true) {
-        var weekPos = getWeekPos();
         var start_time = new Date("2019-01-01T" + clock.value);
 
         var val = new HourlyProgram(start_time, document.getElementById("temperature").value);
-        sliceList[weekPos].set(time_slice_select, val);
+        sliceList[week_pos].set(time_slice_select, val);
         console.log("Saved -> " + JSON.stringify(val));
     }
     time_slice_select = document.getElementById("time-slice-select").value;
+    week_pos = getWeekPos();
 
     resetClockTemperature();
 
