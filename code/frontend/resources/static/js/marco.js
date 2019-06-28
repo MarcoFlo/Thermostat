@@ -42,6 +42,10 @@ function onMessageArrived(message) {
     }
 }
 
+/**
+ *  Initial request for the list of available room
+ *  TODO Retrive and set the current setting from GET localhost:8080/temperature/current_room_state_resource
+ */
 function requestRoom() {
     var xhttp_room = new XMLHttpRequest();
     xhttp_room.onreadystatechange = function () {
@@ -57,6 +61,11 @@ function requestRoom() {
     xhttp_room.close
 }
 
+/**
+ * Function that handle the right/left click
+ *  TODO Retrive and set the current setting from GET localhost:8080/temperature/current_room_state_resource
+ * @param ev
+ */
 function changeRoom(ev) {
     if (currentRoom !== undefined) {
         var desired_room;
