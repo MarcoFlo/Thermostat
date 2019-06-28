@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TemperatureController {
@@ -66,4 +63,11 @@ public class TemperatureController {
         logger.info("I'm gonna set " + idRoom + " to programmed");
         temperatureService.setIsProgrammedRoom(idRoom);
     }
+
+    @GetMapping(value = "/temperature/wsa")
+    public void getCurrentWSAL(@RequestBody String idRoom) {
+        temperatureService.getCurrentWSAL(idRoom);
+    }
+
+
 }

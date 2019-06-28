@@ -1,5 +1,6 @@
 package it.polito.thermostat.controllermd.services.server;
 
+import it.polito.thermostat.controllermd.configuration.SeasonGetter;
 import it.polito.thermostat.controllermd.configuration.exception.ProgramNotExistException;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.Program;
@@ -50,26 +51,12 @@ public class SettingService {
 
     public Program getDefaultProgram() {
         Optional<Program> check;
-        switch (LocalDateTime.now().getMonth()) {
-            case APRIL:
-            case MAY:
-            case JUNE:
-            case JULY:
-            case AUGUST:
-            case SEPTEMBER:
-            case OCTOBER:
-                check = programRepository.findById("summer");
-                break;
-            case NOVEMBER:
-            case DECEMBER:
-            case JANUARY:
-            case FEBRUARY:
-            case MARCH:
-                check = programRepository.findById("winter");
-                break;
-            default:
-                check = null;
-        }
+
+        if (SeasonGetter.isSummer())
+            check = programRepository.findById("summer");
+        else
+            check = programRepository.findById("winter");
+
         if (check.isPresent())
             return check.get();
         else

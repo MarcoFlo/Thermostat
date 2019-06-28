@@ -7,6 +7,7 @@ import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
+import it.polito.thermostat.controllermd.resources.CurrentRoomStateResource;
 import it.polito.thermostat.controllermd.resources.LeaveResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Service
@@ -63,9 +65,10 @@ public class TemperatureService {
      * @param wsa string "winter", ecc
      */
     public void setWSA(String wsa) {
+        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
         WSAL wsal;
-        if (wsalRepository.findAll().iterator().hasNext())
-            wsal = wsalRepository.findAll().iterator().next();
+        if (wsalIterator.hasNext())
+            wsal = wsalIterator.next();
         else {
             wsal = new WSAL();
             wsal.setIsAntiFreeze(false);
@@ -98,11 +101,13 @@ public class TemperatureService {
      * @param leaveResource leave details
      */
     public void setL(LeaveResource leaveResource) {
+        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
         WSAL wsal;
-        if (wsalRepository.findAll().iterator().hasNext())
-            wsal = wsalRepository.findAll().iterator().next();
+        if (wsalIterator.hasNext())
+            wsal = wsalIterator.next();
         else
             wsal = new WSAL();
+
 
         wsal.setIsAntiFreeze(false);
         wsal.setIsLeave(true);
@@ -118,5 +123,21 @@ public class TemperatureService {
         if (!check.isPresent())
             throw new RoomNotExistException("checkRoom");
         return check.get();
+    }
+
+    /**
+     * Get the current state for the specified room
+     * @param idRoom
+     * @return
+     */
+    public CurrentRoomStateResource getCurrentWSAL(String idRoom) {
+        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
+        Optional<Room> checkRoom = roomRepository.findById(idRoom);
+
+        if (wsalIterator.hasNext() && checkRoom.isPresent())
+            return new CurrentRoomStateResource(wsalIterator.next(), checkRoom.get());
+        else
+            return new CurrentRoomStateResource();
+
     }
 }

@@ -64,11 +64,5 @@ public class JsonHandlerService {
         }
     }
 
-    /**
-     * Da Stringa a Data
-     *
-     * @param time stringa time
-     * @return Data
-     */
 
 }
