@@ -163,11 +163,8 @@ function getSliceErrorString(time_slice_select, time_slice_select_index) {
 }
 
 
-function HourlyProgram(time, temperature) {
-    this.time = time;
-    this.temperature = temperature;
-}
+
 
 function getTimeFromDate(date) {
-    return date.toTimeString().substring(0,5);
+    return date.toTimeString().substring(0, 5);
 }

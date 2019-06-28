@@ -69,7 +69,35 @@ function resetPhoneForm() {
         espButtonList[i].children[0].className = "btn btn-secondary";
 }
 
+function produceProgramJson(room_name, espSelected) {
+    var program = {
+        'idProgram': room_name,
+        'weeklyList': []
+    };
+
+    for (var i = 0; i < 2; i++) {
+        var day = {
+            'wake': getFormatted(sliceList[i].get('Wake')),
+            'leave': getFormatted(sliceList[i].get('Leave')),
+            'return': getFormatted(sliceList[i].get('Return')),
+            'sleep': getFormatted(sliceList[i].get('Sleep'))
+        };
+        var dailyMap = {
+            dailyMap: day
+        };
+        program.weeklyList.push(dailyMap);
+    }
+
+    var result = {
+        'idRoom': room_name,
+        'esp8266List': espSelected,
+        'program': program
+    };
+    return JSON.stringify(result);
+}
+
 function savePhoneForm() {
+    saveHourlyData();
     var room_name = document.getElementById("roomName").value;
 
     var espSelected = [];
@@ -79,10 +107,6 @@ function savePhoneForm() {
             espSelected.push(espButtonList[i].children[0].id);
         }
     }
-    console.log(sliceList[0].get("Wake"));
-    // console.log(sliceList[1].toString());
-
-    console.log(JSON.stringify({idRoom: room_name, esp8266List: espSelected, weeklyList: sliceList}));
 
     if (room_name !== "" && espSelected.length !== 0 && sliceList[0].size === 4 && sliceList[1].size === 4) {
 
@@ -90,7 +114,7 @@ function savePhoneForm() {
         xhttp_room.open("POST", "http://localhost:8080/setting/room", true);
         xhttp_room.setRequestHeader("Content-Type", "application/json");
 
-        xhttp_room.send();
+        xhttp_room.send(produceProgramJson(room_name, espSelected));
 
 
     } else {
@@ -105,11 +129,13 @@ function savePhoneForm() {
     }
 }
 
+function HourlyProgram(time, temperature) {
+    this.time = time;
+    this.temperature = temperature;
 
-function Program(idProgram, weeklyMap, age, gender, interests) {
 
-    // property and method definitions
-    this.idProgram = idProgram;
-    this.weeklyMap = weeklyMap;
 }
 
+function getFormatted(hourlyProgram) {
+    return new HourlyProgram(getTimeFromDate(hourlyProgram.time), hourlyProgram.temperature);
+}
