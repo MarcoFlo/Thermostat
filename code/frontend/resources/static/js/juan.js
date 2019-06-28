@@ -1,3 +1,4 @@
+
 function requestEspFree() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -176,6 +177,7 @@ function manual(){
         xhr.open("POST", 'http://localhost:8080/temperature/manual', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
+        document.getElementById("main-container").style.pointerEvents = "auto";
     }
     else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary";
@@ -183,5 +185,37 @@ function manual(){
         xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(idRoom);
+        //document.getElementById("thermostat").style.visibility = "hidden";
+        document.getElementById("main-container").style.pointerEvents = "none";
+        document.getElementById("container-buttons").style.pointerEvents = "auto";
+        document.getElementById("left_button").style.pointerEvents = "auto";
+        document.getElementById("right_button").style.pointerEvents = "auto";
+        //nest.disabled = true;
+
+        /*document.getElementById("main-container").removeEventListener('mousedown', dragStart);
+        document.getElementById("main-container").removeEventListener('touchstart', dragStart);
+
+        document.getElementById("main-container").removeEventListener('mouseup', dragEnd);
+        document.getElementById("main-container").removeEventListener('mouseleave', dragEnd);
+        document.getElementById("main-container").removeEventListener('touchend', dragEnd);*/
+        
+        //include('../../imported_component/nest-thermostat-control/js/thermostat.js');
+        //document.getElementById("main-container").removeEventListener('mousemove', dragMove);
+        //document.getElementById("main-container").removeEventListener('touchmove', dragMove);        
+
     }
 }
+/*function include(file)
+{
+
+  var script  = document.createElement('script');
+  script.src  = file;
+  script.type = 'text/javascript';
+  script.defer = true;
+
+  document.getElementsByTagName('head').item(0).appendChild(script);
+
+}*/
+
+
+
