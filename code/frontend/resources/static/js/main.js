@@ -1,5 +1,5 @@
 var obj;
-window.onload = function(){
+window.onload = function () {
     document.getElementById("Summer").onclick = change_color;
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = manual;
@@ -11,12 +11,14 @@ window.onload = function(){
     document.getElementById("left_arrow").addEventListener('click', changeRoom);
 
     //to disable long press -> right click in chromium
-    window.oncontextmenu = function() { return false; };
+    window.oncontextmenu = function () {
+        return false;
+    };
 
     mqttLoad();
     requestWifiList();
     requestEspFree();
-
+// requestSettingPage();
 
 
     /*var week = document.getElementById("week").onclick = color;*/

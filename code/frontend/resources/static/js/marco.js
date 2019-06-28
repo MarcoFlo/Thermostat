@@ -87,3 +87,17 @@ function changeRoom(ev) {
         setMqttRoom(desired_room);
     }
 }
+
+
+function requestSettingPage() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'phone.html', true);
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 || this.status == 200) {
+            document.getElementById('y').innerHTML = this.responseText;
+        }
+    };
+    xhr.send();
+    document.getElementById('settings-body').innerHTML = ("../../templates/phone.html");
+
+}
