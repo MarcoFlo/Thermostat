@@ -1,6 +1,6 @@
 package it.polito.thermostat.tester.resource;
 
-import it.polito.thermostat.tester.entity.program.Program;
+import it.polito.thermostat.tester.entity.Program;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.polito.thermostat.tester.resource.RoomResource;
 import it.polito.thermostat.tester.entity.ESP8266;
-import it.polito.thermostat.tester.entity.Room;
-import it.polito.thermostat.tester.entity.program.Program;
+import it.polito.thermostat.tester.entity.Program;
 import it.polito.thermostat.tester.repository.ESP8266Repository;
 import it.polito.thermostat.tester.repository.RoomRepository;
 import org.apache.commons.math3.util.Precision;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
