@@ -130,7 +130,7 @@ public class TemperatureService {
      * @param idRoom
      * @return
      */
-    public CurrentRoomStateResource getCurrentWSAL(String idRoom) {
+    public CurrentRoomStateResource getCurrentRoomStateResource(String idRoom) {
         Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
 
