@@ -41,8 +41,6 @@ Before pushing(sending the code to git), remember to pull(download the new code 
 https://docs.google.com/document/d/1TF6zZ8DTbSKHRjFNf6_r4kNfpuSn5rqgrSfVmJvNIGA/edit#heading=h.38xql5hyg87g
 
 # EXTRA
-If you want to check out the auto generated doc start from the index.html file
-
 To open a cmdline very fast go the folder and shift+right click and then choose Open PowerShell here  
 Keep the jar in different folder  
 If windows asks, allow access in private network  
