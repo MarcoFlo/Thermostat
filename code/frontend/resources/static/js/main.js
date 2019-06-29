@@ -5,6 +5,7 @@ window.onload = function () {
     document.getElementById("Manual").onclick = manual;
 
     document.getElementById("connect").onclick = connect;
+    document.getElementById("AntiFreeze").onclick = antifreeze;
 
 
     document.getElementById("right_arrow").addEventListener('click', changeRoom);
