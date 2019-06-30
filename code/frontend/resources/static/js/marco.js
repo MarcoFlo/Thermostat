@@ -56,7 +56,7 @@ function requestRoom() {
             document.getElementById("room_name").innerText = "MainRoom";
         }
     };
-    xhttp_room.open("GET", "http://localhost:8080/setting/room", true);
+    xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
     xhttp_room.send();
     xhttp_room.close
 }

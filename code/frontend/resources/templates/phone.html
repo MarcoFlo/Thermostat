@@ -26,89 +26,101 @@
 
 <div class="container-fluid bg-secondary">
     <form>
-
-        <h1>Configure one room</h1>
-        <div class="accordion" id="accordionExample">
-
-            <div class="card">
-
-                <div class="card-header" id="headingOne">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="roomName" aria-describedby="rommNameHelp"
-                               placeholder="Enter room name">
-                    </div>
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                                aria-expanded="true" aria-controls="collapseOne">Sensor&Actuator
-                        </button>
-                    </h5>
-                </div>
-
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
-                     data-parent="#accordionExample">
-                    <div id="esp-container" class="card-body row justify-content-start">
-                        <!--                        <div class="col-auto p-1">-->
-                        <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
-                        <!--                        </div>-->
-                    </div>
+        <div class="row p-1">
+            <div class="input-group mb-3">
+                <select class="form-control" id="room-select"></select>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-light" id="plus-button">
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" id="headingTwo">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                                data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Program
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
-                     data-parent="#accordionExample">
-                    <div class="card-body container my-2">
+        </div>
 
-                        <div class="form-group row">
-                            <div class="col">
-                                <select class="form-control" id="time-slice-select">
-                                    <option>Wake</option>
-                                    <option>Leave</option>
-                                    <option>Return</option>
-                                    <option>Sleep</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button type="button" id="weekend" class="btn btn-secondary">Weekend</button>
-                            </div>
+        <div class="container">
+            <div class="accordion" id="accordionExample">
+
+                <div class="card">
+
+                    <div class="card-header" id="headingOne">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="roomName" aria-describedby="rommNameHelp"
+                                   placeholder="Enter room name">
                         </div>
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                                    aria-expanded="true" aria-controls="collapseOne">Sensor&Actuator
+                            </button>
+                        </h5>
+                    </div>
 
-                        <div class="row  m-0 input-group clockpicker" id="start-time">
-                            <div class="input-group-addon input-group-prepend ">
-                                <i class="input-group-text fa fa-clock"></i>
-                            </div>
-                            <input id="start-time-input" placeholder="Start time" class="form-control"
-                                   aria-describedby="start-time-help-block"/>
-                            <small class="d-none" id="start-time-help-block"></small>
-                        </div>
-                        <div class="row m-0 pt-2 input-group">
-                            <input type="number" id="temperature" value="20.0" data-decimals="1" min="5" max="30"
-                                   step="0.1"/>
-
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                         data-parent="#accordionExample">
+                        <div id="esp-container" class="card-body row justify-content-start">
+                            <!--                        <div class="col-auto p-1">-->
+                            <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
+                            <!--                        </div>-->
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Program
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                         data-parent="#accordionExample">
+                        <div class="card-body container my-2">
 
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <div class="row float-right">
-                        <div class="col float-right m-1 p-0">
-                            <button id="reset" type="button" class="btn btn-secondary m-1">Reset</button>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <select class="form-control" id="time-slice-select">
+                                        <option>Wake</option>
+                                        <option>Leave</option>
+                                        <option>Return</option>
+                                        <option>Sleep</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" id="weekend" class="btn btn-secondary">Weekend</button>
+                                </div>
+                            </div>
+
+                            <div class="row  m-0 input-group clockpicker" id="start-time">
+                                <div class="input-group-addon input-group-prepend ">
+                                    <i class="input-group-text fa fa-clock"></i>
+                                </div>
+                                <input id="start-time-input" placeholder="Start time" class="form-control"
+                                       aria-describedby="start-time-help-block"/>
+                                <small class="d-none" id="start-time-help-block"></small>
+                            </div>
+                            <div class="row m-0 pt-2 input-group">
+                                <input type="number" id="temperature" value="20.0" data-decimals="1" min="5" max="30"
+                                       step="0.1"/>
+
+                            </div>
                         </div>
-                        <div id="save-div" class="col float-right p-0 m-1">
-                            <button id="save" type="button" class="btn btn-primary m-1">Save changes</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <div class="row float-right">
+                            <div class="col float-right m-1 p-0">
+                                <button id="reset" type="button" class="btn btn-secondary m-1">Reset</button>
+                            </div>
+                            <div id="save-div" class="col float-right p-0 m-1">
+                                <button id="save" type="button" class="btn btn-primary m-1">Save changes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </form>
 
 </div>
