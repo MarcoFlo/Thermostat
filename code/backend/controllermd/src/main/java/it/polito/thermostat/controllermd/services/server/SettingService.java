@@ -2,6 +2,7 @@ package it.polito.thermostat.controllermd.services.server;
 
 import it.polito.thermostat.controllermd.configuration.SeasonGetter;
 import it.polito.thermostat.controllermd.configuration.exception.ProgramNotExistException;
+import it.polito.thermostat.controllermd.configuration.exception.RoomNotExistException;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
@@ -10,9 +11,12 @@ import it.polito.thermostat.controllermd.resources.RoomResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,10 +32,27 @@ public class SettingService {
     @Autowired
     ProgramRepository programRepository;
 
-    public void saveRoom(RoomResource roomResource) {
+    @PostConstruct
+    public void init() {
+
+    }
+
+    public void saveRoomResource(RoomResource roomResource) {
         roomRepository.save(new Room(roomResource));
 
         programRepository.save(roomResource.getProgram());
+    }
+
+    public RoomResource getRoomResource(String idRoom) {
+        Optional<Room> checkRoom = roomRepository.findById(idRoom);
+        Optional<Program> checkProgram = programRepository.findById(idRoom);
+
+        if (checkRoom.isPresent() && checkProgram.isPresent())
+            return new RoomResource(checkRoom.get(), checkProgram.get());
+        else
+            throw new IllegalArgumentException();
+
+
     }
 
     public void deleteRoom(String idRoom) {
@@ -64,5 +85,6 @@ public class SettingService {
         return null;
 
     }
+
 
 }

@@ -1,4 +1,3 @@
-
 window.onload = function () {
     document.getElementById("save").addEventListener("click", savePhoneForm);
     document.getElementById("reset").addEventListener("click", resetPhoneForm);
@@ -8,12 +7,29 @@ window.onload = function () {
     document.getElementById("time-slice-select").addEventListener("change", saveHourlyData);
     document.getElementById("weekend").addEventListener("click", saveHourlyData);
 
+    document.getElementById("room-select").addEventListener("change", changeSelectedRoom);
+
 
     requestListFreeEsp();
     setUpRoomSelect();
 
 
 };
+
+function changeSelectedRoom() {
+    console.log("asking for >" + this.value + "< data");
+    resetPhoneForm();
+    var xhttp_select_room = new XMLHttpRequest();
+    xhttp_select_room.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var room_resource = JSON.parse(xhttp_select_room.responseText);
+            console.log(room_resource);
+
+        }
+    };
+    xhttp_select_room.open("GET", "http://localhost:8080/setting/room/resource/" + this.value, true);
+    xhttp_select_room.send();
+}
 
 function setUpRoomSelect() {
     var xhttp_room = new XMLHttpRequest();
@@ -32,7 +48,6 @@ function setUpRoomSelect() {
     };
     xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
     xhttp_room.send();
-    xhttp_room.close
 }
 
 
@@ -47,7 +62,7 @@ function toggleButton() {
 function requestListFreeEsp() {
     var xhttp_esp = new XMLHttpRequest();
     xhttp_esp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState === 4 && this.status === 200) {
             espList = JSON.parse(xhttp_esp.responseText);
             var espcontainer = document.getElementById("esp-container");
 

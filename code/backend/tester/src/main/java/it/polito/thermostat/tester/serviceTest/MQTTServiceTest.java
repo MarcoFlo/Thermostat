@@ -128,7 +128,7 @@ public class MQTTServiceTest {
     }
 
 
-    public void createMainRoom() throws MqttException {
+    public void createEspMainRoom() throws MqttException {
         MqttMessage msg;
 
         //create rpi esp
@@ -138,9 +138,7 @@ public class MQTTServiceTest {
             mqttClient.publish("/esp8266/" + rpiEsp.get(i), msg);
             logger.info("esp with id: " + rpiEsp.get(i) + " created");
 
-            savedEsp.add(rpiEsp.get(i));
         }
-        createRoom(mainRoomName, rpiEsp);
 
     }
 
@@ -202,20 +200,21 @@ public class MQTTServiceTest {
             in.close();
 
             defaultProgram = objectMapper.readValue(response.toString(), Program.class);
+            defaultProgram.setIdProgram(idRoom);
         } catch (IOException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
         }
 
         try {
-            url = new URL("http://localhost:8080/setting/room");
+            url = new URL("http://localhost:8080/setting/room/resource");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
             DataOutputStream writer = new DataOutputStream(con.getOutputStream());
             RoomResource roomResource = new RoomResource(idRoom, espList, defaultProgram);
-
+logger.info(objectMapper.writeValueAsString(roomResource));
             writer.writeBytes(objectMapper.writeValueAsString(roomResource));
             writer.flush();
             writer.close();

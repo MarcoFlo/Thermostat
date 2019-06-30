@@ -4,12 +4,16 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import it.polito.thermostat.controllermd.entity.Program;
+import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
+import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.logic.JsonHandlerService;
 import it.polito.thermostat.controllermd.services.logic.MQTTservice;
 import it.polito.thermostat.controllermd.services.logic.ManagerService;
+import it.polito.thermostat.controllermd.services.server.SettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,16 @@ import java.util.Arrays;
 @EnableScheduling
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    @Value("${main.room.name}")
+    String mainRoomName;
+    @Value("${main.room.sensor}")
+    String mainRoomSensor;
+    @Value("${main.room.actuator.cooler}")
+    String mainRoomCooler;
+    @Value("${main.room.actuator.heater}")
+    String mainRoomHeater;
 
     @Value("${redis.online}")
     Boolean isRedisOnline;
@@ -90,7 +104,15 @@ public class ControllermdApplication implements CommandLineRunner {
     ManagerService managerService;
 
     @Autowired
+    SettingService settingService;
+
+
+    @Autowired
     MQTTservice mqtTservice;
+
+    @Autowired
+    RoomRepository roomRepository;
+
 
 
     @PostConstruct
@@ -106,7 +128,12 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
+        Program program = settingService.getDefaultProgram();
+        program.setIdProgram(mainRoomName);
+        programRepository.save(program);
+        //TODO bisogna crearli anche come esp
+        logger.info("Main room saved");
     }
 
 

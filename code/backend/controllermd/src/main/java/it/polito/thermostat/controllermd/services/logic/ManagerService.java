@@ -30,14 +30,7 @@ public class ManagerService {
     @Value("#{T(java.lang.Double).parseDouble('${temperature.buffer}')}")
     Double temperatureBuffer;
 
-    @Value("${main.room.name}")
-    String mainRoomName;
-    @Value("${main.room.sensor}")
-    String mainRoomSensor;
-    @Value("${main.room.actuator.cooler}")
-    String mainRoomCooler;
-    @Value("${main.room.actuator.heater}")
-    String mainRoomHeater;
+
 
 
     @Autowired
@@ -65,12 +58,7 @@ public class ManagerService {
     SettingService settingService;
 
 
-    @PostConstruct
-    public void init() {
-        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
-        //TODO bisogna crearli anche come esp
-        logger.info("Main room saved");
-    }
+
 
     //    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {

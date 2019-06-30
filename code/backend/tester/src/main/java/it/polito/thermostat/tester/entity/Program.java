@@ -1,6 +1,10 @@
 package it.polito.thermostat.tester.entity;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import it.polito.thermostat.tester.configuration.CustomDateDeserializer;
+import it.polito.thermostat.tester.configuration.CustomTimeSerializer;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -19,6 +23,8 @@ public class Program {
 
     @Data
     public static class HourlyProgram {
+        @JsonDeserialize(using = CustomDateDeserializer.class)
+        @JsonSerialize(using = CustomTimeSerializer.class)
         private LocalTime time;
         private Double temperature;
     }

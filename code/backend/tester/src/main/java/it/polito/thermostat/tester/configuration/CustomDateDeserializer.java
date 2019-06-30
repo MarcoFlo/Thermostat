@@ -21,7 +21,7 @@ public class CustomDateDeserializer extends StdDeserializer<LocalTime> {
     public LocalTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         String time = jsonParser.getText();
         if (time.length() > 5)
-            time = time.substring(0,time.length() - 3);
+            time.substring(0,time.length() - 3);
         return LocalTime.parse(time, dateTimeFormatter);
     }
 

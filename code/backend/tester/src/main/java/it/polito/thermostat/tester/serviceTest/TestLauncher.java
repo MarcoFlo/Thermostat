@@ -16,7 +16,7 @@ public class TestLauncher {
 
     public void launchAll() {
         try {
-            mqttServiceTest.createMainRoom();
+            mqttServiceTest.createEspMainRoom();
             mqttServiceTest.createSecondaryEspAndRoom();
 
         } catch (MqttException e) {
