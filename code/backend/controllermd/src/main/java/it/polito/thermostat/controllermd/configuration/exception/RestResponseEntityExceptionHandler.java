@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -31,7 +32,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             DateTimeException.class,
             RoomNotExistException.class,
             ProgramNotExistException.class,
-            WifiCredentialsException.class})
+            WifiCredentialsException.class,
+            RequestRejectedException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
         ErrorDTO e = ErrorDTO.builder()
                 .exception(ex.getClass().getSimpleName())
