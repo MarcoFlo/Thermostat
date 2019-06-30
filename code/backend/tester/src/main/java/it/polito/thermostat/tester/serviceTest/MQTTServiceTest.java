@@ -139,7 +139,7 @@ public class MQTTServiceTest {
             logger.info("esp with id: " + rpiEsp.get(i) + " created");
 
         }
-
+        savedEsp.add(mainRoomSensor);
     }
 
     public void createSecondaryEspAndRoom() throws MqttException {
@@ -159,7 +159,7 @@ public class MQTTServiceTest {
                 }
                 while (savedEsp.contains(idEsp));
 
-                mqttClient.publish("/esp8266/"+idEsp, msg);
+                mqttClient.publish("/esp8266/" + idEsp, msg);
                 logger.info("esp with id: " + idEsp + " created");
 
                 savedEsp.add(idEsp);
@@ -214,7 +214,6 @@ public class MQTTServiceTest {
             con.setDoOutput(true);
             DataOutputStream writer = new DataOutputStream(con.getOutputStream());
             RoomResource roomResource = new RoomResource(idRoom, espList, defaultProgram);
-logger.info(objectMapper.writeValueAsString(roomResource));
             writer.writeBytes(objectMapper.writeValueAsString(roomResource));
             writer.flush();
             writer.close();
