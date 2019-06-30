@@ -1,6 +1,7 @@
 package it.polito.thermostat.controllermd.controller;
 
 import it.polito.thermostat.controllermd.entity.Program;
+import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.resources.AssociationResource;
 import it.polito.thermostat.controllermd.resources.RoomResource;
@@ -53,28 +54,13 @@ public class SettingController {
      */
     @GetMapping("/setting/esp/free")
     public List<String> getEspFree() {
-        return esp8266ManagementService.getEspFree();
+        logger.info("I'm gonna return the list of free esp");
+
+        List<String> result = esp8266ManagementService.getEspFree();
+        logger.info(result.toString());
+        return result;
     }
 
-
-    /**
-     * Endpoint that allow us to set/delete associations between room-esp
-     *
-     * @param associationList list of associationResources
-     */
-    @PostMapping("/setting/esp/association")
-    public void postAssociation(@RequestBody List<AssociationResource> associationList) {
-        Iterator<AssociationResource> iterator = associationList.iterator();
-        while (iterator.hasNext()) {
-            AssociationResource associationResource = iterator.next();
-            logger.info("I'm gonna save/delete this association:\n" + associationResource);
-            if (associationResource.getAddBool()) {
-                esp8266ManagementService.setAssociation(associationResource.getIdEsp(), associationResource.getIdRoom());
-            } else {
-                esp8266ManagementService.deleteAssociation(associationResource.getIdEsp());
-            }
-        }
-    }
 
     /**
      * Endpoint to save a room
@@ -91,7 +77,9 @@ public class SettingController {
     @GetMapping("/setting/room/resource/{idRoom}")
     public RoomResource getRoomResource(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm gonna retrive the roomResource for " + idRoom);
-        return settingService.getRoomResource(idRoom);
+        RoomResource roomResource= settingService.getRoomResource(idRoom);
+        logger.info(roomResource.toString());
+        return roomResource;
     }
 
     /**

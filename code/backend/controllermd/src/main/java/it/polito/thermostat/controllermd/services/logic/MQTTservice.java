@@ -126,7 +126,7 @@ public class MQTTservice {
             case "sensor":
                 esp8266.setIsSensor(true);
                 esp8266.setIsCooler(false);
-                mqttClient.subscribe("/" + esp8266.getIdEsp() + "/sensor", this::sensorDataReceived);
+                subscribeSensor(esp8266.getIdEsp());
                 break;
             case "cooler":
                 esp8266.setIsSensor(false);
@@ -147,6 +147,15 @@ public class MQTTservice {
         logger.info("New esp8266 idEsp ->" + esp8266.getIdEsp());
         logger.info("\tisSensor ->" + esp8266.getIsSensor());
         logger.info("\tisCooler ->" + esp8266.getIsCooler());
+    }
+
+
+    public void subscribeSensor(String esp) {
+        try {
+            mqttClient.subscribe("/" + esp + "/sensor", this::sensorDataReceived);
+        } catch (MqttException e) {
+            logger.error("Mqtt service/subscribeSensor error \n" + e.toString());
+        }
     }
 
     /**

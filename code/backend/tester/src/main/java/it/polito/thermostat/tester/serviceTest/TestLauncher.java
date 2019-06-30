@@ -19,7 +19,7 @@ public class TestLauncher {
             mqttServiceTest.createEspMainRoom();
             mqttServiceTest.createSecondaryEspAndRoom();
 
-        } catch (MqttException e) {
+        } catch (MqttException | InterruptedException e) {
             logger.error("newEspTest - publish exception");
         }
     }

@@ -4,6 +4,7 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -61,6 +61,35 @@ public class ControllermdApplication implements CommandLineRunner {
     @Value("${spring.redis.pass}")
     String redisPassword;
 
+
+    @Autowired
+    JsonHandlerService jsonHandlerService;
+
+    @Autowired
+    ESP8266Repository esp8266Repository;
+
+    @Autowired
+    ProgramRepository programRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    WSALRepository wsalRepository;
+
+    @Autowired
+    ManagerService managerService;
+
+    @Autowired
+    SettingService settingService;
+
+    @Autowired
+    MQTTservice mqtTservice;
+
+
+    @Autowired
+    RoomRepository roomRepository;
+
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         if (isRedisOnline) {
@@ -85,35 +114,6 @@ public class ControllermdApplication implements CommandLineRunner {
         return template;
     }
 
-    @Autowired
-    JsonHandlerService jsonHandlerService;
-
-    @Autowired
-    ESP8266Repository esp8266Repository;
-
-    @Autowired
-    ProgramRepository programRepository;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    WSALRepository wsalRepository;
-
-    @Autowired
-    ManagerService managerService;
-
-    @Autowired
-    SettingService settingService;
-
-
-    @Autowired
-    MQTTservice mqtTservice;
-
-    @Autowired
-    RoomRepository roomRepository;
-
-
 
     @PostConstruct
     public void init() {
@@ -128,11 +128,22 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+//        roomRepository.deleteAll();
+//        programRepository.deleteAll();
+//        esp8266Repository.deleteAll();
+        //Main room creation
         roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
+
+        //Main room program creation
         Program program = settingService.getDefaultProgram();
         program.setIdProgram(mainRoomName);
         programRepository.save(program);
-        //TODO bisogna crearli anche come esp
+
+        //Main Room esp creation
+        esp8266Repository.save(new ESP8266(mainRoomSensor, mainRoomName, true, false));
+        esp8266Repository.save(new ESP8266(mainRoomCooler, mainRoomName, false, true));
+        esp8266Repository.save(new ESP8266(mainRoomHeater, mainRoomName, false, false));
+        mqtTservice.subscribeSensor(mainRoomSensor);
         logger.info("Main room saved");
     }
 

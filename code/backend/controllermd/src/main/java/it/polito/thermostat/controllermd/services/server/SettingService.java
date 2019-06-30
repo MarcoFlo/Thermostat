@@ -32,30 +32,45 @@ public class SettingService {
     @Autowired
     ProgramRepository programRepository;
 
+    @Autowired
+    Esp8266ManagementService esp8266ManagementService;
+
     @PostConstruct
     public void init() {
 
     }
 
     public void saveRoomResource(RoomResource roomResource) {
-        roomRepository.save(new Room(roomResource));
-
+        Room room = roomRepository.save(new Room(roomResource));
+        logger.info(roomResource.getEsp8266List().toString() + room.getIdRoom());
+        roomResource.getEsp8266List().forEach(esp -> esp8266ManagementService.setAssociation(esp, room.getIdRoom()));
         programRepository.save(roomResource.getProgram());
+
     }
 
     public RoomResource getRoomResource(String idRoom) {
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
         Optional<Program> checkProgram = programRepository.findById(idRoom);
 
-        if (checkRoom.isPresent() && checkProgram.isPresent())
-            return new RoomResource(checkRoom.get(), checkProgram.get());
-        else
+        if (checkRoom.isPresent() && checkProgram.isPresent()) {
+            Room room = checkRoom.get();
+            logger.info(room.getEsp8266List().toString());
+            return new RoomResource(room, checkProgram.get());
+
+        } else
             throw new IllegalArgumentException();
 
 
     }
 
     public void deleteRoom(String idRoom) {
+
+        Optional<Room> checkRoom = roomRepository.findById(idRoom);
+        if (!checkRoom.isPresent())
+            throw new RoomNotExistException();
+
+        Room room = checkRoom.get();
+        room.getEsp8266List().forEach(esp -> esp8266ManagementService.deleteAssociation(esp));
         roomRepository.deleteById(idRoom);
     }
 

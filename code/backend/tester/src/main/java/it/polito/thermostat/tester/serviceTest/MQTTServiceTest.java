@@ -129,20 +129,13 @@ public class MQTTServiceTest {
 
 
     public void createEspMainRoom() throws MqttException {
-        MqttMessage msg;
 
         //create rpi esp
-        for (int i = 0; i < rpiEsp.size(); i++) {
-            msg = new MqttMessage(sensorType[i].getBytes());
-            msg.setQos(2);
-            mqttClient.publish("/esp8266/" + rpiEsp.get(i), msg);
-            logger.info("esp with id: " + rpiEsp.get(i) + " created");
 
-        }
         savedEsp.add(mainRoomSensor);
     }
 
-    public void createSecondaryEspAndRoom() throws MqttException {
+    public void createSecondaryEspAndRoom() throws MqttException, InterruptedException {
         MqttMessage msg;
         String idEsp;
         List<String> espRoomList;
@@ -165,6 +158,8 @@ public class MQTTServiceTest {
                 savedEsp.add(idEsp);
                 espRoomList.add(idEsp);
             }
+            Thread.sleep(2000);
+            logger.info(espRoomList.toString());
             createRoom(roomName[j], espRoomList);
         }
 
@@ -213,6 +208,7 @@ public class MQTTServiceTest {
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
             DataOutputStream writer = new DataOutputStream(con.getOutputStream());
+            logger.info(espList.toString());
             RoomResource roomResource = new RoomResource(idRoom, espList, defaultProgram);
             writer.writeBytes(objectMapper.writeValueAsString(roomResource));
             writer.flush();

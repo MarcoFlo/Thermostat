@@ -18,6 +18,13 @@
     <!-- our javascript -->
     <script src="../static/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
     <script src="../static/js/phone.js"></script>
+    <script src="../static/js/setting/program.js"></script>
+    <script src="../static/js/setting/room.js"></script>
+    <script src="../static/js/setting/esp.js"></script>
+    <script src="../static/js/setting/general.js"></script>
+
+
+
 
 </head>
 
@@ -26,6 +33,8 @@
 
 <div class="container-fluid bg-secondary">
     <form>
+        <div id="clock" class="clock"></div>
+
         <div class="row p-1">
             <div class="input-group mb-3">
                 <select class="form-control" id="room-select"></select>
@@ -130,12 +139,16 @@
 <script type="text/javascript" src="../imported_component/clockpicker/assets/js/bootstrap.min.js"></script>
 <script src="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap/bootstrap.min.js"></script>
-<script src="../static/js/timeSelector.js"></script>
 
 <script src="../imported_component/bootstrap-input-spinner-master/src/bootstrap-input-spinner.js"></script>
 
 <script>
-    $("input[type='number']").inputSpinner()
+    $("input[type='number']").inputSpinner();
+    $('#start-time-input').change(checkClockValidity);
+    $('.clockpicker').clockpicker({
+        align: 'left',
+        donetext: 'Done',
+    });
 </script>
 </body>
 

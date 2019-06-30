@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,18 +34,30 @@ public class Esp8266ManagementService {
      * @param idEsp  idEsp to set
      */
     public void setAssociation(String idEsp, String idRoom) {
-        ESP8266 esp8266 = esp8266Repository.findById(idEsp).get();
+        logger.info(idEsp + idRoom);
+        Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
+        logger.info("qui sotto");
+
+        if (!checkEsp.isPresent()) {
+            logger.info("setAssociation esp not present");
+            throw new IllegalArgumentException();
+        }
+        ESP8266 esp8266 = checkEsp.get();
+
+        logger.info(esp8266.getIdRoom());
 
         Room room;
         List<String> esp8266List;
         //The esp was already associated to some room
-        if (!esp8266.getIdRoom().equals(idRoom) && esp8266.getIdRoom() != null) {
+        if (esp8266.getIdRoom() != null && !esp8266.getIdRoom().equals(idRoom)) {
+            logger.info("remove from old room");
             //remove esp from the old room
             room = roomRepository.findById(esp8266.getIdRoom()).get();
             esp8266List = room.getEsp8266List();
             room.setEsp8266List(esp8266List.stream().filter(id -> !id.equals(idEsp)).collect(Collectors.toList()));
             roomRepository.save(room);
         }
+        logger.info("add to new room");
 
         //add esp to the new room
         esp8266.setIdRoom(idRoom);

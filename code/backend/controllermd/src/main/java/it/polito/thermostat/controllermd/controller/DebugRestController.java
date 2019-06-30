@@ -1,6 +1,9 @@
 package it.polito.thermostat.controllermd.controller;
 
 import com.google.zxing.WriterException;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.ProgramRepository;
+import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.server.QRService;
 import it.polito.thermostat.controllermd.services.server.WifiService;
@@ -29,17 +32,33 @@ public class DebugRestController {
     @Autowired
     WSALRepository wsalRepository;
 
+    @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
+    ProgramRepository programRepository;
+
+    @Autowired
+    ESP8266Repository esp8266Repository;
+
 
     @GetMapping(value = "/debug", produces = MediaType.IMAGE_PNG_VALUE)
-    public @ResponseBody byte[] qr() throws IOException, WriterException {
+    public @ResponseBody
+    byte[] qr() throws IOException, WriterException {
         logger.info("debug contacted");
         return qrService.getQRCodeImage();
     }
 
 
     @PostMapping("/debug/wsal")
-    public void deleteWSAL()
-    {
+    public void deleteWSAL() {
         wsalRepository.deleteAll();
+    }
+
+    @PostMapping("/debug/getall")
+    public void getAll() {
+        logger.info(esp8266Repository.findAll().toString());
+        logger.info(programRepository.findAll().toString());
+        logger.info(roomRepository.findAll().toString());
     }
 }

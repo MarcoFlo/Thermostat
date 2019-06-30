@@ -1,8 +1,7 @@
-var sliceArr = ["Wake", "Leave", "Return", "Sleep"];
+var sliceArr = ["Wake", "Leave", "Back", "Sleep"];
 var sliceList = [new Map(), new Map()];
 var time_slice_select = sliceArr[0];
 var week_pos = 0;
-$('#start-time-input').change(checkClockValidity);
 
 
 function getWeekPos() {
@@ -51,7 +50,7 @@ function checkClockValidity() {
 
 }
 
-function saveHourlyData() {
+function saveSliceData() {
     var clock = document.getElementById("start-time-input");
     if (checkClockValidity() === true) {
         var start_time = new Date("2019-01-01T" + clock.value);
@@ -66,13 +65,6 @@ function saveHourlyData() {
     resetClockTemperature();
 
 }
-
-
-$('.clockpicker').clockpicker({
-    align: 'left',
-    donetext: 'Done',
-});
-
 
 function resetClockTemperature() {
     console.log("reset clock & temperature");
@@ -163,8 +155,3 @@ function getSliceErrorString(time_slice_select, time_slice_select_index) {
 }
 
 
-
-
-function getTimeFromDate(date) {
-    return date.toTimeString().substring(0, 5);
-}
