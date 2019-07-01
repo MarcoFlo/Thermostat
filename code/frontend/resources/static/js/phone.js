@@ -11,7 +11,6 @@ window.onload = function () {
 
     document.getElementById("plus-button").addEventListener("click", addNewRoom);
 
-    showTime();
     setUpRoomSelect();
 
 
