@@ -253,7 +253,7 @@ public class MQTTServiceTest {
     }
 
 
-    @Scheduled(fixedRate = 10000, initialDelay = 30000)
+    @Scheduled(fixedRate = 10000, initialDelay = 40000)
     public void newSensorData() throws MqttException {
         for (String idEsp : savedEsp) {
             Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);

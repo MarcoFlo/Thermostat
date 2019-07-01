@@ -70,7 +70,7 @@ public class SettingController {
     @PostMapping("/setting/room/resource")
     public void postRoom(@RequestBody RoomResource roomResource) {
         logger.info("Room " + roomResource.getIdRoom() + " will be saved");
-        logger.info(roomResource.toString());
+//        logger.info(roomResource.toString());
         settingService.saveRoomResource(roomResource);
     }
 
@@ -78,7 +78,7 @@ public class SettingController {
     public RoomResource getRoomResource(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm gonna retrive the roomResource for " + idRoom);
         RoomResource roomResource= settingService.getRoomResource(idRoom);
-        logger.info(roomResource.toString());
+//        logger.info(roomResource.toString());
         return roomResource;
     }
 

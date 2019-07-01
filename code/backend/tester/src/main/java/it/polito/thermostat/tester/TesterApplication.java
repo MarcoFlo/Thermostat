@@ -22,10 +22,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-@EnableScheduling
-@EnableAsync
+import java.util.concurrent.Executor;
+
+
 @SpringBootApplication
-@Component
+@EnableScheduling
 public class TesterApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -69,6 +70,7 @@ public class TesterApplication implements CommandLineRunner {
         template.setConnectionFactory(redisConnectionFactory());
         return template;
     }
+
 
 
     @Autowired
