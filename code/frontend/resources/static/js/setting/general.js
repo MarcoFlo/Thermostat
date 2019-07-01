@@ -34,7 +34,6 @@ function resetPhoneForm() {
             if (this.readyState == 4 && this.status == 200) {
                 var room_resource = JSON.parse(xhttp_select_room.responseText);
                 console.log(room_resource);
-                console.log(room_resource.program.weeklyList[1]);
 
                 sliceList = [createMapFromJson(room_resource.program.weeklyList[0]), createMapFromJson(room_resource.program.weeklyList[1])];
                 document.getElementById("roomName").value = room_resource.idRoom;

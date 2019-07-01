@@ -22,10 +22,11 @@ function requestListFreeEsp(espSelectedList) {
 
                 div.appendChild(button);
                 espcontainer.appendChild(div);
+                console.log("free esp -> " + espList.toString());
+
             }
 
             if (espSelectedList !== null) {
-                console.log(espSelectedList.toString());
                 for (var i = 0; i < espSelectedList.length; i++) {
                     var div = document.createElement("div");
                     div.setAttribute("class", "col-auto p-1");
@@ -41,6 +42,7 @@ function requestListFreeEsp(espSelectedList) {
                     div.appendChild(button);
                     espcontainer.appendChild(div);
                 }
+                console.log("selected esp -> " + espSelectedList.toString());
             }
 
         }
