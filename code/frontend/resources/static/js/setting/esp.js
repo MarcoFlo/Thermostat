@@ -22,9 +22,9 @@ function requestListFreeEsp(espSelectedList) {
 
                 div.appendChild(button);
                 espcontainer.appendChild(div);
-                console.log("free esp -> " + espList.toString());
-
             }
+            console.log("free esp -> " + espList.toString());
+
 
             if (espSelectedList !== null) {
                 for (var i = 0; i < espSelectedList.length; i++) {
