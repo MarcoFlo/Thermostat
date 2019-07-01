@@ -2,6 +2,7 @@ package it.polito.thermostat.tester.serviceTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import it.polito.thermostat.tester.repository.ProgramRepository;
 import it.polito.thermostat.tester.resource.RoomResource;
 import it.polito.thermostat.tester.entity.ESP8266;
 import it.polito.thermostat.tester.entity.Program;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import java.net.URL;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MQTTServiceTest {
@@ -62,6 +65,9 @@ public class MQTTServiceTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    ProgramRepository programRepository;
+
 
     private IMqttClient mqttClient;
 
@@ -76,8 +82,12 @@ public class MQTTServiceTest {
     public void init() throws MqttException {
         esp8266Repository.deleteAll();
         roomRepository.deleteAll();
+        //non cancellare mai la program repository se no
+
         rpiEsp = Arrays.asList(mainRoomSensor, mainRoomHeater, mainRoomCooler);
         savedEsp = new LinkedList<>();
+        savedEsp.add(mainRoomSensor);
+
         objectMapper.registerModule(new JavaTimeModule());
 
         MqttConnectOptions options = new MqttConnectOptions();
@@ -128,17 +138,13 @@ public class MQTTServiceTest {
     }
 
 
-    public void createEspMainRoom() throws MqttException {
+    public Map<String, List<String>> createSecondaryEspAndRoom() throws MqttException, InterruptedException {
 
-        //create rpi esp
-
-        savedEsp.add(mainRoomSensor);
-    }
-
-    public void createSecondaryEspAndRoom() throws MqttException, InterruptedException {
         MqttMessage msg;
         String idEsp;
         List<String> espRoomList;
+
+        Map<String, List<String>> result = new HashMap<>();
 
 
         // create normal esp
@@ -157,16 +163,35 @@ public class MQTTServiceTest {
 
                 savedEsp.add(idEsp);
                 espRoomList.add(idEsp);
-            }
-            Thread.sleep(2000);
-            logger.info(espRoomList.toString());
-            createRoom(roomName[j], espRoomList);
-        }
+                TimeUnit.SECONDS.sleep(1);
 
+            }
+            result.put(roomName[j], espRoomList);
+        }
+        return result;
     }
 
+    public void createNotAssociatedEsp() throws MqttException, InterruptedException {
+        MqttMessage msg;
+        String idEsp;
 
-    private void createRoom(String idRoom, List<String> espList) {
+        for (int i = 0; i < 5; i++) {
+            for (String s : sensorType) {
+                msg = new MqttMessage(s.getBytes());
+                msg.setQos(2);
+                do {
+                    idEsp = "idTest" + ThreadLocalRandom.current().nextInt(0, 100 + 1);
+                }
+                while (savedEsp.contains(idEsp));
+                mqttClient.publish("/esp8266/" + idEsp, msg);
+                logger.info("esp with id: " + idEsp + " created");
+                savedEsp.add(idEsp);
+                TimeUnit.SECONDS.sleep(1);
+            }
+        }
+    }
+
+    public void createRoom(String idRoom, List<String> espList)  {
         URL url = null;
         Program defaultProgram = null;
 
@@ -208,7 +233,6 @@ public class MQTTServiceTest {
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
             DataOutputStream writer = new DataOutputStream(con.getOutputStream());
-            logger.info(espList.toString());
             RoomResource roomResource = new RoomResource(idRoom, espList, defaultProgram);
             writer.writeBytes(objectMapper.writeValueAsString(roomResource));
             writer.flush();
@@ -229,7 +253,7 @@ public class MQTTServiceTest {
     }
 
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 10000, initialDelay = 30000)
     public void newSensorData() throws MqttException {
         for (String idEsp : savedEsp) {
             Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
@@ -245,5 +269,6 @@ public class MQTTServiceTest {
             }
         }
     }
+
 
 }

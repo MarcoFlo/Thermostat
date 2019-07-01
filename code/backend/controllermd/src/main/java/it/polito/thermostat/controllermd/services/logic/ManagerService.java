@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ManagerService {
@@ -62,11 +61,11 @@ public class ManagerService {
 
     //    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
-        List<WSAL> checkWSAL = StreamSupport.stream(wsalRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        List<WSAL> checkWSAL = ((List<WSAL>) wsalRepository.findAll());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
         {
             WSAL currentWSAL = checkWSAL.get(0);
-            List<Room> roomList = StreamSupport.stream(roomRepository.findAll().spliterator(), false).collect(Collectors.toList());
+            List<Room> roomList = ((List<Room>)roomRepository.findAll());
             if (currentWSAL.getIsLeave()) {
                 logger.info("Leave mode");
                 manageLeave(roomList.stream().flatMap(room -> room.getEsp8266List().stream()).collect(Collectors.toList()), currentWSAL);

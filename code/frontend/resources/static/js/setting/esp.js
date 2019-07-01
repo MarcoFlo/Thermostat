@@ -7,7 +7,6 @@ function requestListFreeEsp(espSelectedList) {
     xhttp_esp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             var espList = JSON.parse(xhttp_esp.responseText);
-console.log(espList.toString());
 
             for (var i = 0; i < espList.length; i++) {
                 var div = document.createElement("div");

@@ -43,7 +43,7 @@ public class SettingService {
     public void saveRoomResource(RoomResource roomResource) {
         Room room = roomRepository.save(new Room(roomResource));
         logger.info(roomResource.getEsp8266List().toString() + room.getIdRoom());
-        roomResource.getEsp8266List().forEach(esp -> esp8266ManagementService.setAssociation(esp, room.getIdRoom()));
+        esp8266ManagementService.setAssociation(roomResource.getEsp8266List(), room.getIdRoom());
         programRepository.save(roomResource.getProgram());
 
     }

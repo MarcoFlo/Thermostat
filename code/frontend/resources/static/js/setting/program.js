@@ -103,11 +103,7 @@ function checkTimeBoundary(current_slice_index, current_start_time, weekPos) {
     if (after !== undefined)
         console.log("after -> " + after);
 
-
-    if ((before === undefined || (current_start_time.getTime() - before.getTime()) > 0) && (after === undefined || (after.getTime() - current_start_time.getTime()) > 0))
-        return true;
-    else
-        return false;
+    return (before === undefined || (current_start_time.getTime() - before.getTime()) > 0) && (after === undefined || (after.getTime() - current_start_time.getTime()) > 0);
 }
 
 function getSliceBefore(current_slice_index, weekPos) {

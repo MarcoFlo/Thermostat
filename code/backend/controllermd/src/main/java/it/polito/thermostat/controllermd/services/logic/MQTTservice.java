@@ -12,6 +12,7 @@ import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.SensorDataRepository;
 import it.polito.thermostat.controllermd.resources.ThermostatClientResource;
+import it.polito.thermostat.controllermd.services.server.Esp8266ManagementService;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +22,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Service
 public class MQTTservice {
@@ -86,7 +80,7 @@ public class MQTTservice {
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
         logger.info("MQTTService connection done");
 
-        StreamSupport.stream(esp8266Repository.findAll().spliterator(), false).filter(ESP8266::getIsSensor).forEach(esp -> {
+        ((List<ESP8266>)esp8266Repository.findAll()).stream().filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 logger.info("Subscribed to " + esp.getIdEsp());
                 mqttClient.subscribe("/" + esp.getIdEsp() + "/sensor", this::sensorDataReceived);
@@ -180,7 +174,7 @@ public class MQTTservice {
     private void updateClientData(String idEsp, SensorData sensorData) throws MqttException, JsonProcessingException {
         Optional<Room> checkRoom;
         if (environment.getActiveProfiles()[0].equals("dev"))
-            checkRoom = ((List<Room>) roomRepository.findAllById(Arrays.asList("Kitchen", "Bathroom", "Living", "MainRoom"))).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+            checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
         else
             checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
 

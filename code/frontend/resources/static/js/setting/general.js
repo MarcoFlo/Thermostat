@@ -29,10 +29,10 @@ function showTime() {
 
 function createMapFromJson(toBeMapped) {
     var result = new Map();
-    result.set("Wake", new HourlyProgram(toBeMapped.dailyMap.wake.time, toBeMapped.dailyMap.wake.temperature));
-    result.set("Leave", new HourlyProgram(toBeMapped.dailyMap.leave.time, toBeMapped.dailyMap.leave.temperature));
-    result.set("Back", new HourlyProgram(toBeMapped.dailyMap.back.time, toBeMapped.dailyMap.back.temperature));
-    result.set("Sleep", new HourlyProgram(toBeMapped.dailyMap.sleep.time, toBeMapped.dailyMap.sleep.temperature));
+    result.set("Wake", new HourlyProgram(new Date("2019-01-01T" + toBeMapped.dailyMap.wake.time), toBeMapped.dailyMap.wake.temperature));
+    result.set("Leave", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.leave.time), toBeMapped.dailyMap.leave.temperature));
+    result.set("Back", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.back.time), toBeMapped.dailyMap.back.temperature));
+    result.set("Sleep", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.sleep.time), toBeMapped.dailyMap.sleep.temperature));
     return result;
 
 }
@@ -57,7 +57,7 @@ function resetPhoneForm() {
                 requestListFreeEsp(room_resource.esp8266List);
 
 
-                document.getElementById("start-time-input").value = sliceList[0].get(sliceArr[0]).time;
+                document.getElementById("start-time-input").value = getTimeFromDate(sliceList[0].get(sliceArr[0]).time);
                 document.getElementById("weekend").className = "btn btn-secondary";
                 document.getElementById("time-slice-select").value = sliceArr[0];
 
@@ -116,6 +116,14 @@ function savePhoneForm() {
             var option = document.getElementById("New Room");
             option.innerHTML = room_name;
         }
+        var roomFormError = document.createElement("h6");
+        roomFormError.setAttribute("class", "alert alert-success p-0 px-2 m-0 text-center");
+        roomFormError.setAttribute("id", "room-form-error");
+        roomFormError.innerHTML = "Saved succesfully";
+        document.getElementById("save-div").append(roomFormError);
+        setTimeout(function () {
+            $("#room-form-error").delay(3000).remove()
+        }, 3000);
 
     } else {
         var roomFormError = document.createElement("h6");
