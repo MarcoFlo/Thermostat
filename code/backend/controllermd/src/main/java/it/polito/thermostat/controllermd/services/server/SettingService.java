@@ -52,12 +52,9 @@ public class SettingService {
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
         Optional<Program> checkProgram = programRepository.findById(idRoom);
 
-        if (checkRoom.isPresent() && checkProgram.isPresent()) {
-            Room room = checkRoom.get();
-            logger.info(room.getEsp8266List().toString());
-            return new RoomResource(room, checkProgram.get());
-
-        } else
+        if (checkRoom.isPresent() && checkProgram.isPresent())
+            return new RoomResource(checkRoom.get(), checkProgram.get());
+        else
             throw new IllegalArgumentException();
 
 

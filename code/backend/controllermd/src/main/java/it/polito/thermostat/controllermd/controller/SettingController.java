@@ -55,10 +55,7 @@ public class SettingController {
     @GetMapping("/setting/esp/free")
     public List<String> getEspFree() {
         logger.info("I'm gonna return the list of free esp");
-
-        List<String> result = esp8266ManagementService.getEspFree();
-        logger.info(result.toString());
-        return result;
+        return esp8266ManagementService.getEspFree();
     }
 
 
