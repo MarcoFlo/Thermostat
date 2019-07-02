@@ -135,7 +135,7 @@ public class SettingController {
      */
     @PostMapping("/setting/wifi/credentials")
     public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
-        logger.info("I'm gonna connect to this net\n" + wifiNetResource.toString());
+        logger.info("I'm gonna connect to this net -> " + wifiNetResource.toString());
         if (!isWindows)
             wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
         else

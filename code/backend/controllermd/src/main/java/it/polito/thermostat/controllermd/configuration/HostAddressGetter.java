@@ -27,7 +27,7 @@ public class HostAddressGetter {
                 } else {
                     nameInterface = "wlan0";
                 }
-                if (networkInterface.getDisplayName().contains(nameInterface)) {
+                if (networkInterface.getDisplayName().contains(nameInterface) || networkInterface.getDisplayName().contains("NIC")) {
                     Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
                     while (addresses.hasMoreElements()) {
                         InetAddress addr = addresses.nextElement();
