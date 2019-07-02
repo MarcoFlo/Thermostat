@@ -51,7 +51,7 @@
 <body>
 
 
-<div class="container-fluid">
+<div class="container-fluid p-0 ">
 
 
 	<!-- Modal WIFI -->
@@ -132,11 +132,16 @@
         </div>
     </div>
 
-	<div class="row">
-		<a href="#" data-toggle="modal" data-target="#ModalWifi">Configuration-WiFi</a>
-        <button id="settings" type="button" class="btn btn-secondary"  data-toggle="modal" data-target="#settings-modal">Settings</button>
+	<div class="d-flex justify-content-between px-2" style="background-color: #a3a3a3;">
+		<div id="settings" class="p-2 d-flex align-items-center" data-toggle="modal" data-target="#settings-modal">
+			<span class="fa fa-cog fa-2x text-white"/>
+		</div>
+		<h4 id="clock" class="d-flex align-items-center text-white"></h4>
+		<div class="p-2 d-flex align-items-center" data-toggle="modal" data-target="#ModalWifi">
+            <span class="fa fa-wifi fa-2x text-white"/>
+        </div>
     </div>
-	<div id="main-container" class="container-fluid justify-content-center bg-dark ">
+	<div id="main-container" class="container-fluid  justify-content-center bg-dark ">
 		<div  class="row justify-content-center text-light">
 			<h1 id="room_name"></h1>
 		</div>
@@ -158,10 +163,10 @@
 			</div>
 		</div>
 		<div class="row justify-content-center" id="container-buttons">
-			<button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
-			<button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
-			<button type="button" class="btn btn-secondary" id="Manual" value="0">Manual</button>
-			<button type="button" class="btn btn-secondary" id="AntiFreeze" value="0">AntiFreeze</button>
+			<button type="button" class="btn btn-secondary m-1" id="Summer" value="0">Summer</button>
+			<button type="button" class="btn btn-secondary m-1" id="Winter" value="0">Winter</button>
+			<button type="button" class="btn btn-secondary m-1" id="Manual" value="0">Manual</button>
+			<button type="button" class="btn btn-secondary m-1" id="AntiFreeze" value="0">AntiFreeze</button>
 
 		</div>
 	</div>
