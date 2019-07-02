@@ -15,7 +15,7 @@ function requestWifiList() {
 
                 var button = document.createElement("button");
                 button.setAttribute("type", "button");
-                button.setAttribute("class", "btn btn-secondary form-control");
+                button.setAttribute("class", "btn btn-secondary btn-block");
                 button.setCustomValidity("aria-describedby", "essidHelp");
                 button.innerHTML = obj[i].essid;
                 button.setAttribute("id", obj[i].essid);
@@ -36,15 +36,14 @@ function connectWifi() {
     var wifi_selected;
     var children = document.getElementById("options-wifi").children;
     for (var i = 0; i < children.length; i++) {
-        console.log(children[i].id);
-        if (children[i].classList.contains("btn-primary")) {
-            wifi_selected = wifiMap.get(children[i].id);
+        if (children[i].children[0].classList.contains("btn-primary")) {
+            wifi_selected = wifiMap.get(children[i].children[0].id);
         }
     }
 
     wifi_selected.netPassword = null;
     if (!wifi_selected.isKnown)
-        wifi_selected.netPassword = document.getElementById("text").value;
+        wifi_selected.netPassword = document.getElementById("keyboardInput").value;
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
@@ -56,20 +55,19 @@ function wifiSelection() {
     var children = document.getElementById("options-wifi").children;
     for (var i = 0; i < children.length; i++) {
         if (this.id === children[i].children[0].id)
-            this.classList.contains("btn-secondary") ? this.className = "btn btn-primary form-control" : this.className = "btn btn-secondary form-control";
-        else
-            children[i].children[0].className = "btn btn-secondary form-control";
+            this.classList.contains("btn-secondary") ? this.className = "btn btn-primary btn-block" : this.className = "btn btn-secondary btn-block";
+        else {
+            children[i].children[0].className = "btn btn-secondary btn-block";
+            $('#collapseKeyboard').collapse('hide');
 
+        }
     }
 
-    var texto = document.getElementById("text");
-    texto.value = "";
     if (wifiMap.get(this.id).isKnown) {
-        document.getElementById("cont-text").style.visibility = "hidden";
-        texto.value = "1234";
+        $('#collapseKeyboard').collapse('hide');
     } else {
-        document.getElementById("cont-text").style.visibility = "visible";
-        $('#text').trigger('click');
+        $('#collapseKeyboard').collapse('show');
+
     }
 }
 

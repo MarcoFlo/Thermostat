@@ -8,44 +8,23 @@
 
     <link rel="stylesheet" href="../static/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/all.min.css">
+    <link rel="stylesheet" href="../imported_component/fontawesome-free-5.9.0-web/css/fontawesome.min.css">
+
     <script src="../static/js/jquery.js"></script>
     <script src="../static/js/bootstrap/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../imported_component/nest-thermostat-control/css/thermostat.css">
 
-
-    <link href="../imported_component/keyboard/docs/css/jquery-ui.min.css" rel="stylesheet">
-    <!-- still using jQuery v2.2.4 because Bootstrap doesn't support v3+ -->
-    <script src="../imported_component/keyboard/docs/js/jquery-latest-slim.min.js"></script>
-    <script src="../imported_component/keyboard/docs/js/jquery-ui-custom.min.js"></script>
-    <!-- <script src="docs/js/jquery-migrate-3.0.1.min.js"></script> -->
-
-    <!-- keyboard widget css & script (required) -->
-    <link href="../imported_component/keyboard/css/keyboard.css" rel="stylesheet">
-    <script src="../imported_component/keyboard/js/jquery.keyboard.js"></script>
-
-    <!-- keyboard extensions (optional) -->
-    <script src="../imported_component/keyboard/js/jquery.mousewheel.js"></script>
-    <script src="../imported_component/keyboard/js/jquery.keyboard.extension-typing.js"></script>
-    <script src="../imported_component/keyboard/js/jquery.keyboard.extension-autocomplete.js"></script>
-    <script src="../imported_component/keyboard/js/jquery.keyboard.extension-caret.js"></script>
-
-    <!-- demo only -->
-    <link rel="stylesheet" href="../imported_component/keyboard/docs/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../imported_component/keyboard/docs/css/font-awesome.min.css">
-    <!-- to have the glyphicon-->
-    <link href="../imported_component/keyboard/docs/css/demo.css" rel="stylesheet">
-    <link href="../imported_component/keyboard/docs/css/tipsy.css" rel="stylesheet">
-    <link href="../imported_component/keyboard/docs/css/prettify.css" rel="stylesheet">
-    <script src="../imported_component/keyboard/docs/js/bootstrap.min.js"></script>
-    <script src="../imported_component/keyboard/docs/js/demo.js"></script>
-    <script src="../imported_component/keyboard/docs/js/jquery.tipsy.min.js"></script>
-    <script src="../imported_component/keyboard/docs/js/prettify.js"></script> <!-- syntax highlighting -->
+    <link rel="stylesheet" href="../imported_component/bin/keyboard/docs/css/font-awesome.min.css">
 
     <!-- our javascript -->
     <script src="../static/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
     <script src="../static/js/juan.js"></script>
     <script src="../static/js/marco.js"></script>
     <script src="../static/js/main.js"></script>
+
+    <!--    simple keyboard extension-->
+    <link href="../imported_component/simple-keyboard/css.css" rel="stylesheet">
+
 
 </head>
 
@@ -69,9 +48,14 @@
                     <div class="d-flex flex-column form-group" id="options-wifi">
 
                     </div>
-                    <div style="text-align:center; visibility: hidden;" id="cont-text">
-                        <input id="text" type="password" placeholder="Password">
+                    <div id="collapseKeyboard" class="collapse">
+                        <div class="card-body p-1">
+                            <input class="input form-control" type="password" id="keyboardInput" placeholder="Insert the password for this network"/>
+                            <div class="simple-keyboard"></div>
+                        </div>
                     </div>
+
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="connect" data-dismiss="modal">Connect
                         </button>
@@ -146,9 +130,27 @@
 </div>
 
 <script src="../imported_component/nest-thermostat-control/js/thermostat.js"></script>
+<script src="../imported_component/simple-keyboard/js.js"></script>
 <script>
-    $('#text').keyboard({layout: 'qwerty'});
+
+    let Keyboard = window.SimpleKeyboard.default;
+
+    let myKeyboard = new Keyboard({
+        onChange: input => onChange(input),
+        onKeyPress: button => onKeyPress(button)
+    });
+
+    function onChange(input) {
+        document.querySelector(".input").value = input;
+        console.log("Input changed", input);
+    }
+
+    function onKeyPress(button) {
+        console.log("Button pressed", button);
+    }
 </script>
+
+
 
 
 </body>
