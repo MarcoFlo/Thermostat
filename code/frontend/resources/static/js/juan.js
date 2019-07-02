@@ -171,6 +171,8 @@ function manual() {
         document.getElementById("container-buttons").style.pointerEvents = "auto";
         document.getElementById("left_button").style.pointerEvents = "auto";
         document.getElementById("right_button").style.pointerEvents = "auto";
+
+        nest.target_temperature = nest.ambient_temperature;
         //nest.disabled = true;
 
         /*document.getElementById("main-container").removeEventListener('mousedown', dragStart);
@@ -194,13 +196,13 @@ function antifreeze() {
         var idRoom = $($('h1').contents()[0]).text();
         document.getElementById(name).className = "btn btn-primary";
         document.getElementById(name).value = 1;
-        document.getElementById("Summer").className = "btn btn-primary";
-        document.getElementById("Summer").value = 1;
+        document.getElementById("Summer").className = "btn btn-secondary";
+        document.getElementById("Summer").value = 0;
         document.getElementById("Manual").className = "btn btn-secondary";
         document.getElementById("Manual").value = 0;
-        document.getElementById("Winter").className = "btn btn-secondary";
-        document.getElementById("Winter").value = 0;
-        nest.hvac_state = 'cooling';
+        document.getElementById("Winter").className = "btn btn-primary";
+        document.getElementById("Winter").value = 1;
+        nest.hvac_state = 'heating';
         var xhr = new XMLHttpRequest();
         xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
         xhr.setRequestHeader("Content-Type", "application/json");

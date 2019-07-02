@@ -28,6 +28,12 @@ function setMqttRoom(idRoom) {
     client.subscribe("/temperature/" + room_list[idRoom]);
     currentRoom = idRoom;
     document.getElementById("room_name").innerText = room_list[currentRoom];
+    //InitialState();
+
+    //if(idRoom!=undefined){
+        //alert(room_list[currentRoom]);
+    //   get_backend(currentRoom);
+    //}
 }
 
 function onMessageArrived(message) {
@@ -84,7 +90,10 @@ function changeRoom(ev) {
             }
                 break;
         }
+        InitialState();
         setMqttRoom(desired_room);
+        //get_backend(desired_room);
+
     }
 }
 
@@ -99,5 +108,48 @@ function requestSettingPage() {
     };
     xhr.send();
     document.getElementById('settings-body').innerHTML = ("../../templates/phone.html");
+
+}
+function get_backend(desired_room){
+    var xhttp_backend = new XMLHttpRequest();
+    xhttp_backend.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // Typical action to be performed when the document is ready:
+            /*console.log(xhttp.responseText);*/
+            console.log("Entry backend");
+            var obj = JSON.parse(xhttp_backend.responseText);
+                    alert(room_list[desired_room]);
+
+            //obj.isWinter = true;
+            if(obj.isWinter){
+                //alert("entra");
+                $('#Winter').trigger('click');
+            }
+            if(obj.isSummer){
+                $('#Summer').trigger('click');
+            }
+            if(obj.isAntiFreeze){
+                $('#AntiFreeze').trigger('click');
+            }
+            if(obj.isManual){
+                $('#Manual').trigger('click');    
+            }
+            /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
+
+        }
+    };
+    xhttp_backend.open("GET", "http://localhost:8080/temperature/current_room_state_resource/"+desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp_backend.send();
+}
+function InitialState(){
+    document.getElementById("Summer").value = 0;
+    document.getElementById("Summer").className = "btn btn-secondary"
+    document.getElementById("Winter").value = 0;
+    document.getElementById("Winter").className = "btn btn-secondary";
+    document.getElementById("Manual").value = 0;
+    document.getElementById("Manual").className = "btn btn-secondary"
+    document.getElementById("AntiFreeze").value = 0;
+    document.getElementById("AntiFreeze").className = "btn btn-secondary";
+    nest.hvac_state = 'off';
 
 }
