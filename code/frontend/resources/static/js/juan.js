@@ -1,90 +1,85 @@
+var wifiMap = new Map();
 
-function requestEspFree() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            // Typical action to be performed when the document is ready:
-            /*console.log(xhttp.responseText);*/
-            var obj = JSON.parse(xhttp.responseText);
-            /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
-
-        }
-    };
-    xhttp.open("GET", "http://localhost:8080/setting/esp/free", true); /*filename='localhost:8080/setting/esp/free';*/
-    xhttp.send();
-
-}
 
 function requestWifiList() {
     var xhttp_wifi = new XMLHttpRequest();
     xhttp_wifi.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            // Typical action to be performed when the document is ready:
-            /*console.log(xhttp.responseText);*/
             obj = JSON.parse(xhttp_wifi.responseText);
+            wifiMap = createMapFromWifiList(obj);
+            console.log(wifiMap);
+            var capa = document.getElementById("options-wifi");
+            for (var i = 0; i < obj.length; i++) {
+                var div = document.createElement("div");
+                div.setAttribute("class", "d-flex flex-row p-1");
 
-            console.log(obj[0].essid);
-            /*var array = obj.split("");*/
-            console.log(obj.length);
-            if (obj.length > 1) {
-                //var resta = obj.length - 1;
-                var capa = document.getElementById("options-wifi");
-                for (i = 1; i <= obj.length; i++) {
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "button");
-                    input.setAttribute("class", "btn btn-secondary");
-                    var aux = i;
-                    input.setAttribute("name", "wifi-1");
-                    input.setAttribute("value", ""+obj[i-1].essid);
-                    input.setAttribute("id", ""+aux);
-                    input.onclick= function(){
-                        //var xhttp_wifi = new XMLHttpRequest();
-                        //xhttp_wifi.onreadystatechange = function () {
-                         //   if (this.readyState == 4 && this.status == 200) {
-                            // Typical action to be performed when the document is ready:
-                            /*console.log(xhttp.responseText);*/
-                        //    var obj = JSON.parse(xhttp_wifi.responseText);
-                        for (i = 1; i <= obj.length; i++) {
-                            document.getElementById(i).className = "btn btn-secondary";
-                        }
-                        document.getElementById(this.id).className = "btn btn-primary";
-                        var texto = document.getElementById("text");
-                        texto.value = "";
-                        var key = obj[this.id-1].isKnown; 
-                        if( key == 1){
-                            document.getElementById("cont-text").style.visibility = "hidden";
-                            texto.value= "1234";    
-                        }else{
-                            document.getElementById("cont-text").style.visibility = "visible";
-                            $('#text').trigger('click');
-                        }
-                        //}
-                    };
-                    //xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
-                    //xhttp_wifi.send();
-                    //};
-                    //var span = document.createElement("SPAN");
-                    //span.setAttribute("id", "wifi-" + aux);
-                    //var branch = document.createElement("br");
-                    capa.appendChild(input);
-                    //capa.appendChild(span);
-                    //capa.appendChild(branch);
-                }
+                var button = document.createElement("button");
+                button.setAttribute("type", "button");
+                button.setAttribute("class", "btn btn-secondary form-control");
+                button.setCustomValidity("aria-describedby", "essidHelp");
+                button.innerHTML = obj[i].essid;
+                button.setAttribute("id", obj[i].essid);
+                button.addEventListener("click", wifiSelection);
+
+                div.appendChild(button);
+                capa.appendChild(div);
             }
-            /*for (i = 0; i < obj.length; i++) {
-                var aux = i + 1;
-                document.getElementById("wifi-" + aux).innerHTML = obj[i].essid;
-            }*/
-
 
         }
     };
-    xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true);
     xhttp_wifi.send();
-
-
 }
 
+
+function connectWifi() {
+    var wifi_selected;
+    var children = document.getElementById("options-wifi").children;
+    for (var i = 0; i < children.length; i++) {
+        console.log(children[i].id);
+        if (children[i].classList.contains("btn-primary")) {
+            wifi_selected = wifiMap.get(children[i].id);
+        }
+    }
+
+    wifi_selected.netPassword = null;
+    if (!wifi_selected.isKnown)
+        wifi_selected.netPassword = document.getElementById("text").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(wifi_selected));
+}
+
+function wifiSelection() {
+    var children = document.getElementById("options-wifi").children;
+    for (var i = 0; i < children.length; i++) {
+        if (this.id === children[i].children[0].id)
+            this.classList.contains("btn-secondary") ? this.className = "btn btn-primary form-control" : this.className = "btn btn-secondary form-control";
+        else
+            children[i].children[0].className = "btn btn-secondary form-control";
+
+    }
+
+    var texto = document.getElementById("text");
+    texto.value = "";
+    if (wifiMap.get(this.id).isKnown) {
+        document.getElementById("cont-text").style.visibility = "hidden";
+        texto.value = "1234";
+    } else {
+        document.getElementById("cont-text").style.visibility = "visible";
+        $('#text').trigger('click');
+    }
+}
+
+function createMapFromWifiList(obj) {
+    var wifiMap = new Map();
+    for (var i = 0; i < obj.length; i++) {
+        wifiMap.set(obj[i].essid, obj[i]);
+    }
+    return wifiMap;
+}
 
 function change_color() {
     var name = this.id;
@@ -97,7 +92,7 @@ function change_color() {
                 document.getElementById(name).value = 1;
                 document.getElementById(array[x]).className = "btn btn-secondary";
                 document.getElementById(array[x]).value = 0;
-               // var xhr = new XMLHttpRequest();
+                // var xhr = new XMLHttpRequest();
 
                 if (name === "Summer") {
                     nest.hvac_state = 'cooling';
@@ -106,13 +101,13 @@ function change_color() {
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("summer");
                 } else if (name === "Winter") {
-                    if(document.getElementById("AntiFreeze").value==0){
+                    if (document.getElementById("AntiFreeze").value == 0) {
                         nest.hvac_state = 'heating';
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("winter");
-                    }else{
+                    } else {
                         document.getElementById(name).className = "btn btn-secondary";
                         document.getElementById(name).value = 0;
                         document.getElementById(array[x]).className = "btn btn-primary";
@@ -145,34 +140,14 @@ function change_color() {
     }
 }
 
-function connect(){
-    var wifi_selected = document.getElementsByName("wifi-1");
-    //alert(wifi_selected.length);
-    for(i=1;i<=wifi_selected.length;i++){
-        if(wifi_selected[i-1].checked){
-             var xhr = new XMLHttpRequest();
-             //obj[i-1].essid = "nana";
-             //alert(obj[i-1].essid);
-             if(!obj[i-1].isKnown){
-                var texto = document.getElementById("text").value;
-                obj[i-1].netPassword = texto;
-            }
-            //alert(obj[i-1].netPassword);
-            var jsonSend = JSON.stringify(obj[i-1]);
-            xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(jsonSend);
-        }
-    }
-}
 
-function manual(){
+function manual() {
     var name = this.id;
     var value = this.value;
     var xhr = new XMLHttpRequest();
     var idRoom = $($('h1').contents()[0]).text();
     var desiredTemperature = nest.target_temperature;
-    var obj = { idRoom: idRoom, desiredTemperature: desiredTemperature };
+    var obj = {idRoom: idRoom, desiredTemperature: desiredTemperature};
     //alert(obj.idRoom);
     //alert(obj.desiredTemperature);
     //alert(desiredTemperature);
@@ -187,8 +162,7 @@ function manual(){
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
         document.getElementById("main-container").style.pointerEvents = "auto";
-    }
-    else if (value == 1) {
+    } else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary";
         document.getElementById(name).value = 0;
         xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
@@ -207,14 +181,15 @@ function manual(){
         document.getElementById("main-container").removeEventListener('mouseup', dragEnd);
         document.getElementById("main-container").removeEventListener('mouseleave', dragEnd);
         document.getElementById("main-container").removeEventListener('touchend', dragEnd);*/
-        
+
         //include('../../imported_component/nest-thermostat-control/js/thermostat.js');
         //document.getElementById("main-container").removeEventListener('mousemove', dragMove);
         //document.getElementById("main-container").removeEventListener('touchmove', dragMove);        
 
     }
 }
-function antifreeze(){
+
+function antifreeze() {
     var name = this.id;
     var value = this.value;
     if (value == 0) {
@@ -238,7 +213,7 @@ function antifreeze(){
         xhr.send(idRoom);
     } else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary";
-        document.getElementById(name).value = 0;   
+        document.getElementById(name).value = 0;
     }
 }
 

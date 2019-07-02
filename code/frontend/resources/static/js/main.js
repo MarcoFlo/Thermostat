@@ -4,7 +4,7 @@ window.onload = function () {
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = manual;
 
-    document.getElementById("connect").onclick = connect;
+    document.getElementById("connect").addEventListener("click",connectWifi);
     document.getElementById("AntiFreeze").onclick = antifreeze;
 
 
@@ -19,7 +19,6 @@ window.onload = function () {
     showTime();
     mqttLoad();
     requestWifiList();
-    requestEspFree();
 // requestSettingPage();
 
 

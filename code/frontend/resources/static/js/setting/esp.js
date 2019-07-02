@@ -16,7 +16,7 @@ function requestListFreeEsp(espSelectedList) {
                 button.setAttribute("type", "button");
                 button.setAttribute("class", "btn btn-secondary");
                 button.setAttribute("name", "esp-button");
-                button.onclick = toggleButton;
+                button.addEventListener("click",  toggleButton);
                 button.innerHTML = espList[i];
                 button.setAttribute("id", espList[i]);
 
