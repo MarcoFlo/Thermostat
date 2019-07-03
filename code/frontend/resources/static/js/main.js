@@ -1,11 +1,16 @@
 var obj;
 window.onload = function () {
-    document.getElementById("Summer").onclick = change_color;
+    // document.getElementById("Summer").addEventListener("click", toggleWSAL);
+    // document.getElementById("Winter").addEventListener("click", toggleWSAL);
+    // document.getElementById("Manual").addEventListener("click", toggleWSAL);
+
+    document.getElementById("Summer").addEventListener("click", change_color);
     document.getElementById("Winter").onclick = change_color;
     document.getElementById("Manual").onclick = manual;
-
-    document.getElementById("connect").addEventListener("click",connectWifi);
     document.getElementById("AntiFreeze").onclick = antifreeze;
+
+
+    document.getElementById("connect").addEventListener("click", connectWifi);
 
 
     document.getElementById("right_arrow").addEventListener('click', changeRoom);

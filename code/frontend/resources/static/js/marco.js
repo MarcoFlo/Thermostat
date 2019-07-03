@@ -31,7 +31,7 @@ function setMqttRoom(idRoom) {
     //InitialState();
 
     //if(idRoom!=undefined){
-        //alert(room_list[currentRoom]);
+    //alert(room_list[currentRoom]);
     //   get_backend(currentRoom);
     //}
 }
@@ -64,7 +64,6 @@ function requestRoom() {
     };
     xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
     xhttp_room.send();
-    xhttp_room.close
 }
 
 /**
@@ -72,12 +71,11 @@ function requestRoom() {
  *  TODO Retrive and set the current setting from GET localhost:8080/temperature/current_room_state_resource
  * @param ev
  */
-function changeRoom(ev) {
+function changeRoom() {
     if (currentRoom !== undefined) {
-        var desired_room;
-        switch (ev.target.id) {
+        var desired_room = currentRoom;
+        switch (this.id) {
             case "right_arrow" : {
-                console.log("right arrow");
                 desired_room = (currentRoom + 1) % room_list.length;
             }
                 break;
@@ -87,12 +85,13 @@ function changeRoom(ev) {
                 else
                     desired_room = currentRoom - 1;
                 desired_room = desired_room % room_list.length;
+
             }
                 break;
         }
-        InitialState();
+        initialState();
         setMqttRoom(desired_room);
-        //get_backend(desired_room);
+        get_backend(desired_room);
 
     }
 }
@@ -110,7 +109,8 @@ function requestSettingPage() {
     document.getElementById('settings-body').innerHTML = ("../../templates/phone.html");
 
 }
-function get_backend(desired_room){
+
+function get_backend(desired_room) {
     var xhttp_backend = new XMLHttpRequest();
     xhttp_backend.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -118,38 +118,39 @@ function get_backend(desired_room){
             /*console.log(xhttp.responseText);*/
             console.log("Entry backend");
             var obj = JSON.parse(xhttp_backend.responseText);
-                    alert(room_list[desired_room]);
+            alert(room_list[desired_room]);
 
             //obj.isWinter = true;
-            if(obj.isWinter){
+            if (obj.isWinter) {
                 //alert("entra");
                 $('#Winter').trigger('click');
             }
-            if(obj.isSummer){
+            if (obj.isSummer) {
                 $('#Summer').trigger('click');
             }
-            if(obj.isAntiFreeze){
+            if (obj.isAntiFreeze) {
                 $('#AntiFreeze').trigger('click');
             }
-            if(obj.isManual){
-                $('#Manual').trigger('click');    
+            if (obj.isManual) {
+                $('#Manual').trigger('click');
             }
             /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
 
         }
     };
-    xhttp_backend.open("GET", "http://localhost:8080/temperature/current_room_state_resource/"+desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp_backend.open("GET", "http://localhost:8080/temperature/current_room_state_resource/" + desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp_backend.send();
 }
-function InitialState(){
+
+function initialState() {
     document.getElementById("Summer").value = 0;
-    document.getElementById("Summer").className = "btn btn-secondary"
+    document.getElementById("Summer").className = "btn btn-secondary m-1";
     document.getElementById("Winter").value = 0;
-    document.getElementById("Winter").className = "btn btn-secondary";
+    document.getElementById("Winter").className = "btn btn-secondary m-1";
     document.getElementById("Manual").value = 0;
-    document.getElementById("Manual").className = "btn btn-secondary"
+    document.getElementById("Manual").className = "btn btn-secondary m-1";
     document.getElementById("AntiFreeze").value = 0;
-    document.getElementById("AntiFreeze").className = "btn btn-secondary";
+    document.getElementById("AntiFreeze").className = "btn btn-secondary m-1";
     nest.hvac_state = 'off';
 
 }
