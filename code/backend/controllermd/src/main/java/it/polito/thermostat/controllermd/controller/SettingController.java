@@ -5,7 +5,9 @@ import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.resources.AssociationResource;
 import it.polito.thermostat.controllermd.resources.RoomResource;
+import it.polito.thermostat.controllermd.resources.StatsResource;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
+import it.polito.thermostat.controllermd.services.logic.StatService;
 import it.polito.thermostat.controllermd.services.server.Esp8266ManagementService;
 import it.polito.thermostat.controllermd.services.server.SettingService;
 import it.polito.thermostat.controllermd.services.server.TemperatureService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /*
@@ -48,6 +51,9 @@ public class SettingController {
 
     @Autowired
     SettingService settingService;
+
+    @Autowired
+    StatService statService;
 
     /**
      * @return a list of free esp
@@ -153,5 +159,9 @@ public class SettingController {
         return "iamrpi";
     }
 
-
+    @GetMapping("/setting/stats/{date}")
+    public List<StatsResource> getStatsResource(@PathVariable("date") String date)
+    {
+        return statService.getDayStats(date).stream().map(stats -> new StatsResource(stats)).collect(Collectors.toList());
+    }
 }

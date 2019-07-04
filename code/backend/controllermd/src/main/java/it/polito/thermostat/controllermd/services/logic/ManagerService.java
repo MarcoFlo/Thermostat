@@ -29,6 +29,8 @@ public class ManagerService {
     @Value("#{T(java.lang.Double).parseDouble('${temperature.buffer}')}")
     Double temperatureBuffer;
 
+    @Autowired
+    StatService statService;
 
 
 
@@ -68,29 +70,29 @@ public class ManagerService {
             List<Room> roomList = ((List<Room>)roomRepository.findAll());
             if (currentWSAL.getIsLeave()) {
                 logger.info("Leave mode");
-                manageLeave(roomList.stream().flatMap(room -> room.getEsp8266List().stream()).collect(Collectors.toList()), currentWSAL);
+                roomList.forEach(room -> manageLeave(room, currentWSAL));
                 return;
             } else if (currentWSAL.getIsAntiFreeze()) {
                 logger.info("AntiFreeze mode");
-                manageESP(roomList.stream().flatMap(room -> room.getEsp8266List().stream()).collect(Collectors.toList())
-                        , currentWSAL.getAntiFreezeTemperature(), false, true);
+                roomList.forEach(room -> manageESP(room, currentWSAL.getAntiFreezeTemperature(), false, true));
+
                 return;
             }
             roomList.stream().forEach(room -> manageRoom(room, currentWSAL.getIsSummer()));
         }
     }
 
-    private void manageLeave(List<String> esp8266List, WSAL currentWSAL) {
+    private void manageLeave(Room room, WSAL currentWSAL) {
         LocalDateTime leaveEnd = currentWSAL.getLeaveEnd();
         LocalDateTime now = LocalDateTime.now();
         Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveBackTemperature());
 
         //It's time to turn on the system
         if (now.isAfter(leaveEnd.plus((long) (60 * temperatureDiff * scalingFactor), ChronoUnit.MINUTES))) {
-            manageESP(esp8266List, currentWSAL.getLeaveBackTemperature(), currentWSAL.getIsSummer(), true);
+            manageESP(room, currentWSAL.getLeaveBackTemperature(), currentWSAL.getIsSummer(), true);
         } else //waiting at leaveTemperature
         {
-            manageESP(esp8266List, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);
+            manageESP(room, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);
 
         }
     }
@@ -98,7 +100,7 @@ public class ManagerService {
     private void manageRoom(Room room, Boolean isSummer) {
         if (room.getIsManual()) {
             logger.info(room.getIdRoom() + "isManual");
-            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, false);
+            manageESP(room, room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
             Optional<Program> check = programRepository.findById(room.getIdRoom());
@@ -113,7 +115,7 @@ public class ManagerService {
             Program.HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
             roomRepository.save(room);
-            manageESP(room.getEsp8266List(), room.getDesiredTemperature(), isSummer, true);
+            manageESP(room, room.getDesiredTemperature(), isSummer, true);
         }
     }
 
@@ -132,10 +134,10 @@ public class ManagerService {
         return programResult;
     }
 
-    private void manageESP(List<String> esp8266List, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
-        if (!esp8266List.isEmpty()) {
+    private void manageESP(Room room, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
+        if (!room.getEsp8266List().isEmpty()) {
             int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
-            List<String> esp8266ListSeason = esp8266List.stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
+            List<String> esp8266ListSeason = room.getEsp8266List().stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
 
             esp8266ListSeason.stream().forEach(idEsp -> {
                 Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idEsp);
@@ -147,6 +149,7 @@ public class ManagerService {
                     else
                         commandActuator = new CommandActuator(idEsp, isSummer);
                     mqttService.manageActuator(commandActuator);
+                    statService.handleNewCommand(room.getIdRoom(),commandActuator);
                 }
             });
         }

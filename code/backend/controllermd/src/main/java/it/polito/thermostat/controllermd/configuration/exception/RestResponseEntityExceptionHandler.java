@@ -33,7 +33,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             RoomNotExistException.class,
             ProgramNotExistException.class,
             WifiCredentialsException.class,
-            RequestRejectedException.class})
+            RequestRejectedException.class,
+            StatNotExistException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
         ErrorDTO e = ErrorDTO.builder()
                 .exception(ex.getClass().getSimpleName())
