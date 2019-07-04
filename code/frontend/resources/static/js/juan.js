@@ -93,24 +93,33 @@ function change_color() {
                 // var xhr = new XMLHttpRequest();
 
                 if (name === "Summer") {
-                    nest.hvac_state = 'cooling';
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                    xhr.send("summer");
-                } else if (name === "Winter") {
-                    if (document.getElementById("AntiFreeze").value === 0) {
-                        nest.hvac_state = 'heating';
+                    antif_state = document.getElementById("AntiFreeze").value;
+                    if ( antif_state == 0) {
+                        nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
-                        xhr.send("winter");
-                    } else {
+                        xhr.send("summer");
+                    }else {
                         document.getElementById(name).className = "btn btn-secondary m-1";
                         document.getElementById(name).value = 0;
                         document.getElementById(array[x]).className = "btn btn-primary m-1";
                         document.getElementById(array[x]).value = 1;
                     }
+                } else if (name === "Winter") {
+                    antif_state = document.getElementById("AntiFreeze").value;
+                    if ( antif_state == 0) {
+                        nest.hvac_state = 'heating';
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                        xhr.send("winter");
+                    } /*else {
+                        document.getElementById(name).className = "btn btn-secondary m-1";
+                        document.getElementById(name).value = 0;
+                        document.getElementById(array[x]).className = "btn btn-primary m-1";
+                        document.getElementById(array[x]).value = 1;
+                    }*/
                 }
             }
         } else if (value == 1) {
@@ -121,11 +130,19 @@ function change_color() {
                 document.getElementById(array[x]).value = 1;
                 //nest.hvac_state = 'off';
                 if (array[x] === "Summer") {
-                    nest.hvac_state = 'cooling';
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                    xhr.send("summer");
+                    antif_state = document.getElementById("AntiFreeze").value;
+                    if ( antif_state == 0) {
+                        nest.hvac_state = 'cooling';
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                        xhr.send("summer");
+                    } else {
+                        document.getElementById(name).className = "btn btn-primary m-1";
+                        document.getElementById(name).value = 0;
+                        document.getElementById(array[x]).className = "btn btn-secondary m-1";
+                        document.getElementById(array[x]).value = 1;
+                    }
                 } else if (array[x] === "Winter") {
                     nest.hvac_state = 'heating';
                     var xhr = new XMLHttpRequest();
