@@ -22,7 +22,7 @@ public class Stats {
     private String idRoom;
 
     private Long amount;
-    private LocalTime onTime;
+    private LocalTime commandTime;
     private Boolean on;
 
 }

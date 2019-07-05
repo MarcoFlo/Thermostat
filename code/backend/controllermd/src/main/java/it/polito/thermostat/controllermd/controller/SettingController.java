@@ -80,7 +80,7 @@ public class SettingController {
     @GetMapping("/setting/room/resource/{idRoom}")
     public RoomResource getRoomResource(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm gonna retrive the roomResource for " + idRoom);
-        RoomResource roomResource= settingService.getRoomResource(idRoom);
+        RoomResource roomResource = settingService.getRoomResource(idRoom);
 //        logger.info(roomResource.toString());
         return roomResource;
     }
@@ -159,9 +159,10 @@ public class SettingController {
         return "iamrpi";
     }
 
-    @GetMapping("/setting/stats/{date}")
-    public List<StatsResource> getStatsResource(@PathVariable("date") String date)
-    {
-        return statService.getDayStats(date).stream().map(stats -> new StatsResource(stats)).collect(Collectors.toList());
+
+    @GetMapping("/setting/stats/{idRoom}")
+    public StatsResource getStatsResourceRoom(@PathVariable("idRoom") String idRoom) {
+        logger.info("get /setting/stats/" + idRoom + " contacted");
+        return statService.getweeklyStats(idRoom);
     }
 }

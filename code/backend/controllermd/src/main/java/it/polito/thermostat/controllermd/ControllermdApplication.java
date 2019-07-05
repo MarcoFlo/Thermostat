@@ -14,6 +14,7 @@ import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.logic.JsonHandlerService;
 import it.polito.thermostat.controllermd.services.logic.MQTTservice;
 import it.polito.thermostat.controllermd.services.logic.ManagerService;
+import it.polito.thermostat.controllermd.services.logic.StatService;
 import it.polito.thermostat.controllermd.services.server.SettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,8 @@ public class ControllermdApplication implements CommandLineRunner {
     @Autowired
     MQTTservice mqtTservice;
 
+    @Autowired
+    StatService statService;
 
     @Autowired
     RoomRepository roomRepository;
@@ -145,6 +148,11 @@ public class ControllermdApplication implements CommandLineRunner {
         esp8266Repository.save(new ESP8266(mainRoomHeater, mainRoomName, false, false));
         mqtTservice.subscribeSensor(mainRoomSensor);
         logger.info("Main room saved");
+
+
+//        statService.buildNewDataSet();
+        logger.info("new data set built");
+
     }
 
 
