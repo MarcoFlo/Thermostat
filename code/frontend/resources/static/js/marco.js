@@ -78,7 +78,7 @@ function changeRoom() {
 
         initialState();
         setMqttRoom(desired_room);
-        get_backend(desired_room);
+        get_backend(room_list[desired_room]);
 
     }
 }
