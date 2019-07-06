@@ -1,8 +1,9 @@
 var obj;
 window.onload = function () {
-    // document.getElementById("Summer").addEventListener("click", toggleWSAL);
-    // document.getElementById("Winter").addEventListener("click", toggleWSAL);
-    // document.getElementById("Manual").addEventListener("click", toggleWSAL);
+    //to disable long press -> right click in chromium
+    window.oncontextmenu = function () {
+        return false;
+    };
 
     document.getElementById("Summer").addEventListener("click", change_color);
     document.getElementById("Winter").onclick = change_color;
@@ -17,6 +18,15 @@ window.onload = function () {
     document.getElementById("left_arrow").addEventListener('click', changeRoom);
 
 
+
+
+
+
+    showTime();
+    mqttLoad();
+    requestWifiList();
+
+
     //Setting/room
     document.getElementById("save").addEventListener("click", savePhoneForm);
     document.getElementById("reset").addEventListener("click", resetPhoneForm);
@@ -28,30 +38,11 @@ window.onload = function () {
     setUpRoomSelect();
 
     //stats
-    getStats();
-
-
-    //to disable long press -> right click in chromium
-    window.oncontextmenu = function () {
-        return false;
-    };
-
-    showTime();
-    mqttLoad();
-    requestWifiList();
-// requestSettingPage();
-
-
-    /*var week = document.getElementById("week").onclick = color;*/
-
-    /*var anterior = document.getElementById("anterior").onclick = profiles;
-    var despues = document.getElementById("despues").onclick = profiles;*/
-
-    /* var minus = document.getElementById("minus").onclick = hours;
-     var plus = document.getElementById("plus").onclick = hours;
-
-     var minus_temp = document.getElementById("minus_temp").onclick = temp;
-     var plus_temp = document.getElementById("plus_temp").onclick = temp;*/
+    document.getElementById("room_name").innerText = "MainRoom";
+    document.getElementById("room-stats").innerText = "MainRoom";
+    getStats("MainRoom");
+    document.getElementById("right-stats").addEventListener("click", changeStatsRoom);
+    document.getElementById("left-stats").addEventListener("click", changeStatsRoom);
 
 
 };

@@ -48,18 +48,40 @@ function loadChart(labelArr, dataArr) {
     });
 }
 
-function getStats() {
+function getStats(room) {
+    console.log("requested stats for " + room);
     var xhttp_stats = new XMLHttpRequest();
     xhttp_stats.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(xhttp_stats.responseText);
-            // console.log(response.dayList + "\n" + response.dataList[0] + "\n" + response.dataList[1]);
-            if (response.dayList.length !== 0)
+            console.log(response.dayList + "\n" + response.dataList[0] + "\n" + response.dataList[1]);
+            if (response.dayList.length !== 0) {
                 loadChart(response.dayList, response.dataList);
-            else
+                document.getElementById("no-stats").innerText = "";
+
+            }
+                else {
                 console.log("No stats"); //TODO setup
+                document.getElementById("no-stats").innerText = "Sorry, there are not available stats for this room";
+
+                var chart = document.getElementById('myChart');
+                const context = chart.getContext('2d');
+                context.clearRect(0, 0, chart.width, chart.height);
+            }
+            document.getElementById("room-stats").innerText = room;
+
         }
     };
-    xhttp_stats.open("GET", "http://localhost:8080/setting/stats/" + "Kitchen", true);
+    xhttp_stats.open("GET", "http://localhost:8080/setting/stats/" + room, true);
     xhttp_stats.send();
+}
+
+function changeStatsRoom() {
+
+    var room_stats = document.getElementById("room-stats").innerText;
+    console.log(room_stats);
+    console.log(this.id);
+    var desiredRoom = rotateRoom(room_list.indexOf(room_stats), this.id);
+    console.log("desired index" + desiredRoom);
+    getStats(room_list[desiredRoom]);
 }
