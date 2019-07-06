@@ -66,8 +66,10 @@ public class TemperatureController {
 
     @GetMapping("/temperature/current_room_state_resource/{idRoom}")
     public CurrentRoomStateResource getCurrentRoomStateResource(@PathVariable("idRoom") String idRoom) {
-        logger.info("Current room state resource retrived");
-        return temperatureService.getCurrentRoomStateResource(idRoom);
+        logger.info("I'm gonna retrice the Current room state resource for " + idRoom);
+        CurrentRoomStateResource currentRoomStateResource = temperatureService.getCurrentRoomStateResource(idRoom);
+        logger.info(currentRoomStateResource.toString());
+        return currentRoomStateResource;
     }
 
 
