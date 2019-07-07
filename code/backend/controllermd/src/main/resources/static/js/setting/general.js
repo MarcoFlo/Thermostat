@@ -1,3 +1,18 @@
+function rotateRoom(currentRoom, id) {
+    var desired_room = currentRoom;
+    if (id.indexOf("right") !== -1) {
+        desired_room = (currentRoom + 1) % room_list.length;
+    } else if (id.indexOf("left") !== -1) {
+        if (currentRoom === 0)
+            desired_room = room_list.length - 1;
+        else
+            desired_room = currentRoom - 1;
+        desired_room = desired_room % room_list.length;
+    }
+
+    return desired_room;
+}
+
 function toggleButton() {
     if (this.classList.contains("btn-secondary"))
         this.className = "btn btn-primary";
@@ -11,13 +26,12 @@ function getTimeFromDate(date) {
 }
 
 
-
 function createMapFromJson(toBeMapped) {
     var result = new Map();
     result.set("Wake", new HourlyProgram(new Date("2019-01-01T" + toBeMapped.dailyMap.wake.time), toBeMapped.dailyMap.wake.temperature));
-    result.set("Leave", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.leave.time), toBeMapped.dailyMap.leave.temperature));
-    result.set("Back", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.back.time), toBeMapped.dailyMap.back.temperature));
-    result.set("Sleep", new HourlyProgram(new Date("2019-01-01T" +toBeMapped.dailyMap.sleep.time), toBeMapped.dailyMap.sleep.temperature));
+    result.set("Leave", new HourlyProgram(new Date("2019-01-01T" + toBeMapped.dailyMap.leave.time), toBeMapped.dailyMap.leave.temperature));
+    result.set("Back", new HourlyProgram(new Date("2019-01-01T" + toBeMapped.dailyMap.back.time), toBeMapped.dailyMap.back.temperature));
+    result.set("Sleep", new HourlyProgram(new Date("2019-01-01T" + toBeMapped.dailyMap.sleep.time), toBeMapped.dailyMap.sleep.temperature));
     return result;
 
 }

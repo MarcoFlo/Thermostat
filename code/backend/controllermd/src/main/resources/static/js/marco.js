@@ -59,7 +59,8 @@ function requestRoom() {
             room_list = JSON.parse(xhttp_room.responseText);
             client.subscribe("/temperature/MainRoom");
             currentRoom = room_list.indexOf("MainRoom");
-            document.getElementById("room_name").innerText = "MainRoom";
+
+
         }
     };
     xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
@@ -73,42 +74,16 @@ function requestRoom() {
  */
 function changeRoom() {
     if (currentRoom !== undefined) {
-        var desired_room = currentRoom;
-        switch (this.id) {
-            case "right_arrow" : {
-                desired_room = (currentRoom + 1) % room_list.length;
-            }
-                break;
-            case "left_arrow" : {
-                if (currentRoom === 0)
-                    desired_room = room_list.length - 1;
-                else
-                    desired_room = currentRoom - 1;
-                desired_room = desired_room % room_list.length;
+        var desired_room = rotateRoom(currentRoom, this.id);
 
-            }
-                break;
-        }
         initialState();
         setMqttRoom(desired_room);
-        get_backend(desired_room);
+        get_backend(room_list[desired_room]);
 
     }
 }
 
 
-function requestSettingPage() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'phone.html', true);
-    xhr.onreadystatechange = function () {
-        if (this.readyState == 4 || this.status == 200) {
-            document.getElementById('y').innerHTML = this.responseText;
-        }
-    };
-    xhr.send();
-    document.getElementById('settings-body').innerHTML = ("../../templates/phone.html");
-
-}
 
 function get_backend(desired_room) {
     var xhttp_backend = new XMLHttpRequest();
@@ -118,7 +93,6 @@ function get_backend(desired_room) {
             /*console.log(xhttp.responseText);*/
             console.log("Entry backend");
             var obj = JSON.parse(xhttp_backend.responseText);
-            alert(room_list[desired_room]);
 
             //obj.isWinter = true;
             if (obj.isWinter) {
