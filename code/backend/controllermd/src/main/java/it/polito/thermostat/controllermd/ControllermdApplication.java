@@ -4,6 +4,7 @@ package it.polito.thermostat.controllermd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.entity.Room;
@@ -152,6 +153,8 @@ public class ControllermdApplication implements CommandLineRunner {
 
 //        statService.buildNewDataSet();
         logger.info("new data set built");
+
+        logger.info(HostAddressGetter.getMAC());
 
     }
 
