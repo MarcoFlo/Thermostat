@@ -95,18 +95,19 @@ function get_backend(desired_room) {
             var obj = JSON.parse(xhttp_backend.responseText);
 
             //obj.isWinter = true;
+            if (obj.isManual) {
+                retrieve_values("Manual", "heating");
+            }
             if (obj.isWinter) {
                 //alert("entra");
-                $('#Winter').trigger('click');
+                retrieve_values("Winter","heating");
             }
             if (obj.isSummer) {
-                $('#Summer').trigger('click');
+                retrieve_values("Summer","cooling");
             }
             if (obj.isAntiFreeze) {
-                $('#AntiFreeze').trigger('click');
-            }
-            if (obj.isManual) {
-                $('#Manual').trigger('click');
+                retrieve_values("Winter","heating");
+                retrieve_values("AntiFreeze","heating");
             }
             /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
 
@@ -127,4 +128,9 @@ function initialState() {
     document.getElementById("AntiFreeze").className = "btn btn-secondary m-1";
     nest.hvac_state = 'off';
 
+}
+function retrieve_values(stanza, state){
+    document.getElementById(stanza).className = "btn btn-primary m-1";
+    document.getElementById(stanza).value = 1;
+    nest.hvac_state = state; 
 }

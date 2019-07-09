@@ -9,6 +9,9 @@ function requestWifiList() {
             wifiMap = createMapFromWifiList(obj);
             console.log(wifiMap);
             var capa = document.getElementById("options-wifi");
+            while (capa.firstChild) {
+                capa.removeChild(capa.firstChild);
+            }
             for (var i = 0; i < obj.length; i++) {
                 var div = document.createElement("div");
                 div.setAttribute("class", "d-flex flex-row p-1");
