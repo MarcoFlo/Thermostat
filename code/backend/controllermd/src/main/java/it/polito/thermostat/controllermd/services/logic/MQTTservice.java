@@ -12,7 +12,6 @@ import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.SensorDataRepository;
 import it.polito.thermostat.controllermd.resources.ThermostatClientResource;
-import it.polito.thermostat.controllermd.services.server.Esp8266ManagementService;
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +79,12 @@ public class MQTTservice {
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
         logger.info("MQTTService connection done");
 
+
+    }
+
+
+    public void subscribeToPresentEsp()
+    {
         ((List<ESP8266>)esp8266Repository.findAll()).stream().filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 logger.info("Subscribed to " + esp.getIdEsp());
@@ -87,9 +92,7 @@ public class MQTTservice {
             } catch (MqttException e) {
                 logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
             }
-        });
-    }
-
+        });    }
 
     /**
      * @param commandActuator
