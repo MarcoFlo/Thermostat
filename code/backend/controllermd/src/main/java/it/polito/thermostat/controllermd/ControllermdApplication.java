@@ -153,8 +153,7 @@ public class ControllermdApplication implements CommandLineRunner {
         logger.info("Main room saved");
 
 
-//        statService.buildNewDataSet();
-        logger.info("new data set built");
+
 
         logger.info(HostAddressGetter.getMAC());
 

@@ -5,6 +5,7 @@ import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
+import it.polito.thermostat.controllermd.services.logic.StatService;
 import it.polito.thermostat.controllermd.services.server.QRService;
 import it.polito.thermostat.controllermd.services.server.WifiService;
 import org.slf4j.Logger;
@@ -41,6 +42,9 @@ public class DebugRestController {
     @Autowired
     ESP8266Repository esp8266Repository;
 
+    @Autowired
+    StatService statService;
+
 
     @GetMapping(value = "/debug", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody
@@ -60,5 +64,11 @@ public class DebugRestController {
         logger.info(esp8266Repository.findAll().toString());
         logger.info(programRepository.findAll().toString());
         logger.info(roomRepository.findAll().toString());
+    }
+
+    @PostMapping("/debug/stats")
+    public void buildStats() {
+        statService.buildNewDataSet();
+        logger.info("new data set built");
     }
 }
