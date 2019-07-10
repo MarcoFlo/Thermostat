@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -61,7 +62,7 @@ public class ManagerService {
 
 
 
-    //    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
         List<WSAL> checkWSAL = ((List<WSAL>) wsalRepository.findAll());
         if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
