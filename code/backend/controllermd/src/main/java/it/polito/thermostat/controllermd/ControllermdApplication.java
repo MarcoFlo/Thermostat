@@ -107,7 +107,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
         } else {
             logger.info("Redis local database");
-            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("192.168.1.127");
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost");
 
             return new LettuceConnectionFactory(redisStandaloneConfiguration);
         }
