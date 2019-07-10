@@ -102,7 +102,7 @@ function change_color() {
                     if ( antif_state == 0) {
                         nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.open("POST", window.location.origin+'/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     }else {

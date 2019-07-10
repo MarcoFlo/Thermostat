@@ -3,9 +3,9 @@ it.polito.thermostat.controllermd.configuration
 it.polito.thermostat.controllermd.configuration.exception
 it.polito.thermostat.controllermd.controller
 it.polito.thermostat.controllermd.entity
-it.polito.thermostat.controllermd.entity.program
 it.polito.thermostat.controllermd.object
 it.polito.thermostat.controllermd.repository
 it.polito.thermostat.controllermd.resources
+it.polito.thermostat.controllermd.resources.MQTTaws
 it.polito.thermostat.controllermd.services.logic
 it.polito.thermostat.controllermd.services.server

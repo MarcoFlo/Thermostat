@@ -6,21 +6,33 @@ window.onload = function () {
     };
 
     document.getElementById("Summer").addEventListener("click", change_color);
-    document.getElementById("Winter").onclick = change_color;
-    document.getElementById("Manual").onclick = manual;
-    document.getElementById("AntiFreeze").onclick = antifreeze;
+    document.getElementById("Summer").addEventListener("touchstart", change_color);
+
+    document.getElementById("Winter").addEventListener("click", change_color);
+    document.getElementById("Winter").addEventListener("touchstart", change_color);
+
+    document.getElementById("Manual").addEventListener("click", manual);
+    document.getElementById("Manual").addEventListener("touchstart", manual);
+
+
+    document.getElementById("AntiFreeze").addEventListener("click", antifreeze);
+    document.getElementById("AntiFreeze").addEventListener("touchstart", antifreeze);
 
 
     document.getElementById("connect").addEventListener("click", connectWifi);
+    document.getElementById("connect").addEventListener("touchstart", connectWifi);
+
+
     document.getElementById("reload").addEventListener("click", requestWifiList);
+    document.getElementById("reload").addEventListener("touchstart", requestWifiList);
 
 
     document.getElementById("right_arrow").addEventListener('click', changeRoom);
+    document.getElementById("right_arrow").addEventListener('touchstart', changeRoom);
+
+
     document.getElementById("left_arrow").addEventListener('click', changeRoom);
-
-
-
-
+    document.getElementById("left_arrow").addEventListener('touchstart', changeRoom);
 
 
     showTime();
@@ -30,12 +42,29 @@ window.onload = function () {
 
     //Setting/room
     document.getElementById("save").addEventListener("click", savePhoneForm);
+    document.getElementById("save").addEventListener("touchstart", savePhoneForm);
+
     document.getElementById("reset").addEventListener("click", resetPhoneForm);
+    document.getElementById("reset").addEventListener("touchstart", resetPhoneForm);
+
     document.getElementById("weekend").addEventListener("click", toggleButton);
+    document.getElementById("weekend").addEventListener("touchstart", toggleButton);
+
+
     document.getElementById("time-slice-select").addEventListener("change", saveSliceData);
+    document.getElementById("time-slice-select").addEventListener("touchstart", saveSliceData);
+
+
     document.getElementById("weekend").addEventListener("click", saveSliceData);
+    document.getElementById("weekend").addEventListener("touchstart", saveSliceData);
+
+
     document.getElementById("room-select").addEventListener("change", resetPhoneForm);
+    document.getElementById("room-select").addEventListener("touchstart", resetPhoneForm);
+
     document.getElementById("plus-button").addEventListener("click", addNewRoom);
+    document.getElementById("plus-button").addEventListener("touchstart", addNewRoom);
+
     setUpRoomSelect();
 
     //stats
@@ -43,7 +72,10 @@ window.onload = function () {
     document.getElementById("room-stats").innerText = "MainRoom";
     getStats("MainRoom");
     document.getElementById("right-stats").addEventListener("click", changeStatsRoom);
+    document.getElementById("right-stats").addEventListener("touchstart", changeStatsRoom);
+
     document.getElementById("left-stats").addEventListener("click", changeStatsRoom);
+    document.getElementById("left-stats").addEventListener("touchstart", changeStatsRoom);
 
 
 };
