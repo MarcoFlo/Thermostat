@@ -91,9 +91,9 @@ function change_color() {
     for (var x = 0; x < array.length; x++) {
         if (value == 0) {
             if (array[x] != name) {
-                document.getElementById(name).className = "btn btn-primary m-1";
+                document.getElementById(name).className = "btn btn-primary";
                 document.getElementById(name).value = 1;
-                document.getElementById(array[x]).className = "btn btn-secondary m-1";
+                document.getElementById(array[x]).className = "btn btn-secondary";
                 document.getElementById(array[x]).value = 0;
                 // var xhr = new XMLHttpRequest();
 
@@ -106,9 +106,9 @@ function change_color() {
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     }else {
-                        document.getElementById(name).className = "btn btn-secondary m-1";
+                        document.getElementById(name).className = "btn btn-secondary";
                         document.getElementById(name).value = 0;
-                        document.getElementById(array[x]).className = "btn btn-primary m-1";
+                        document.getElementById(array[x]).className = "btn btn-primary";
                         document.getElementById(array[x]).value = 1;
                     }
                 } else if (name === "Winter") {
@@ -129,9 +129,9 @@ function change_color() {
             }
         } else if (value == 1) {
             if (array[x] != name) {
-                document.getElementById(name).className = "btn btn-secondary m-1";
+                document.getElementById(name).className = "btn btn-secondary";
                 document.getElementById(name).value = 0;
-                document.getElementById(array[x]).className = "btn btn-primary m-1";
+                document.getElementById(array[x]).className = "btn btn-primary";
                 document.getElementById(array[x]).value = 1;
                 //nest.hvac_state = 'off';
                 if (array[x] === "Summer") {
@@ -143,9 +143,9 @@ function change_color() {
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     } else {
-                        document.getElementById(name).className = "btn btn-primary m-1";
+                        document.getElementById(name).className = "btn btn-primary";
                         document.getElementById(name).value = 0;
-                        document.getElementById(array[x]).className = "btn btn-secondary m-1";
+                        document.getElementById(array[x]).className = "btn btn-secondary";
                         document.getElementById(array[x]).value = 1;
                     }
                 } else if (array[x] === "Winter") {
@@ -218,11 +218,11 @@ function antifreeze() {
         var idRoom = $($('h1').contents()[0]).text();
         document.getElementById(name).className = "btn btn-primary m-1";
         document.getElementById(name).value = 1;
-        document.getElementById("Summer").className = "btn btn-secondary m-1";
+        document.getElementById("Summer").className = "btn btn-secondary";
         document.getElementById("Summer").value = 0;
         document.getElementById("Manual").className = "btn btn-secondary m-1";
         document.getElementById("Manual").value = 0;
-        document.getElementById("Winter").className = "btn btn-primary m-1";
+        document.getElementById("Winter").className = "btn btn-primary";
         document.getElementById("Winter").value = 1;
         nest.hvac_state = 'heating';
         var xhr = new XMLHttpRequest();

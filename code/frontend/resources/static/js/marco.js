@@ -119,9 +119,9 @@ function get_backend(desired_room) {
 
 function initialState() {
     document.getElementById("Summer").value = 0;
-    document.getElementById("Summer").className = "btn btn-secondary m-1";
+    document.getElementById("Summer").className = "btn btn-secondary";
     document.getElementById("Winter").value = 0;
-    document.getElementById("Winter").className = "btn btn-secondary m-1";
+    document.getElementById("Winter").className = "btn btn-secondary";
     document.getElementById("Manual").value = 0;
     document.getElementById("Manual").className = "btn btn-secondary m-1";
     document.getElementById("AntiFreeze").value = 0;
@@ -130,7 +130,12 @@ function initialState() {
 
 }
 function retrieve_values(stanza, state){
-    document.getElementById(stanza).className = "btn btn-primary m-1";
+    if(stanza === "Winter" || stanza === "Summer"){
+        document.getElementById(stanza).className = "btn btn-primary";
+    }else{
+        document.getElementById(stanza).className = "btn btn-primary m-1";
+    }
     document.getElementById(stanza).value = 1;
     nest.hvac_state = state; 
 }
+
