@@ -42,6 +42,7 @@ import java.util.List;
 @EnableScheduling
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
 
     @Value("${main.room.name}")
@@ -98,7 +99,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        if (isRedisOnline) {
+        if (isWindows) {
             logger.info("Redis online database");
             RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
             redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));

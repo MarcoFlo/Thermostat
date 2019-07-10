@@ -29,6 +29,7 @@ import java.util.concurrent.Executor;
 @EnableScheduling
 public class TesterApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
 
 
     @Value("${redis.online}")
@@ -50,7 +51,7 @@ public class TesterApplication implements CommandLineRunner {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-      if (isRedisOnline) {
+      if (isWindows) {
             logger.info("Redis online database");
             RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
             redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
