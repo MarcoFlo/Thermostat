@@ -9,6 +9,9 @@ function requestWifiList() {
             wifiMap = createMapFromWifiList(obj);
             console.log(wifiMap);
             var capa = document.getElementById("options-wifi");
+            while (capa.firstChild) {
+                capa.removeChild(capa.firstChild);
+            }
             for (var i = 0; i < obj.length; i++) {
                 var div = document.createElement("div");
                 div.setAttribute("class", "d-flex flex-row p-1");
@@ -16,7 +19,6 @@ function requestWifiList() {
                 var button = document.createElement("button");
                 button.setAttribute("type", "button");
                 button.setAttribute("class", "btn btn-secondary btn-block");
-                button.setCustomValidity("aria-describedby", "essidHelp");
                 button.innerHTML = obj[i].essid;
                 button.setAttribute("id", obj[i].essid);
                 button.addEventListener("click", wifiSelection);
@@ -64,8 +66,11 @@ function wifiSelection() {
     }
 
     if (wifiMap.get(this.id).isKnown) {
+        console.log("hide");
         $('#collapseKeyboard').collapse('hide');
     } else {
+        console.log("show");
+
         $('#collapseKeyboard').collapse('show');
 
     }
@@ -86,9 +91,9 @@ function change_color() {
     for (var x = 0; x < array.length; x++) {
         if (value == 0) {
             if (array[x] != name) {
-                document.getElementById(name).className = "btn btn-primary m-1";
+                document.getElementById(name).className = "btn btn-primary";
                 document.getElementById(name).value = 1;
-                document.getElementById(array[x]).className = "btn btn-secondary m-1";
+                document.getElementById(array[x]).className = "btn btn-secondary";
                 document.getElementById(array[x]).value = 0;
                 // var xhr = new XMLHttpRequest();
 
@@ -101,9 +106,9 @@ function change_color() {
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     }else {
-                        document.getElementById(name).className = "btn btn-secondary m-1";
+                        document.getElementById(name).className = "btn btn-secondary";
                         document.getElementById(name).value = 0;
-                        document.getElementById(array[x]).className = "btn btn-primary m-1";
+                        document.getElementById(array[x]).className = "btn btn-primary";
                         document.getElementById(array[x]).value = 1;
                     }
                 } else if (name === "Winter") {
@@ -124,9 +129,9 @@ function change_color() {
             }
         } else if (value == 1) {
             if (array[x] != name) {
-                document.getElementById(name).className = "btn btn-secondary m-1";
+                document.getElementById(name).className = "btn btn-secondary";
                 document.getElementById(name).value = 0;
-                document.getElementById(array[x]).className = "btn btn-primary m-1";
+                document.getElementById(array[x]).className = "btn btn-primary";
                 document.getElementById(array[x]).value = 1;
                 //nest.hvac_state = 'off';
                 if (array[x] === "Summer") {
@@ -138,9 +143,9 @@ function change_color() {
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     } else {
-                        document.getElementById(name).className = "btn btn-primary m-1";
+                        document.getElementById(name).className = "btn btn-primary";
                         document.getElementById(name).value = 0;
-                        document.getElementById(array[x]).className = "btn btn-secondary m-1";
+                        document.getElementById(array[x]).className = "btn btn-secondary";
                         document.getElementById(array[x]).value = 1;
                     }
                 } else if (array[x] === "Winter") {
@@ -213,11 +218,11 @@ function antifreeze() {
         var idRoom = $($('h1').contents()[0]).text();
         document.getElementById(name).className = "btn btn-primary m-1";
         document.getElementById(name).value = 1;
-        document.getElementById("Summer").className = "btn btn-secondary m-1";
+        document.getElementById("Summer").className = "btn btn-secondary";
         document.getElementById("Summer").value = 0;
         document.getElementById("Manual").className = "btn btn-secondary m-1";
         document.getElementById("Manual").value = 0;
-        document.getElementById("Winter").className = "btn btn-primary m-1";
+        document.getElementById("Winter").className = "btn btn-primary";
         document.getElementById("Winter").value = 1;
         nest.hvac_state = 'heating';
         var xhr = new XMLHttpRequest();

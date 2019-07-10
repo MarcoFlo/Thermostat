@@ -12,6 +12,7 @@ window.onload = function () {
 
 
     document.getElementById("connect").addEventListener("click", connectWifi);
+    document.getElementById("reload").addEventListener("click", requestWifiList);
 
 
     document.getElementById("right_arrow").addEventListener('click', changeRoom);
