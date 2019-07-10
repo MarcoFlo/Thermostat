@@ -17,6 +17,7 @@ import it.polito.thermostat.controllermd.services.logic.MQTTservice;
 import it.polito.thermostat.controllermd.services.logic.ManagerService;
 import it.polito.thermostat.controllermd.services.logic.StatService;
 import it.polito.thermostat.controllermd.services.server.SettingService;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.List;
 
 
 @SpringBootApplication
@@ -155,6 +157,8 @@ public class ControllermdApplication implements CommandLineRunner {
         logger.info("new data set built");
 
         logger.info(HostAddressGetter.getMAC());
+
+        mqtTservice.subscribeToPresentEsp();
 
     }
 
