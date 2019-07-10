@@ -6,31 +6,32 @@
     <title>Nest Thermostat Control</title>
 
 
-    <link rel="stylesheet" href="../imported_component/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../imported_component/fontawesome-git/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.css">
-    <link rel="stylesheet" href="../imported_component/nest-thermostat-control/css/thermostat.css">
+
+        <link rel="stylesheet" href="../imported_component/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../imported_component/fontawesome-git/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="../imported_component/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.css">
+        <link rel="stylesheet" href="../imported_component/nest-thermostat-control/css/thermostat.css">
 
 
-    <script src="../static/js/jquery.js"></script>
-    <script src="../imported_component/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <script src="../imported_component/chart/chart-min.js"></script>
+        <script src="../static/js/jquery.js"></script>
+        <script src="../imported_component/chart/chart-min.js"></script>
+        <script src="../imported_component/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 
 
-    <!--    simple keyboard extension-->
-    <link href="../imported_component/simple-keyboard/css.css" rel="stylesheet">
+        <!--    simple keyboard extension-->
+        <link href="../imported_component/simple-keyboard/css.css" rel="stylesheet">
 
-    <!-- our javascript -->
-    <script src="../static/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
-    <script src="../static/js/setting/general.js"></script>
-    <script src="../static/js/juan.js"></script>
-    <script src="../static/js/marco.js"></script>
-    <script src="../static/js/setting/program.js"></script>
-    <script src="../static/js/setting/room.js"></script>
-    <script src="../static/js/setting/esp.js"></script>
-    <script src="../static/js/chart/chart_launcher.js"></script>
+        <!-- our javascript -->
+        <script src="../static/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+        <script src="../static/js/setting/general.js"></script>
+        <script src="../static/js/juan.js"></script>
+        <script src="../static/js/marco.js"></script>
+        <script src="../static/js/setting/program.js"></script>
+        <script src="../static/js/setting/room.js"></script>
+        <script src="../static/js/setting/esp.js"></script>
+        <script src="../static/js/chart/chart_launcher.js"></script>
 
-    <script src="../static/js/main.js"></script>
+        <script src="../static/js/main.js"></script>
 </head>
 
 <body>
@@ -40,8 +41,9 @@
 
 
     <!-- Modal WIFI -->
-    <div class="modal" id="ModalWifi" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="ModalWifi" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Wi-Fi</h5>
@@ -75,7 +77,7 @@
     </div>
 
     <!-- Modal settings-->
-    <div class="modal fade show" id="settings-modal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog"
          aria-labelledby="setting-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -83,10 +85,12 @@
                     <div class="d-flex justify-content-between">
                         <div class="d-flex">
                             <div class="list-group list-group-horizontal p-0 m-0" id="list-tab" role="tablist">
-                                <a class="list-group-item list-group-item-action rounded-0 border-left-0 border-bottom-0" id="list-room-list"
+                                <a class="list-group-item list-group-item-action rounded-0 border-left-0 border-bottom-0 active"
+                                   id="list-room-list"
                                    data-toggle="list" href="#list-room" role="tab" aria-controls="room"><i
                                         class="fas fa-door-open"></i></a>
-                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0" id="list-setting-list"
+                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                                   id="list-setting-list"
                                    data-toggle="list" href="#list-setting" role="tab"
                                    aria-controls="setting"><i class="fas fa-chart-bar"></i></a>
                             </div>
@@ -104,8 +108,6 @@
                     </div>
 
 
-
-
                 </div>
                 <div id="settings-body" class=" modal-body p-0">
 
@@ -116,12 +118,12 @@
 
                             <div class="container-fluid">
                                 <form>
+
                                     <div class="row p-2">
                                         <div class="input-group">
                                             <select class="form-control" id="room-select"></select>
                                             <div class="input-group-append">
-                                                <button type="button" class="btn btn-light border rounded-right"
-                                                        id="plus-button">
+                                                <button type="button" class="btn btn-light" id="plus-button">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
@@ -141,19 +143,16 @@
                                                     </div>
                                                     <h5 class="mb-0">
                                                         <button class="btn btn-link" type="button"
-                                                                data-toggle="collapse"
-                                                                data-target="#collapseOne"
-                                                                aria-expanded="true"
-                                                                aria-controls="collapseOne">Sensor&Actuator
+                                                                data-toggle="collapse" data-target="#collapseOne"
+                                                                aria-expanded="true" aria-controls="collapseOne">
+                                                            Sensor&Actuator
                                                         </button>
                                                     </h5>
                                                 </div>
 
-                                                <div id="collapseOne" class="collapse"
-                                                     aria-labelledby="headingOne"
+                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
                                                      data-parent="#accordionExample">
-                                                    <div id="esp-container"
-                                                         class="card-body row justify-content-start">
+                                                    <div id="esp-container" class="card-body row justify-content-start">
                                                         <!--                        <div class="col-auto p-1">-->
                                                         <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
                                                         <!--                        </div>-->
@@ -170,15 +169,13 @@
                                                         </button>
                                                     </h5>
                                                 </div>
-                                                <div id="collapseTwo" class="collapse"
-                                                     aria-labelledby="headingTwo"
+                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
                                                      data-parent="#accordionExample">
                                                     <div class="card-body container my-2">
 
                                                         <div class="form-group row">
                                                             <div class="col">
-                                                                <select class="form-control"
-                                                                        id="time-slice-select">
+                                                                <select class="form-control" id="time-slice-select">
                                                                     <option>Wake</option>
                                                                     <option>Leave</option>
                                                                     <option>Back</option>
@@ -192,16 +189,14 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="row  m-0 input-group clockpicker"
-                                                             id="start-time">
+                                                        <div class="row  m-0 input-group clockpicker" id="start-time">
                                                             <div class="input-group-addon input-group-prepend ">
                                                                 <i class="input-group-text fa fa-clock"></i>
                                                             </div>
-                                                            <input id="start-time-input"
-                                                                   placeholder="Start time" class="form-control"
+                                                            <input id="start-time-input" placeholder="Start time"
+                                                                   class="form-control"
                                                                    aria-describedby="start-time-help-block"/>
-                                                            <small class="d-none"
-                                                                   id="start-time-help-block"></small>
+                                                            <small class="d-none" id="start-time-help-block"></small>
                                                         </div>
                                                         <div class="row m-0 pt-2 input-group">
                                                             <input type="number" id="temperature" value="20.0"
@@ -223,7 +218,7 @@
                                                         </div>
                                                         <div id="save-div" class="col float-right p-0 m-1">
                                                             <button id="save" type="button" class="btn btn-primary m-1">
-                                                                Save
+                                                                Save changes
                                                             </button>
                                                         </div>
                                                     </div>
@@ -234,6 +229,7 @@
 
                                 </form>
 
+
                             </div>
                         </div>
 
@@ -242,15 +238,17 @@
                              aria-labelledby="list-setting-list">
                             <div class="d-flex flex-row justify-content-center p-1">
 
-                                    <div class="input-group px-5 mx-5">
-                                        <div class="input-group-prepend" id="left-stats">
-                                            <i class=" input-group-text fa fa-chevron-left" style=" vertical-align: middle;"></i>
-                                        </div>
-                                        <h3 id="room-stats" class="form-control">M</h3>
-                                        <div class="input-group-append align-middle font-awesome-div" id="right-stats">
-                                            <i class=" input-group-text fa fa-chevron-right" style=" vertical-align: middle;"></i>
-                                        </div>
+                                <div class="input-group px-5 mx-5">
+                                    <div class="input-group-prepend" id="left-stats">
+                                        <i class=" input-group-text fa fa-chevron-left"
+                                           style=" vertical-align: middle;"></i>
                                     </div>
+                                    <h3 id="room-stats" class="form-control">M</h3>
+                                    <div class="input-group-append align-middle font-awesome-div" id="right-stats">
+                                        <i class=" input-group-text fa fa-chevron-right"
+                                           style=" vertical-align: middle;"></i>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <div class="d-flex flex-row">
@@ -309,6 +307,24 @@
 </div>
 </div>
 
+
+
+<script src="../imported_component/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js"></script>
+<script src="../imported_component/bootstrap-input-spinner-master/src/bootstrap-input-spinner.js"></script>
+
+<script>
+        $("input[type='number']").inputSpinner();
+        $('#start-time-input').change(checkClockValidity);
+        $('.clockpicker').clockpicker({
+            default: 'now',
+            vibrate: true,
+            placement: "top",
+            align: "left",
+            autoclose: true,
+            twelvehour: false
+        });
+</script>
+
 <script src="../imported_component/nest-thermostat-control/js/thermostat.js"></script>
 <script src="../imported_component/simple-keyboard/js.js"></script>
 <script>
@@ -328,20 +344,6 @@
     function onKeyPress(button) {
         console.log("Button pressed", button);
     }
-</script>
-
-<script type="text/javascript" src="../imported_component/clockpicker/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="../imported_component/clockpicker/assets/js/bootstrap.min.js"></script>
-<script src="../imported_component/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
-<script src="../imported_component/bootstrap-input-spinner-master/src/bootstrap-input-spinner.js"></script>
-
-<script>
-    $("input[type='number']").inputSpinner();
-    $('#start-time-input').change(checkClockValidity);
-    $('.clockpicker').clockpicker({
-        align: 'left',
-        donetext: 'Done',
-    });
 </script>
 
 

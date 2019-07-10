@@ -19,7 +19,6 @@ function requestWifiList() {
                 var button = document.createElement("button");
                 button.setAttribute("type", "button");
                 button.setAttribute("class", "btn btn-secondary btn-block");
-                button.setCustomValidity("aria-describedby", "essidHelp");
                 button.innerHTML = obj[i].essid;
                 button.setAttribute("id", obj[i].essid);
                 button.addEventListener("click", wifiSelection);
@@ -67,8 +66,11 @@ function wifiSelection() {
     }
 
     if (wifiMap.get(this.id).isKnown) {
+        console.log("hide");
         $('#collapseKeyboard').collapse('hide');
     } else {
+        console.log("show");
+
         $('#collapseKeyboard').collapse('show');
 
     }
