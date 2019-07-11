@@ -247,8 +247,8 @@ function Activate_Leave_Resource(){
         //alert(days);
         var leaveTemperature = document.getElementById("temperature_leave").value;
         //alert(leaveTemperature);
-        var hourAmount = days*hours;
-        //alert(total_hours);
+        var hourAmount = days*24 + parseInt(hours);
+        //alert(hourAmount);
         document.getElementById("activate-leave").className = "btn btn-primary";
         document.getElementById("activate-leave").value = 1;
         var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
