@@ -16,5 +16,5 @@ def on_message(client, userdata, message):
 client = mqtt.Client("mainActuator")
 client.on_message=on_message
 client.connect("localhost")
-client.loop_start()
 client.subscribe("/mainActuator/actuator")
+client.loop_start()
