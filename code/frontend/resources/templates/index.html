@@ -93,6 +93,10 @@
                                    id="list-setting-list"
                                    data-toggle="list" href="#list-setting" role="tab"
                                    aria-controls="setting"><i class="fas fa-chart-bar"></i></a>
+                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                                   id="leave-resource-leave"
+                                   data-toggle="list" href="#leave-resource" role="tab"
+                                   aria-controls="setting"><i class="fa fa-plane"></i></a>
                             </div>
                         </div>
 
@@ -257,6 +261,64 @@
                             </div>
                             <canvas id="myChart"></canvas>
                         </div>
+
+                        <!-- Leave-->
+                        <div class="tab-pane fade " id="leave-resource" role="tabpanel"
+                             aria-labelledby="leave-resource-leave">
+                             <div class="card-body container my-2">
+                               <div class="form-group row">
+                                    <div class="col">
+                                        <select class="form-control" id="time-days-select">
+                                            <option>1 Day</option>
+                                            <option>2 Days</option>
+                                            <option>3 Days</option>
+                                            <option>4 Days</option>
+                                            <option>5 Days</option>
+                                            <option>6 Days</option>
+                                            <option>7 Days</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select class="form-control" id="time-hours-select">
+                                            <option>1 Hour</option>
+                                            <option>2 Hours</option>
+                                            <option>3 Hours</option>
+                                            <option>4 Hours</option>
+                                            <option>5 Hours</option>
+                                            <option>6 Hours</option>
+                                            <option>7 Hours</option>
+                                            <option>8 Hours</option>
+                                            <option>9 Hours</option>
+                                            <option>10 Hours</option>
+                                            <option>11 Hours</option>
+                                            <option>12 Hours</option>
+                                            <option>13 Hours</option>
+                                            <option>14 Hours</option>
+                                            <option>15 Hours</option>
+                                            <option>16 Hours</option>
+                                            <option>17 Hours</option>
+                                            <option>18 Hours</option>
+                                            <option>19 Hours</option>
+                                            <option>20 Hours</option>
+                                            <option>21 Hours</option>
+                                            <option>22 Hours</option>
+                                            <option>23 Hours</option>
+                                            <option>24 Hours</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="row m-0 pt-2 input-group">
+                                    <input type="number" id="temperature_leave" value="20.0"
+                                        data-decimals="1" min="5" max="30"
+                                        step="0.1"/>
+                                </div>
+
+                            </div>
+                            <div class="row justify-content-center">
+                                <button type="button" class="btn btn-secondary" id="activate-leave" value="0">Activate</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
