@@ -16,8 +16,8 @@ def on_message(client, userdata, message):
         GPIO.output(17, GPIO.LOW)
 
 
-client = mqtt.Client("mainActuator")
+client = mqtt.Client("mainRoomCooler")
 client.on_message=on_message
 client.connect("localhost")
-client.subscribe("/mainActuator/actuator")
+client.subscribe("/mainRoomCooler/actuator")
 client.loop_forever()
