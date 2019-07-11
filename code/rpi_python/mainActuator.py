@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 
