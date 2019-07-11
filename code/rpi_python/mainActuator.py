@@ -7,8 +7,8 @@ GPIO.setup(17, GPIO.OUT)
 
 def on_message(client, userdata, message):
     msg_decoded = str(message.payload.decode("utf-8"));
-
-    if msg_decoded is "on":
+    print("message received ", msg_decoded)
+    if msg_decoded == "on":
         print("on")
         GPIO.output(17, GPIO.HIGH)
     else:
