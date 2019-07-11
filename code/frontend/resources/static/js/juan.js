@@ -239,4 +239,26 @@ function antifreeze() {
     }
 }
 
-
+function Activate_Leave_Resource(){
+    if(this.value == 0){
+        var hours = document.getElementById("time-hours-select").value.split(" ")[0];
+        //alert(hours);
+        var days = document.getElementById("time-days-select").value.split(" ")[0];
+        //alert(days);
+        var leaveTemperature = document.getElementById("temperature_leave").value;
+        //alert(leaveTemperature);
+        var hourAmount = days*hours;
+        //alert(total_hours);
+        document.getElementById("activate-leave").className = "btn btn-primary";
+        document.getElementById("activate-leave").value = 1;
+        var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
+        var xhr = new XMLHttpRequest();
+        var jsonSend = JSON.stringify(LeaveResource);
+        xhr.open("POST", 'http:localhost:8080/temperature/leave', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(jsonSend);
+    }else{
+        document.getElementById("activate-leave").className = "btn btn-secondary";
+        document.getElementById("activate-leave").value = 0;
+    }
+}
