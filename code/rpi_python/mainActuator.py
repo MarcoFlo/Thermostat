@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
-GPIO.cleanup()
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 
@@ -18,4 +18,4 @@ client = mqtt.Client("mainActuator")
 client.on_message=on_message
 client.connect("localhost")
 client.subscribe("/mainActuator/actuator")
-client.loop_start()
+client.loop_forever()
