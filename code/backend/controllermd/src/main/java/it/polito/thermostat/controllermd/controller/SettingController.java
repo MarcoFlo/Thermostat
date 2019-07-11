@@ -1,5 +1,6 @@
 package it.polito.thermostat.controllermd.controller;
 
+import com.google.zxing.WriterException;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
@@ -8,15 +9,14 @@ import it.polito.thermostat.controllermd.resources.RoomResource;
 import it.polito.thermostat.controllermd.resources.StatsResource;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import it.polito.thermostat.controllermd.services.logic.StatService;
-import it.polito.thermostat.controllermd.services.server.Esp8266ManagementService;
-import it.polito.thermostat.controllermd.services.server.SettingService;
-import it.polito.thermostat.controllermd.services.server.TemperatureService;
-import it.polito.thermostat.controllermd.services.server.WifiService;
+import it.polito.thermostat.controllermd.services.server.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +54,9 @@ public class SettingController {
 
     @Autowired
     StatService statService;
+
+    @Autowired
+    QRService qrService;
 
     /**
      * @return a list of free esp
@@ -164,5 +167,12 @@ public class SettingController {
     public StatsResource getStatsResourceRoom(@PathVariable("idRoom") String idRoom) {
         logger.info("get /setting/stats/" + idRoom + " contacted");
         return statService.getweeklyStats(idRoom);
+    }
+
+    @GetMapping(value = "/qr", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody
+    byte[] qr() throws IOException, WriterException {
+        logger.info("/qr contacted");
+        return qrService.getQRCodeImage();
     }
 }

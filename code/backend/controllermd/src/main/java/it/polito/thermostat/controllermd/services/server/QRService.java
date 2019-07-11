@@ -6,11 +6,11 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 
 import java.io.ByteArrayOutputStream;
@@ -22,11 +22,14 @@ import java.nio.file.FileSystems;
 public class QRService {
 
     /**
-     * Controller image
+     *
+     * @return the image to get the thermostat controller from the phone
+     * @throws WriterException
+     * @throws IOException
      */
     public byte[] getQRCodeImage() throws WriterException, IOException {
-        String text = "http://localhost:8080";
-        int width = 300;
+        String text = "http://" + HostAddressGetter.getIp() + ":8080";
+        int width = 500;
         int height = width;
         String filePath = "./file.png";
 
@@ -34,7 +37,7 @@ public class QRService {
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
 
         //scrittura su file
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", FileSystems.getDefault().getPath(filePath));
+//        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", FileSystems.getDefault().getPath(filePath));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);

@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -86,15 +84,16 @@ public class ManagerService {
     private void manageLeave(Room room, WSAL currentWSAL) {
         LocalDateTime leaveEnd = currentWSAL.getLeaveEnd();
         LocalDateTime now = LocalDateTime.now();
-        Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - currentWSAL.getLeaveBackTemperature());
+        Double leaveBackTemperature = findNearestTimeSlot(currentWSAL.getLeaveEnd(), findProgramById(room.getIdRoom())).getTemperature();
+        Double temperatureDiff = Math.abs(currentWSAL.getLeaveTemperature() - leaveBackTemperature);
+
 
         //It's time to turn on the system
         if (now.isAfter(leaveEnd.plus((long) (60 * temperatureDiff * scalingFactor), ChronoUnit.MINUTES))) {
-            manageESP(room, currentWSAL.getLeaveBackTemperature(), currentWSAL.getIsSummer(), true);
-        } else //waiting at leaveTemperature
-        {
+            manageESP(room, leaveBackTemperature, currentWSAL.getIsSummer(), true);
+        } else {
+            //waiting at leave beack temperature
             manageESP(room, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);
-
         }
     }
 
@@ -104,16 +103,9 @@ public class ManagerService {
             manageESP(room, room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
-            Optional<Program> check = programRepository.findById(room.getIdRoom());
+            Program programRoom = findProgramById(room.getIdRoom());
 
-            //Shouldn't be possible, but if we try to set a room without a program, programmed the system uses the default one
-            Program programRoom;
-            if (check.isPresent())
-                programRoom = check.get();
-            else
-                programRoom = settingService.getDefaultProgram();
-
-            Program.HourlyProgram hourlyProgram = findNearestTimeSlot(programRoom);
+            Program.HourlyProgram hourlyProgram = findNearestTimeSlot(LocalDateTime.now(),programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
             roomRepository.save(room);
             manageESP(room, room.getDesiredTemperature(), isSummer, true);
@@ -121,15 +113,15 @@ public class ManagerService {
     }
 
 
-    private Program.HourlyProgram findNearestTimeSlot(Program programRoom) {
+    private Program.HourlyProgram findNearestTimeSlot(LocalDateTime when, Program programRoom) {
         Program.DailyProgram dailyProgram;
-        if (LocalDate.now().getDayOfWeek().getValue() <= 5)//lunedi - venerdì
+        if (when.getDayOfWeek().getValue() <= 5)//lunedi - venerdì
             dailyProgram = programRoom.getWeeklyList().get(1);
         else
             dailyProgram = programRoom.getWeeklyList().get(2);
 
         Program.HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
-                .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(LocalTime.now()))
+                .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(when.toLocalTime()))
                 .min(Comparator.comparing(o -> o.getTime()))
                 .get();
         return programResult;
@@ -155,4 +147,17 @@ public class ManagerService {
             });
         }
     }
+
+
+    private Program findProgramById(String idRoom)
+    {
+        Optional<Program> check = programRepository.findById(idRoom);
+
+        if (check.isPresent())
+            return check.get();
+        else
+            return settingService.getDefaultProgram();
+
+    }
+
 }

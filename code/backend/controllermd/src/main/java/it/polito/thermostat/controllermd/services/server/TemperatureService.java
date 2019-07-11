@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -112,8 +113,7 @@ public class TemperatureService {
         wsal.setIsAntiFreeze(false);
         wsal.setIsLeave(true);
         wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
-        wsal.setLeaveBackTemperature(leaveResource.getLeaveBackTemperature());
-        wsal.setLeaveEnd(leaveResource.getLeaveEnd());
+        wsal.setLeaveEnd(LocalDateTime.now().plus(leaveResource.getHourAmount(), ChronoUnit.HOURS));
         wsal.setCreationDate(LocalDateTime.now().toString());
         wsalRepository.save(wsal);
     }
@@ -127,6 +127,7 @@ public class TemperatureService {
 
     /**
      * Get the current state for the specified room
+     *
      * @param idRoom
      * @return
      */

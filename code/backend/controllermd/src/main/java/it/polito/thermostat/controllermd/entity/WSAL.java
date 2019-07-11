@@ -21,7 +21,6 @@ public class WSAL {
 
     private Boolean isLeave;
     private Double leaveTemperature;
-    private Double leaveBackTemperature;
     private LocalDateTime leaveEnd;
 
 }
