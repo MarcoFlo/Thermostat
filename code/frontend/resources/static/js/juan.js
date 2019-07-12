@@ -254,7 +254,7 @@ function Activate_Leave_Resource(){
         var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
         var xhr = new XMLHttpRequest();
         var jsonSend = JSON.stringify(LeaveResource);
-        xhr.open("POST", 'http:localhost:8080/temperature/leave', true);
+        xhr.open("POST", 'http://localhost:8080/temperature/leave', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
     }else{
