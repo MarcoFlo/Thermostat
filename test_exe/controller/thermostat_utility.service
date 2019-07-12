@@ -1,11 +1,10 @@
 [Unit]
 Description=ThermostatService
-After=redis-server
+After=thermostat_controller
 
 [Service]
-ExecStart=java -jar controllermd-0.2.7-SNAPSHOT.jar
-ExecStartPost=python3 mainSensor.py
-ExecStartPost=sleep 70
+ExecStartPre=/bin/sleep 30
+ExecStart=python3 mainSensor.py
 ExecStartPost=python3 mainActuator.py
 ExecStartPost=chromium-browser --incognito --noerrdialogs --disable-infobars --kiosk http://localhost:8080
 WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
