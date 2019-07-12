@@ -254,11 +254,33 @@ function Activate_Leave_Resource(){
         var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
         var xhr = new XMLHttpRequest();
         var jsonSend = JSON.stringify(LeaveResource);
-        xhr.open("POST", 'http:localhost:8080/temperature/leave', true);
+        xhr.open("POST", 'http://localhost:8080/temperature/leave', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
     }else{
         document.getElementById("activate-leave").className = "btn btn-secondary";
         document.getElementById("activate-leave").value = 0;
     }
+}
+
+function get_QRcode(){
+    var xhttp_wifi = new XMLHttpRequest();
+    xhttp_wifi.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            //obj = JSON.parse(xhttp_wifi.responseText);
+            //alert(xhttp_wifi.responseText);
+            //var img = document.createElement("img");
+            //img.src = xhttp_wifi.responseText +".png";
+            //alert(xhttp_wifi.responseText);
+            // convert to Base64
+            var rawResponse = xhttp_wifi.responseText;
+            var b64Response = btoa(unescape(encodeURIComponent(rawResponse)));
+           // var b64Response = btoa(rawResponse);
+            document.getElementById("image-qr").src = 'data:image/png;base64,'+b64Response; 
+    
+
+        }
+    };
+    xhttp_wifi.open("GET", "http://localhost:8080/qr", true);
+    xhttp_wifi.send();
 }
