@@ -96,7 +96,11 @@
                                 <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
                                    id="leave-resource-leave"
                                    data-toggle="list" href="#leave-resource" role="tab"
-                                   aria-controls="setting"><i class="fa fa-plane"></i></a>
+                                   aria-controls="setting"><i class="fa fa-plane"></i></a> 
+                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                                   id="qr-code-qr"
+                                   data-toggle="list" href="#qr-code" role="tab"
+                                   aria-controls="setting"><i class="fas fa-qrcode"></i></a>
                             </div>
                         </div>
 
@@ -269,6 +273,7 @@
                                <div class="form-group row">
                                     <div class="col">
                                         <select class="form-control" id="time-days-select">
+                                            <option>0 Day</option>
                                             <option>1 Day</option>
                                             <option>2 Days</option>
                                             <option>3 Days</option>
@@ -318,6 +323,18 @@
                                 <button type="button" class="btn btn-secondary" id="activate-leave" value="0">Activate</button>
                             </div>
                         </div>
+                        <!-- QR-code -->
+                        <div class="tab-pane fade " id="qr-code" role="tabpanel"
+                             aria-labelledby="qr-code-qr">
+                             <div class="form-group row">
+                                <div class="col" id="image-qr">
+                                </div>
+                             </div>
+                             <div class="row justify-content-center">
+                                <button type="button" class="btn btn-secondary" id="generate-qr" value="0">Generate</button>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
