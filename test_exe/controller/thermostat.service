@@ -1,0 +1,14 @@
+[Unit]
+Description=ThermostatService
+After=redis-server
+
+[Service]
+ExecStart=sh ./bash.sh
+WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
