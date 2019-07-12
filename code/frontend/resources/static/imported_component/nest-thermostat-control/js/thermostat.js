@@ -382,13 +382,14 @@ var thermostatDial = (function () {
             } else {
                 return [ev.x, ev.y];
             }
-            ;
+
         }
 
         var startDelay;
 
         function dragStart(ev) {
             ev.preventDefault();
+
             startDelay = setTimeout(function () {
                 setClass(svg, 'dial--edit', true);
                 _drag.inProgress = true;
@@ -396,7 +397,7 @@ var thermostatDial = (function () {
                 _drag.startTemperature = self.target_temperature || options.minValue;
                 _drag.lockAxis = undefined;
             }, 1000);
-        };
+        }
 
         function dragEnd(ev) {
             ev.preventDefault();
@@ -404,17 +405,23 @@ var thermostatDial = (function () {
             setClass(svg, 'dial--edit', false);
             if (!_drag.inProgress) return;
             _drag.inProgress = false;
-            if (self.target_temperature != _drag.startTemperature) {
+            if (self.target_temperature !== _drag.startTemperature) {
                 if (typeof options.onSetTargetTemperature == 'function') {
                     options.onSetTargetTemperature(self.target_temperature);
                 }
-                ;
+                var manualResource = {idRoom: room_list[currentRoom], desiredTemperature: self.target_temperature};
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", 'http://localhost:8080/temperature/manual', true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify(manualResource));
+                console.log("sending manual resource " + self.target_temperature);
             }
-            ;
-        };
+
+        }
 
         function dragMove(ev) {
             ev.preventDefault();
+
             if (!_drag.inProgress) {
                 return;
             }
@@ -435,9 +442,11 @@ var thermostatDial = (function () {
             } else {
                 dxy = (Math.abs(dy) > Math.abs(dx)) ? dy : dx;
             }
-            ;
+
             var dValue = (dxy * getSizeRatio()) / (options.diameter * 2) * properties.rangeValue;
             self.target_temperature = roundHalf(_drag.startTemperature + dValue);
+
+
         }
 
         // svg.addEventListener('mousedown',dragStart);
