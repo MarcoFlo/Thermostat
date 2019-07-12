@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -62,10 +63,10 @@ public class ManagerService {
 
     @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
-        List<WSAL> checkWSAL = ((List<WSAL>) wsalRepository.findAll());
-        if (!checkWSAL.isEmpty()) //controlliamo che ci sia almneo una config
+        Optional<WSAL> checkWSAL = wsalRepository.findById("wsal");
+        if (checkWSAL.isPresent()) //controlliamo che ci sia almneo una config
         {
-            WSAL currentWSAL = checkWSAL.get(0);
+            WSAL currentWSAL = checkWSAL.get();
             List<Room> roomList = ((List<Room>)roomRepository.findAll());
             if (currentWSAL.getIsLeave()) {
                 logger.info("Leave mode");
@@ -116,9 +117,9 @@ public class ManagerService {
     private Program.HourlyProgram findNearestTimeSlot(LocalDateTime when, Program programRoom) {
         Program.DailyProgram dailyProgram;
         if (when.getDayOfWeek().getValue() <= 5)//lunedi - venerdì
-            dailyProgram = programRoom.getWeeklyList().get(1);
+            dailyProgram = programRoom.getWeeklyList().get(0);
         else
-            dailyProgram = programRoom.getWeeklyList().get(2);
+            dailyProgram = programRoom.getWeeklyList().get(1);
 
         Program.HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
                 .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(when.toLocalTime()))

@@ -47,6 +47,7 @@ public class TemperatureService {
         room.setIsManual(true);
         room.setDesiredTemperature(desiredTemperature);
         roomRepository.save(room);
+        handleManualProgrammed();
     }
 
     /**
@@ -58,6 +59,7 @@ public class TemperatureService {
         Room room = checkRoom(idRoom);
         room.setIsManual(false);
         roomRepository.save(room);
+        handleManualProgrammed();
     }
 
     /**
@@ -66,17 +68,8 @@ public class TemperatureService {
      * @param wsa string "winter", ecc
      */
     public void setWSA(String wsa) {
-        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
-        WSAL wsal;
-        if (wsalIterator.hasNext())
-            wsal = wsalIterator.next();
-        else {
-            wsal = new WSAL();
-            wsal.setIsAntiFreeze(false);
-            wsal.setIsSummer(false);
-            wsal.setIsLeave(false);
-            wsal.setIsWinter(false);
-        }
+        WSAL wsal = getWSAL();
+
         switch (wsa) {
             case "winter":
                 wsal.setIsSummer(false);
@@ -92,7 +85,6 @@ public class TemperatureService {
             default:
                 logger.error("setWsa string not recognised");
         }
-        wsal.setCreationDate(LocalDateTime.now().toString());
         wsalRepository.save(wsal);
     }
 
@@ -102,19 +94,11 @@ public class TemperatureService {
      * @param leaveResource leave details
      */
     public void setL(LeaveResource leaveResource) {
-        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
-        WSAL wsal;
-        if (wsalIterator.hasNext())
-            wsal = wsalIterator.next();
-        else
-            wsal = new WSAL();
-
-
+        WSAL wsal = getWSAL();
         wsal.setIsAntiFreeze(false);
         wsal.setIsLeave(true);
         wsal.setLeaveTemperature(leaveResource.getLeaveTemperature());
         wsal.setLeaveEnd(LocalDateTime.now().plus(leaveResource.getHourAmount(), ChronoUnit.HOURS));
-        wsal.setCreationDate(LocalDateTime.now().toString());
         wsalRepository.save(wsal);
     }
 
@@ -132,13 +116,37 @@ public class TemperatureService {
      * @return
      */
     public CurrentRoomStateResource getCurrentRoomStateResource(String idRoom) {
-        Iterator<WSAL> wsalIterator = wsalRepository.findAll().iterator();
+        Optional<WSAL> wsalCheck = wsalRepository.findById("wsal");
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
 
-        if (wsalIterator.hasNext() && checkRoom.isPresent())
-            return new CurrentRoomStateResource(wsalIterator.next(), checkRoom.get());
+        if (wsalCheck.isPresent() && checkRoom.isPresent())
+            return new CurrentRoomStateResource(wsalCheck.get(), checkRoom.get());
         else
             return new CurrentRoomStateResource();
 
+    }
+
+
+    private WSAL getWSAL() {
+        WSAL wsal;
+        Optional<WSAL> checkWSAL = wsalRepository.findById("wsal");
+        if (checkWSAL.isPresent())
+            wsal = checkWSAL.get();
+        else {
+            wsal = new WSAL();
+            wsal.setIsAntiFreeze(false);
+            wsal.setIsSummer(false);
+            wsal.setIsLeave(false);
+            wsal.setIsWinter(false);
+        }
+        wsal.setId("wsal");
+        return wsal;
+    }
+
+    private void handleManualProgrammed() {
+        WSAL wsal = getWSAL();
+        wsal.setIsAntiFreeze(false);
+        wsal.setIsLeave(false);
+        wsalRepository.save(wsal);
     }
 }

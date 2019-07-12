@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @RedisHash("wsal")
 public class WSAL {
     @Id
-    private String creationDate;
+    private String id;
 
     private Boolean isWinter;
     private Boolean isSummer;
