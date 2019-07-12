@@ -1,5 +1,5 @@
 #!/bin/bash
 
-chromium-browser --noerrdialogs --incognito --start-maximized --disable-infobars --kiosk https://localhost:8080
-sleep 5
-xdotool key F11
+chromium-browser --incognito --noerrdialogs --disable-infobars --kiosk http://localhost:8080
+# sleep 5
+# xdotool key F11
