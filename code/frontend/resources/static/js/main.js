@@ -38,8 +38,6 @@ window.onload = function () {
     document.getElementById("activate-leave").addEventListener('click', Activate_Leave_Resource);
     document.getElementById("activate-leave").addEventListener('touchstart', Activate_Leave_Resource);
 
-    
-
 
     showTime();
     mqttLoad();
