@@ -3,10 +3,7 @@ Description=ThermostatService
 After=thermostat_controller
 
 [Service]
-ExecStartPre=/bin/sleep 30
 ExecStart=python3 mainSensor.py
-ExecStartPost=python3 mainActuator.py
-ExecStartPost=chromium-browser --incognito --noerrdialogs --disable-infobars --kiosk http://localhost:8080
 WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
 StandardOutput=inherit
 StandardError=inherit

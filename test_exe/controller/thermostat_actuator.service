@@ -1,0 +1,14 @@
+[Unit]
+Description=ThermostatService
+After=thermostat_controller
+
+[Service]
+ExecStart=python3 mainActuator.py
+WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
