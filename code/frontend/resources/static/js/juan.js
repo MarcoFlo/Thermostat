@@ -2,6 +2,8 @@ var wifiMap = new Map();
 
 
 function requestWifiList() {
+    document.getElementById("successful").style.display = "none";
+    document.getElementById("fail").style.display = "none";
     var xhttp_wifi = new XMLHttpRequest();
     xhttp_wifi.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -48,6 +50,16 @@ function connectWifi() {
         wifi_selected.netPassword = document.getElementById("keyboardInput").value;
 
     var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var res = xhr.responseText;
+            if(res){
+                document.getElementById("successful").style.display = "block";
+            }else{
+                document.getElementById("fail").style.display = "block";
+            }
+        }
+    };
     xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(wifi_selected));
