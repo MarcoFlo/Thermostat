@@ -3,7 +3,7 @@ Description=ThermostatService
 After=redis-server
 
 [Service]
-ExecStart=lxterminal --command sh ./bash.sh
+ExecStart=/home/pi/Documents/Thermostat/test_exe/controller/bash.sh
 WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
 StandardOutput=inherit
 StandardError=inherit
