@@ -3,7 +3,11 @@ Description=ThermostatService
 After=redis-server
 
 [Service]
-ExecStart=/home/pi/Documents/Thermostat/test_exe/controller/bash.sh
+ExecStart=java -jar controllermd-0.2.7-SNAPSHOT.jar
+ExecStartPost=python3 mainSensor.py
+ExecStartPost=sleep 70
+ExecStartPost=python3 mainActuator.py
+ExecStartPost=chromium-browser --incognito --noerrdialogs --disable-infobars --kiosk http://localhost:8080
 WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
 StandardOutput=inherit
 StandardError=inherit
