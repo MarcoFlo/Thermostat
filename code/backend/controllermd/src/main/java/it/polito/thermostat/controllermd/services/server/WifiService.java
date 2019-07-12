@@ -60,26 +60,22 @@ public class WifiService {
      * @param pw    pw of the ap
      * @return debugging string
      */
-    public String connectToNet(String essid, String pw) {
+    public Boolean connectToNet(String essid, String pw) {
         switchToStation();
 
         if (pw == null) {
             Integer knownNet;
             if ((knownNet = isKnownNet(essid)) != -1) {
-                if (connectKnownNet(knownNet)) {
-                    logger.info("ConnectKnownNet done");
-                }
+                logger.info("Gonna connect to knownNet");
+                return connectKnownNet(knownNet);
             } else {
                 logger.error("WifiService/conncetToNet it was not a known net");
+                return false;
             }
         } else {
-            if (connectNewNet(essid, pw)) {
-                logger.info("ConnectNewNet done");
-            }
+            logger.info("Gonna connect to newNet");
+            return connectNewNet(essid, pw);
         }
-
-        return "connectToNet okay";
-
     }
 
 
@@ -269,7 +265,7 @@ public class WifiService {
                 if (wasAP)
                     switchToAP();
                 logger.info("handleConnectResult -> credenziali sbagliate");
-                throw new WifiCredentialsException("Credentials not valid");
+                return false;
             }
             if (result.indexOf("id") != -1) {
                 execService.execute(" wpa_cli -iwlan0 save_config");

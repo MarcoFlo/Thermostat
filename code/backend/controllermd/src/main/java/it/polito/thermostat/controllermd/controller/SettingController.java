@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -143,12 +144,14 @@ public class SettingController {
      * @param wifiNetResource net credentials
      */
     @PostMapping("/setting/wifi/credentials")
-    public void postWifi(@RequestBody WifiNetResource wifiNetResource) {
+    public String postWifi(@RequestBody WifiNetResource wifiNetResource) {
         logger.info("I'm gonna connect to this net -> " + wifiNetResource.toString());
         if (!isWindows)
-            wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword());
-        else
-            logger.info("This operation is not available on windows");
+            return wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword()).toString();
+        else {
+            logger.info("This operation is not available on windows, I'm gonna return random true/false");
+            return String.valueOf(ThreadLocalRandom.current().nextInt(0, 2) == 1);
+        }
     }
 
     /**
