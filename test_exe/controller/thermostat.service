@@ -1,6 +1,6 @@
 [Unit]
 Description=ThermostatService
-After=network.target
+After=redis-server
 
 [Service]
 ExecStart=sh ./bash.sh
