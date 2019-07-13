@@ -1,0 +1,14 @@
+[Unit]
+Description=ThermostatControllerService
+After=redis-server
+
+[Service]
+ExecStart=java -jar controllermd-0.2.7-SNAPSHOT.jar
+WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
