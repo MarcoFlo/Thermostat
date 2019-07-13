@@ -35,8 +35,8 @@ window.onload = function () {
     document.getElementById("left_arrow").addEventListener('click', changeRoom);
     document.getElementById("left_arrow").addEventListener('touchstart', changeRoom);
 
-    document.getElementById("activate-leave").addEventListener('click', Activate_Leave_Resource);
-    document.getElementById("activate-leave").addEventListener('touchstart', Activate_Leave_Resource);
+    document.getElementById("activate-leave").addEventListener('click', activate_Leave_Resource);
+    document.getElementById("activate-leave").addEventListener('touchstart', activate_Leave_Resource);
 
 
     showTime();

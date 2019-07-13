@@ -53,6 +53,7 @@ function onMessageArrived(message) {
  *  TODO Retrive and set the current setting from GET localhost:8080/temperature/current_room_state_resource
  */
 function requestRoom() {
+    get_backend("MainRoom");
     var xhttp_room = new XMLHttpRequest();
     xhttp_room.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -66,6 +67,8 @@ function requestRoom() {
     xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
     xhttp_room.send();
 }
+
+
 
 /**
  * Function that handle the right/left click
@@ -91,8 +94,8 @@ function get_backend(desired_room) {
         if (this.readyState == 4 && this.status == 200) {
             // Typical action to be performed when the document is ready:
             /*console.log(xhttp.responseText);*/
-            console.log("Entry backend");
             var obj = JSON.parse(xhttp_backend.responseText);
+            console.log("Entry backend " + xhttp_backend.responseText);
 
             //obj.isWinter = true;
             if (obj.isManual) {
@@ -109,8 +112,11 @@ function get_backend(desired_room) {
                 retrieve_values("Winter","heating");
                 retrieve_values("AntiFreeze","heating");
             }
-            /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
-
+            if (obj.isLeave)
+            {
+                nest.away = true;
+                document.getElementById("main-container").style.pointerEvents = "none";
+            }
         }
     };
     xhttp_backend.open("GET", "http://localhost:8080/temperature/current_room_state_resource/" + desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
