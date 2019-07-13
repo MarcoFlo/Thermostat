@@ -19,7 +19,6 @@ public class DebugRestController {
     WifiService wifiService;
 
 
-
     @Autowired
     WSALRepository wsalRepository;
 

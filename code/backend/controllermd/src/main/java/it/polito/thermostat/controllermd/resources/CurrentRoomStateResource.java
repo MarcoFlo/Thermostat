@@ -36,7 +36,7 @@ public class CurrentRoomStateResource {
         isWinter = !SeasonGetter.isSummer();
         isSummer = !isWinter;
         isAntiFreeze = false;
-        antiFreezeTemperature = 8.0;
+        antiFreezeTemperature = 10.0;
         isLeave = false;
         leaveTemperature = 18.0;
         isManual = false;

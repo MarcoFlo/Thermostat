@@ -8,8 +8,8 @@ import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.entity.Room;
-import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.ProgramRepository;
+import it.polito.thermostat.controllermd.repository.ESP8266Repository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.WSALRepository;
 import it.polito.thermostat.controllermd.services.logic.JsonHandlerService;
@@ -17,7 +17,6 @@ import it.polito.thermostat.controllermd.services.logic.MQTTservice;
 import it.polito.thermostat.controllermd.services.logic.ManagerService;
 import it.polito.thermostat.controllermd.services.logic.StatService;
 import it.polito.thermostat.controllermd.services.server.SettingService;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +25,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.List;
 
 
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class ControllermdApplication implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
@@ -73,8 +75,6 @@ public class ControllermdApplication implements CommandLineRunner {
     @Autowired
     ESP8266Repository esp8266Repository;
 
-    @Autowired
-    ProgramRepository programRepository;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -97,6 +97,9 @@ public class ControllermdApplication implements CommandLineRunner {
     @Autowired
     RoomRepository roomRepository;
 
+
+    @Autowired
+    ProgramRepository programRepository;
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         if (isWindows) {
@@ -121,6 +124,15 @@ public class ControllermdApplication implements CommandLineRunner {
         return template;
     }
 
+    @Bean("threadPoolTaskExecutor")
+    public TaskExecutor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(20);
+        executor.setMaxPoolSize(1000);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setThreadNamePrefix("Async-");
+        return executor;
+    }
 
     @PostConstruct
     public void init() {
@@ -138,7 +150,9 @@ public class ControllermdApplication implements CommandLineRunner {
 //        roomRepository.deleteAll();
 //        programRepository.deleteAll();
 //        esp8266Repository.deleteAll();
-        //Main room creation
+
+
+        //Main room creation todo if c'è già
         roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
 
         //Main room program creation
@@ -152,8 +166,6 @@ public class ControllermdApplication implements CommandLineRunner {
         esp8266Repository.save(new ESP8266(mainRoomHeater, mainRoomName, false, false));
         mqtTservice.subscribeSensor(mainRoomSensor);
         logger.info("Main room saved");
-
-
 
 
         logger.info(HostAddressGetter.getMAC());

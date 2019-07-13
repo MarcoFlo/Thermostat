@@ -4,11 +4,9 @@ package it.polito.thermostat.controllermd.services.logic;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
-import it.polito.thermostat.controllermd.entity.CommandActuator;
-import it.polito.thermostat.controllermd.entity.ESP8266;
-import it.polito.thermostat.controllermd.entity.Room;
-import it.polito.thermostat.controllermd.entity.SensorData;
+import it.polito.thermostat.controllermd.entity.*;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
+import it.polito.thermostat.controllermd.repository.ProgramRepository;
 import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.repository.SensorDataRepository;
 import it.polito.thermostat.controllermd.resources.ThermostatClientResource;
@@ -18,9 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +49,9 @@ public class MQTTservice {
 
     @Autowired
     Environment environment;
+
+    @Autowired
+    ProgramRepository programRepository;
 
     @Value("${mqtt.online}")
     Boolean isMQTTOnline;
@@ -83,16 +86,16 @@ public class MQTTservice {
     }
 
 
-    public void subscribeToPresentEsp()
-    {
-        ((List<ESP8266>)esp8266Repository.findAll()).stream().filter(ESP8266::getIsSensor).forEach(esp -> {
+    public void subscribeToPresentEsp() {
+        ((List<ESP8266>) esp8266Repository.findAll()).stream().filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
                 logger.info("Subscribed to " + esp.getIdEsp());
                 mqttClient.subscribe("/" + esp.getIdEsp() + "/sensor", this::sensorDataReceived);
             } catch (MqttException e) {
                 logger.error("Mqtt service/manageKnowEsp error \n" + e.toString());
             }
-        });    }
+        });
+    }
 
     /**
      * @param commandActuator
@@ -102,7 +105,7 @@ public class MQTTservice {
         String command = commandActuator.getCommandBoolean() ? "on" : "off";
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
-        //msg.setRetained(true);
+        logger.info(commandActuator.toString());
         try {
             mqttClient.publish("/" + commandActuator.getIdEsp() + "/actuator", msg);
             mqttawService.sendEvent(commandActuator, 11);
@@ -161,7 +164,8 @@ public class MQTTservice {
      * @param topic
      * @param message
      */
-    private void sensorDataReceived(String topic, MqttMessage message) throws MqttException, JsonProcessingException {
+    @Async("threadPoolTaskExecutor")
+    public void sensorDataReceived(String topic, MqttMessage message) throws MqttException, JsonProcessingException {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
 
@@ -183,7 +187,8 @@ public class MQTTservice {
 
         if (checkRoom.isPresent()) {
             Room room = checkRoom.get();
-            ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getIsManual() ? -1 : room.getDesiredTemperature(), sensorData.getApparentTemperature());
+            Program.HourlyProgram hourlyProgram = managerService.findNearestTimeSlot(LocalDateTime.now(), programRepository.findById(room.getIdRoom()).get());
+            ThermostatClientResource thermostatClientResource = new ThermostatClientResource(room.getIsManual() ? -1 : hourlyProgram.getTemperature(), sensorData.getApparentTemperature());
             MqttMessage msg = new MqttMessage(objectMapper.writeValueAsString(thermostatClientResource).getBytes());
             msg.setQos(2);
             msg.setRetained(true);

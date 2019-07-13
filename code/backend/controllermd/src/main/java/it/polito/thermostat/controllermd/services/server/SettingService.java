@@ -72,7 +72,9 @@ public class SettingService {
     }
 
     public List<String> getListRoom() {
-        return ((List<Room>) roomRepository.findAll()).stream().map(room -> room.getIdRoom()).collect(Collectors.toList());
+        return ((List<Room>) roomRepository.findAll()).stream().map(room -> {
+            logger.info((room.getIdRoom()));
+            return room.getIdRoom();}).collect(Collectors.toList());
     }
 
     public Program getProgramRoom(String idRoom) {

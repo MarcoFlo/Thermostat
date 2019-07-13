@@ -219,7 +219,6 @@ function antifreeze() {
     var name = this.id;
     var value = this.value;
     if (value == 0) {
-        var idRoom = $($('h1').contents()[0]).text();
         document.getElementById(name).className = "btn btn-primary m-1";
         document.getElementById(name).value = 1;
         document.getElementById("Summer").className = "btn btn-secondary";

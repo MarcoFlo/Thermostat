@@ -33,7 +33,6 @@ public class ManagerService {
     StatService statService;
 
 
-
     @Autowired
     MQTTservice mqttService;
 
@@ -59,15 +58,13 @@ public class ManagerService {
     SettingService settingService;
 
 
-
-
-//    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
         Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
         if (checkWSAL.isPresent()) //controlliamo che ci sia almneo una config
         {
             WSAL currentWSAL = checkWSAL.get();
-            List<Room> roomList = ((List<Room>)roomRepository.findAll());
+            List<Room> roomList = ((List<Room>) roomRepository.findAll());
             if (currentWSAL.getIsLeave()) {
                 logger.info("Leave mode");
                 roomList.forEach(room -> manageLeave(room, currentWSAL));
@@ -106,7 +103,7 @@ public class ManagerService {
             logger.info(room.getIdRoom() + "isProgramed");
             Program programRoom = findProgramById(room.getIdRoom());
 
-            Program.HourlyProgram hourlyProgram = findNearestTimeSlot(LocalDateTime.now(),programRoom);
+            Program.HourlyProgram hourlyProgram = findNearestTimeSlot(LocalDateTime.now(), programRoom);
             room.setDesiredTemperature(hourlyProgram.getTemperature());
             roomRepository.save(room);
             manageESP(room, room.getDesiredTemperature(), isSummer, true);
@@ -114,7 +111,7 @@ public class ManagerService {
     }
 
 
-    private Program.HourlyProgram findNearestTimeSlot(LocalDateTime when, Program programRoom) {
+    public Program.HourlyProgram findNearestTimeSlot(LocalDateTime when, Program programRoom) {
         Program.DailyProgram dailyProgram;
         if (when.getDayOfWeek().getValue() <= 5)//lunedi - venerdì
             dailyProgram = programRoom.getWeeklyList().get(0);
@@ -131,10 +128,25 @@ public class ManagerService {
     private void manageESP(Room room, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
         if (!room.getEsp8266List().isEmpty()) {
             int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
-            List<String> esp8266ListSeason = room.getEsp8266List().stream().filter(esp8266 -> esp8266Repository.findById(esp8266).get().getIsCooler().equals(isSummer)).collect(Collectors.toList());
 
-            esp8266ListSeason.stream().forEach(idEsp -> {
-                Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idEsp);
+            List<ESP8266> esp8266List = room.getEsp8266List().stream().map(idEsp -> {
+                Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
+                if (checkEsp.isPresent())
+                    return checkEsp.get();
+                else
+                    return null;
+            }).collect(Collectors.toList());//.filter(esp8266 -> esp8266.getIsCooler().equals(isSummer) && !esp8266.getIsSensor()).forEach(esp8266 -> logger.info(esp8266.toString()));
+
+            List<String> esp8266ListActuator = esp8266List.stream().filter(esp8266 -> esp8266.getIsCooler().equals(isSummer) && !esp8266.getIsSensor()).map(ESP8266::getIdEsp).collect(Collectors.toList());
+            Optional<String> checkString = esp8266List.stream().filter(ESP8266::getIsSensor).map(ESP8266::getIdEsp).findFirst();
+            String idSensor;
+            if (checkString.isPresent())
+                idSensor = checkString.get();
+            else
+                throw new IllegalArgumentException("Room must have a sensor");
+
+            esp8266ListActuator.stream().forEach(idEsp -> {
+                Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idSensor);
                 if (sensorDataCheck.isPresent()) {
                     SensorData sensorData = sensorDataCheck.get();
                     CommandActuator commandActuator;
@@ -143,15 +155,14 @@ public class ManagerService {
                     else
                         commandActuator = new CommandActuator(idEsp, isSummer);
                     mqttService.manageActuator(commandActuator);
-                    statService.handleNewCommand(room.getIdRoom(),commandActuator);
+                    statService.handleNewCommand(room.getIdRoom(), commandActuator);
                 }
             });
         }
     }
 
 
-    private Program findProgramById(String idRoom)
-    {
+    private Program findProgramById(String idRoom) {
         Optional<Program> check = programRepository.findById(idRoom);
 
         if (check.isPresent())

@@ -36,7 +36,7 @@ public class Esp8266ManagementService {
         List<ESP8266> esp8266List = espList.stream().map(idEsp -> {
             Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
             if (!checkEsp.isPresent()) {
-                logger.info("setAssociation esp not present");
+                logger.info("setAssociation esp not present " + idEsp);
                 throw new IllegalArgumentException();
             }
             return checkEsp.get();
