@@ -37,6 +37,8 @@ function requestWifiList() {
 
 
 function connectWifi() {
+    document.getElementById("successful").style.display = "none";
+    document.getElementById("fail").style.display = "none";
     var wifi_selected;
     var children = document.getElementById("options-wifi").children;
     for (var i = 0; i < children.length; i++) {
@@ -53,7 +55,7 @@ function connectWifi() {
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var res = xhr.responseText;
-            if(res){
+            if(res === "true"){
                 document.getElementById("successful").style.display = "block";
             }else{
                 document.getElementById("fail").style.display = "block";
