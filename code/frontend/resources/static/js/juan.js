@@ -233,13 +233,13 @@ function antifreeze() {
         xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send("antifreeze");
-        xhr = new XMLHttpRequest();
-        xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(idRoom);
     } else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary m-1";
         document.getElementById(name).value = 0;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send("antifreeze");
     }
 }
 

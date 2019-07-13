@@ -53,6 +53,7 @@ function onMessageArrived(message) {
  *  TODO Retrive and set the current setting from GET localhost:8080/temperature/current_room_state_resource
  */
 function requestRoom() {
+    get_backend("MainRoom");
     var xhttp_room = new XMLHttpRequest();
     xhttp_room.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -61,6 +62,17 @@ function requestRoom() {
             currentRoom = room_list.indexOf("MainRoom");
 
 
+        }
+    };
+    xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
+    xhttp_room.send();
+}
+
+function requestRoomList() {
+    var xhttp_room = new XMLHttpRequest();
+    xhttp_room.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            room_list = JSON.parse(xhttp_room.responseText);
         }
     };
     xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);

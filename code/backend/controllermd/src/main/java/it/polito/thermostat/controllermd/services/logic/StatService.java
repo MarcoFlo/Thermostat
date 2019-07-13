@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 public class StatService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    //TODO chiamare una funzione che a mezzanotte calcola le ultime eventuali ore di on
     @Autowired
     StatsRepository statsRepository;
     @Autowired
@@ -36,12 +34,10 @@ public class StatService {
 
     private Stats handleStatUpdate(Stats stats, Boolean currentCommand, LocalTime time) {
         if (stats.getOn() && !currentCommand) {
-            logger.info("Sto spegnendo");
             stats.setOn(false);
             stats.setAmount(stats.getAmount() + ChronoUnit.HOURS.between(stats.getCommandTime(), time));
             return stats;
         } else if (!stats.getOn() && currentCommand) {
-            logger.info("Sto accendendo");
             stats.setOn(true);
             stats.setCommandTime(time);
             return stats;
@@ -77,7 +73,7 @@ public class StatService {
         List<Stats> statsList = (List<Stats>) statsRepository.findAllById(statsKey);
         for (Stats stat : statsList) {
             String dayOfWeek = stat.getDay().getDayOfWeek().toString();
-            dayList.add(dayOfWeek.substring(0,1) + dayOfWeek.toLowerCase().substring(1).toLowerCase());
+            dayList.add(dayOfWeek.substring(0, 1) + dayOfWeek.toLowerCase().substring(1).toLowerCase());
             onList.add(stat.getAmount());
             offList.add(24 - stat.getAmount());
         }
@@ -110,13 +106,15 @@ public class StatService {
 
     @Profile("dev")
     public void buildNewDataSet() {
+        statsRepository.deleteAll();
+
         List<Stats> toBeSaved = new LinkedList<>();
-        String[] roomArr = {"Kitchen", "Living"};
+        String[] roomArr = {"MainRoom", "Kitchen", "Living"};
 
         for (String idRoom : roomArr) {
             for (int i = 1; i < 8; i++) {
                 LocalDate day = LocalDate.now().minus(i, ChronoUnit.DAYS);
-                Long amount = ThreadLocalRandom.current().nextLong(0, 24);
+                Long amount = ThreadLocalRandom.current().nextLong(0, 16);
                 toBeSaved.add(new Stats(day + idRoom, day, idRoom, amount, LocalTime.now(), false));
             }
         }

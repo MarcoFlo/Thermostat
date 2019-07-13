@@ -14,10 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TemperatureService {
@@ -73,18 +76,27 @@ public class TemperatureService {
         switch (wsa) {
             case "winter":
                 wsal.setIsSummer(false);
+                wsal.setIsWinter(true);
                 break;
             case "summer":
                 wsal.setIsSummer(true);
+                wsal.setIsWinter(false);
                 wsal.setIsAntiFreeze(false);
                 break;
             case "antifreeze":
-                wsal.setIsAntiFreeze(true);
+                wsal.setIsAntiFreeze(!wsal.getIsAntiFreeze());
+                List<Room> roomList = ((List<Room>) roomRepository.findAll()).stream().map(room -> {
+                    room.setIsManual(false);
+                    return room;
+                }).collect(Collectors.toList());
+                roomRepository.saveAll(roomList);
                 wsal.setIsSummer(false);
+                wsal.setIsWinter(true);
                 break;
             default:
                 logger.error("setWsa string not recognised");
         }
+        logger.info(wsal.toString());
         wsalRepository.save(wsal);
     }
 
@@ -116,34 +128,42 @@ public class TemperatureService {
      * @return
      */
     public CurrentRoomStateResource getCurrentRoomStateResource(String idRoom) {
-        Optional<WSAL> wsalCheck = wsalRepository.findById("wsal");
+        Optional<WSAL> wsalCheck = wsalRepository.findById("mainwsal");
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
 
-        if (wsalCheck.isPresent() && checkRoom.isPresent())
-            return new CurrentRoomStateResource(wsalCheck.get(), checkRoom.get());
-        else
-            return new CurrentRoomStateResource();
+        if (wsalCheck.isPresent() && checkRoom.isPresent()) {
+            logger.info("old current room stare tesource");
 
+            return new CurrentRoomStateResource(wsalCheck.get(), checkRoom.get());
+        } else {
+            logger.info("new current room stare tesource");
+            return new CurrentRoomStateResource();
+        }
     }
 
 
     private WSAL getWSAL() {
         WSAL wsal;
-        Optional<WSAL> checkWSAL = wsalRepository.findById("wsal");
-        if (checkWSAL.isPresent())
+        Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
+        if (checkWSAL.isPresent()) {
+            logger.info("old wsal");
             wsal = checkWSAL.get();
-        else {
+        } else {
+            logger.info("new wsal");
+
             wsal = new WSAL();
             wsal.setIsAntiFreeze(false);
+            wsal.setAntiFreezeTemperature(10.0);
             wsal.setIsSummer(false);
             wsal.setIsLeave(false);
             wsal.setIsWinter(false);
         }
-        wsal.setId("wsal");
+        wsal.setId("mainwsal");
         return wsal;
     }
 
     private void handleManualProgrammed() {
+        logger.info("handle manual programmed");
         WSAL wsal = getWSAL();
         wsal.setIsAntiFreeze(false);
         wsal.setIsLeave(false);

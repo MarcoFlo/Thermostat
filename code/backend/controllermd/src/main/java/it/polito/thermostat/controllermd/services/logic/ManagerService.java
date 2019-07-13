@@ -61,9 +61,9 @@ public class ManagerService {
 
 
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     public void scheduleFixedRateTask() {
-        Optional<WSAL> checkWSAL = wsalRepository.findById("wsal");
+        Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
         if (checkWSAL.isPresent()) //controlliamo che ci sia almneo una config
         {
             WSAL currentWSAL = checkWSAL.get();
