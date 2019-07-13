@@ -149,8 +149,9 @@ public class SettingController {
         if (!isWindows)
             return wifiService.connectToNet(wifiNetResource.getEssid(), wifiNetResource.getNetPassword()).toString();
         else {
-            logger.info("This operation is not available on windows, I'm gonna return random true/false");
-            return String.valueOf(ThreadLocalRandom.current().nextInt(0, 2) == 1);
+            String result = String.valueOf(ThreadLocalRandom.current().nextInt(0, 2) == 1);
+            logger.info("This operation is not available on windows, I'm gonna return " + result);
+            return result;
         }
     }
 

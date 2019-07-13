@@ -34,7 +34,7 @@
     <script src="../static/js/main.js"></script>
 </head>
 
-<body>
+<body class="bg-dark">
 
 
 <div class="container-fluid p-0 ">
@@ -68,280 +68,272 @@
                     <div class="alert alert-danger" role="alert" id="fail" style="display:none">
                         Wrong password, try again
                     </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="reload">
-                            <i class="fas fa-redo"></i></button>
-                        <button type="button" class="btn btn-primary" id="connect" >Connect
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="reload">
+                        <i class="fas fa-redo"></i></button>
+                    <button type="button" class="btn btn-primary" id="connect">Connect
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal settings-->
-    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog"
-         aria-labelledby="setting-modal-label" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                <div class="border-bottom p-0">
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex">
-                            <div class="list-group list-group-horizontal p-0 m-0" id="list-tab" role="tablist">
-                                <a class="list-group-item list-group-item-action rounded-0 border-left-0 border-bottom-0 active"
-                                   id="list-room-list"
-                                   data-toggle="list" href="#list-room" role="tab" aria-controls="room"><i
-                                        class="fas fa-door-open"></i></a>
-                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
-                                   id="list-setting-list"
-                                   data-toggle="list" href="#list-setting" role="tab"
-                                   aria-controls="setting"><i class="fas fa-chart-bar"></i></a>
-                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
-                                   id="leave-resource-leave"
-                                   data-toggle="list" href="#leave-resource" role="tab"
-                                   aria-controls="setting"><i class="fa fa-plane"></i></a> 
-                                <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
-                                   id="qr-code-qr"
-                                   data-toggle="list" href="#qr-code" role="tab"
-                                   aria-controls="setting"><i class="fas fa-qrcode"></i></a>
-                            </div>
+<!-- Modal settings-->
+<div class="modal fade" id="settings-modal" tabindex="-1" role="dialog"
+     aria-labelledby="setting-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="border-bottom p-0">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                        <div class="list-group list-group-horizontal p-0 m-0" id="list-tab" role="tablist">
+                            <a class="list-group-item list-group-item-action rounded-0 border-left-0 border-bottom-0 active"
+                               id="list-room-list"
+                               data-toggle="list" href="#list-room" role="tab" aria-controls="room"><i
+                                    class="fas fa-door-open"></i></a>
+                            <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                               id="list-setting-list"
+                               data-toggle="list" href="#list-setting" role="tab"
+                               aria-controls="setting"><i class="fas fa-chart-bar"></i></a>
+                            <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                               id="leave-resource-leave"
+                               data-toggle="list" href="#leave-resource" role="tab"
+                               aria-controls="setting"><i class="fa fa-plane"></i></a>
+                            <a class="list-group-item list-group-item-action rounded-0 border-bottom-0"
+                               id="qr-code-qr"
+                               data-toggle="list" href="#qr-code" role="tab"
+                               aria-controls="setting"><i class="fas fa-qrcode"></i></a>
                         </div>
-
-                        <div class="d-flex">
-                            <div class="d-flex align-items-center p-3">
-
-                                <button type="button" class="close m-0 p-0" data-dismiss="modal" aria-label="Close">
-                                    <span class="m-0 p-0" aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        </div>
-
                     </div>
 
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center p-3">
+
+                            <button type="button" class="close m-0 p-0" data-dismiss="modal" aria-label="Close">
+                                <span class="m-0 p-0" aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
 
                 </div>
-                <div id="settings-body" class=" modal-body p-0">
 
-                    <div class="tab-content container-fluid p-0" id="nav-tabContent">
-                        <!-- room managment-->
-                        <div class="tab-pane fade show active " id="list-room" role="tabpanel"
-                             aria-labelledby="list-room-list">
 
-                            <div class="container-fluid">
-                                <form>
+            </div>
+            <div id="settings-body" class=" modal-body p-0">
 
-                                    <div class="row p-2">
-                                        <div class="input-group">
-                                            <select class="form-control" id="room-select"></select>
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-light" id="plus-button">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
+                <div class="tab-content container-fluid p-0" id="nav-tabContent">
+                    <!-- room managment-->
+                    <div class="tab-pane fade show active " id="list-room" role="tabpanel"
+                         aria-labelledby="list-room-list">
+
+                        <div class="container-fluid">
+                            <form>
+
+                                <div class="row p-2">
+                                    <div class="input-group">
+                                        <select class="form-control" id="room-select"></select>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-light" id="plus-button">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="container p-2">
-                                        <div class="accordion" id="accordionExample">
+                                <div class="container p-2">
+                                    <div class="accordion" id="accordionExample">
 
-                                            <div class="card">
+                                        <div class="card">
 
-                                                <div class="card-header" id="headingOne">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" id="roomName"
-                                                               aria-describedby="rommNameHelp"
-                                                               placeholder="Enter room name">
-                                                    </div>
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button"
-                                                                data-toggle="collapse" data-target="#collapseOne"
-                                                                aria-expanded="true" aria-controls="collapseOne">
-                                                            Sensor&Actuator
-                                                        </button>
-                                                    </h5>
+                                            <div class="card-header" id="headingOne">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="roomName"
+                                                           aria-describedby="rommNameHelp"
+                                                           placeholder="Enter room name">
                                                 </div>
-
-                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
-                                                     data-parent="#accordionExample">
-                                                    <div id="esp-container" class="card-body row justify-content-start">
-                                                        <!--                        <div class="col-auto p-1">-->
-                                                        <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
-                                                        <!--                        </div>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingTwo">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link collapsed" type="button"
-                                                                data-toggle="collapse"
-                                                                data-target="#collapseTwo" aria-expanded="false"
-                                                                aria-controls="collapseTwo">Program
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                                                     data-parent="#accordionExample">
-                                                    <div class="card-body container my-2">
-
-                                                        <div class="form-group row">
-                                                            <div class="col">
-                                                                <select class="form-control" id="time-slice-select">
-                                                                    <option>Wake</option>
-                                                                    <option>Leave</option>
-                                                                    <option>Back</option>
-                                                                    <option>Sleep</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                <button type="button" id="weekend"
-                                                                        class="btn btn-secondary">Weekend
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row  m-0 input-group clockpicker" id="start-time">
-                                                            <div class="input-group-addon input-group-prepend ">
-                                                                <i class="input-group-text fa fa-clock"></i>
-                                                            </div>
-                                                            <input id="start-time-input" placeholder="Start time"
-                                                                   class="form-control"
-                                                                   aria-describedby="start-time-help-block"/>
-                                                            <small class="d-none" id="start-time-help-block"></small>
-                                                        </div>
-                                                        <div class="row m-0 pt-2 input-group">
-                                                            <input type="number" id="temperature" value="20.0"
-                                                                   data-decimals="1" min="5" max="30"
-                                                                   step="0.1"/>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link" type="button"
+                                                            data-toggle="collapse" data-target="#collapseOne"
+                                                            aria-expanded="true" aria-controls="collapseOne">
+                                                        Sensor&Actuator
+                                                    </button>
+                                                </h5>
                                             </div>
 
-                                            <div class="card">
-                                                <div class="card-header" id="headingThree">
-                                                    <div class="row float-right">
-                                                        <div class="col float-right m-1 p-0">
-                                                            <button id="reset" type="button"
-                                                                    class="btn btn-secondary m-1">Reset
+                                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                                 data-parent="#accordionExample">
+                                                <div id="esp-container" class="card-body row justify-content-start">
+                                                    <!--                        <div class="col-auto p-1">-->
+                                                    <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
+                                                    <!--                        </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingTwo">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" type="button"
+                                                            data-toggle="collapse"
+                                                            data-target="#collapseTwo" aria-expanded="false"
+                                                            aria-controls="collapseTwo">Program
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                                 data-parent="#accordionExample">
+                                                <div class="card-body container my-2">
+
+                                                    <div class="form-group row">
+                                                        <div class="col">
+                                                            <select class="form-control" id="time-slice-select">
+                                                                <option>Wake</option>
+                                                                <option>Leave</option>
+                                                                <option>Back</option>
+                                                                <option>Sleep</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <button type="button" id="weekend"
+                                                                    class="btn btn-secondary">Weekend
                                                             </button>
                                                         </div>
-                                                        <div id="save-div" class="col float-right p-0 m-1">
-                                                            <button id="save" type="button" class="btn btn-primary m-1">
-                                                                Save changes
-                                                            </button>
+                                                    </div>
+
+                                                    <div class="row  m-0 input-group clockpicker" id="start-time">
+                                                        <div class="input-group-addon input-group-prepend ">
+                                                            <i class="input-group-text fa fa-clock"></i>
                                                         </div>
+                                                        <input id="start-time-input" placeholder="Start time"
+                                                               class="form-control"
+                                                               aria-describedby="start-time-help-block"/>
+                                                        <small class="d-none" id="start-time-help-block"></small>
+                                                    </div>
+                                                    <div class="row m-0 pt-2 input-group">
+                                                        <input type="number" id="temperature" value="20.0"
+                                                               data-decimals="1" min="5" max="30"
+                                                               step="0.1"/>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                </form>
-
-
-                            </div>
-                        </div>
-
-                        <!-- stats-->
-                        <div class="tab-pane fade " id="list-setting" role="tabpanel"
-                             aria-labelledby="list-setting-list">
-                            <div class="d-flex flex-row justify-content-center p-1">
-
-                                <div class="input-group px-5 mx-5">
-                                    <div class="input-group-prepend" id="left-stats">
-                                        <i class=" input-group-text fa fa-chevron-left"
-                                           style=" vertical-align: middle;"></i>
-                                    </div>
-                                    <h3 id="room-stats" class="form-control">M</h3>
-                                    <div class="input-group-append align-middle font-awesome-div" id="right-stats">
-                                        <i class=" input-group-text fa fa-chevron-right"
-                                           style=" vertical-align: middle;"></i>
+                                        <div class="card">
+                                            <div class="card-header" id="headingThree">
+                                                <div class="row float-right">
+                                                    <div class="col float-right m-1 p-0">
+                                                        <button id="reset" type="button"
+                                                                class="btn btn-secondary m-1">Reset
+                                                        </button>
+                                                    </div>
+                                                    <div id="save-div" class="col float-right p-0 m-1">
+                                                        <button id="save" type="button" class="btn btn-primary m-1">
+                                                            Save changes
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="d-flex flex-row">
-                                    <h4 id="no-stats"></h4>
-                                </div>
-                            </div>
-                            <canvas id="myChart"></canvas>
+
+                            </form>
+
+
                         </div>
-
-                        <!-- Leave-->
-                        <div class="tab-pane fade " id="leave-resource" role="tabpanel"
-                             aria-labelledby="leave-resource-leave">
-                             <div class="card-body container my-2">
-                               <div class="form-group row">
-                                    <div class="col">
-                                        <select class="form-control" id="time-days-select">
-                                            <option>0 Day</option>
-                                            <option>1 Day</option>
-                                            <option>2 Days</option>
-                                            <option>3 Days</option>
-                                            <option>4 Days</option>
-                                            <option>5 Days</option>
-                                            <option>6 Days</option>
-                                            <option>7 Days</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-auto">
-                                        <select class="form-control" id="time-hours-select">
-                                            <option>1 Hour</option>
-                                            <option>2 Hours</option>
-                                            <option>3 Hours</option>
-                                            <option>4 Hours</option>
-                                            <option>5 Hours</option>
-                                            <option>6 Hours</option>
-                                            <option>7 Hours</option>
-                                            <option>8 Hours</option>
-                                            <option>9 Hours</option>
-                                            <option>10 Hours</option>
-                                            <option>11 Hours</option>
-                                            <option>12 Hours</option>
-                                            <option>13 Hours</option>
-                                            <option>14 Hours</option>
-                                            <option>15 Hours</option>
-                                            <option>16 Hours</option>
-                                            <option>17 Hours</option>
-                                            <option>18 Hours</option>
-                                            <option>19 Hours</option>
-                                            <option>20 Hours</option>
-                                            <option>21 Hours</option>
-                                            <option>22 Hours</option>
-                                            <option>23 Hours</option>
-                                            <option>24 Hours</option>
-                                        </select>
-                                    </div>
-                                </div> 
-                                <div class="row m-0 pt-2 input-group">
-                                    <input type="number" id="temperature_leave" value="20.0"
-                                        data-decimals="1" min="5" max="30"
-                                        step="0.1"/>
-                                </div>
-
-                            </div>
-                            <div class="row justify-content-center">
-                                <button type="button" class="btn btn-secondary" id="activate-leave" value="0">Activate</button>
-                            </div>
-                        </div>
-                        <!-- QR-code -->
-                        <div class="tab-pane fade " id="qr-code" role="tabpanel"
-                             aria-labelledby="qr-code-qr">
-                             <div class="row justify-content-center" id="ssss">
-                                <img src="http://localhost:8080/qr" id="image-qr">
-                             </div>
-                        </div>
-
-
                     </div>
+
+                    <!-- stats-->
+                    <div class="tab-pane fade " id="list-setting" role="tabpanel"
+                         aria-labelledby="list-setting-list">
+                        <div class="d-flex flex-row justify-content-center p-1">
+
+                            <div class="input-group px-5 mx-5">
+                                <div class="input-group-prepend" id="left-stats">
+                                    <i class=" input-group-text fa fa-chevron-left"
+                                       style=" vertical-align: middle;"></i>
+                                </div>
+                                <h3 id="room-stats" class="form-control">M</h3>
+                                <div class="input-group-append align-middle font-awesome-div" id="right-stats">
+                                    <i class=" input-group-text fa fa-chevron-right"
+                                       style=" vertical-align: middle;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div class="d-flex flex-row">
+                                <h4 id="no-stats"></h4>
+                            </div>
+                        </div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+
+                    <!-- Leave-->
+                    <div class="tab-pane fade " id="leave-resource" role="tabpanel"
+                         aria-labelledby="leave-resource-leave">
+                        <div class="card-body my-2">
+                            <div class="form-group row">
+                                <div class="col">
+                                    <select class="form-control" id="time-days-select" aria-describedby="leaveHelp">
+                                        <option>0 Day</option>
+                                        <option>1 Day</option>
+                                        <option>2 Days</option>
+                                        <option>3 Days</option>
+                                        <option>4 Days</option>
+                                        <option>5 Days</option>
+                                        <option>6 Days</option>
+                                        <option>7 Days</option>
+                                    </select>
+                                    <small id="leaveHelp" class="form-text text-muted">Leave time</small>
+                                </div>
+                                <div class="col-auto">
+                                    <select class="form-control" id="time-hours-select">
+                                        <option>1 Hour</option>
+                                        <option>3 Hours</option>
+                                        <option>6 Hours</option>
+                                        <option>9 Hours</option>
+                                        <option>12 Hours</option>
+                                        <option>15 Hours</option>
+                                        <option>18 Hours</option>
+                                        <option>21 Hours</option>
+                                        <option>24 Hours</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row m-0  input-group">
+                                <input type="number" id="temperature_leave" aria-describedby="temperatureHelp"
+                                       value="20.0" data-decimals="1" min="5" max="30" step="0.1"/>
+                                <small id="temperatureHelp" class="form-text text-muted">The temperature you will find
+                                    at comeback
+                                </small>
+
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="button" class="btn btn-secondary btn-lg btn-block" id="activate-leave"
+                                    value="0">Activate
+                            </button>
+                        </div>
+                    </div>
+                    <!-- QR-code -->
+                    <div class="tab-pane fade " id="qr-code" role="tabpanel"
+                         aria-labelledby="qr-code-qr">
+                        <div class="row justify-content-center" id="ssss">
+                            <img src="http://localhost:8080/qr" style="width: 80vmin; height: 80vmin;"
+                                 id="image-qr">
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div class="d-flex justify-content-between px-2" style="background-color: #a3a3a3;">
@@ -350,7 +342,7 @@
         <span class="fa fa-cog fa-2x text-white"/>
     </div>
     <h4 id="clock" class="d-flex align-items-center text-white"></h4>
-    <div id="wifiIcon" class="p-2 d-flex align-items-center" data-toggle="modal" >
+    <div id="wifiIcon" class="p-2 d-flex align-items-center" data-toggle="modal">
         <span class="fas fa-wifi fa-2x text-white"/>
     </div>
 </div>
@@ -366,7 +358,7 @@
             </button>
         </div>
         <!--            thermostat-->
-        <div class="d-flex flex-column justify-content-center m-2" id='thermostat'></div>
+        <div class="d-flex flex-column justify-content-center m-2" style="width: 70vmin; height: 70vmin;" id='thermostat'></div>
 
         <!--        right button-->
         <div class="d-flex flex-column justify-content-center flex-wrap" id="right_button">
@@ -429,7 +421,7 @@
         $("#wifi-modal").modal({backdrop: "static"});
     });
 
-    $('#settingsIcon').click( function (e) {
+    $('#settingsIcon').click(function (e) {
         $("#settings-modal").modal({backdrop: "static"});
     });
 
