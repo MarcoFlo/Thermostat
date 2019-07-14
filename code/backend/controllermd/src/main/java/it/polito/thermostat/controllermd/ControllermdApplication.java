@@ -147,19 +147,15 @@ public class ControllermdApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        roomRepository.deleteAll();
-//        programRepository.deleteAll();
-//        esp8266Repository.deleteAll();
-
-
         //Main room creation
-        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, 25.0));
+        if (!roomRepository.findById(mainRoomName).isPresent()) {
+            roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, 25.0));
 
-        //Main room program creation
-        Program program = settingService.getDefaultProgram();
-        program.setIdProgram(mainRoomName);
-        programRepository.save(program);
-
+            //Main room program creation
+            Program program = settingService.getDefaultProgram();
+            program.setIdProgram(mainRoomName);
+            programRepository.save(program);
+        }
         //Main Room esp creation
         esp8266Repository.save(new ESP8266(mainRoomSensor, mainRoomName, true, false));
         esp8266Repository.save(new ESP8266(mainRoomCooler, mainRoomName, false, true));
@@ -167,11 +163,7 @@ public class ControllermdApplication implements CommandLineRunner {
         mqtTservice.subscribeSensor(mainRoomSensor);
         logger.info("Main room saved");
 
-
-        logger.info(HostAddressGetter.getMAC());
-
         mqtTservice.subscribeToPresentEsp();
-
     }
 
 
