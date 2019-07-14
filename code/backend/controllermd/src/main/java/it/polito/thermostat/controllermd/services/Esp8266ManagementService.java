@@ -26,8 +26,7 @@ public class Esp8266ManagementService {
 
 
     /**
-     * Allow us to set an association between an esp and the choosen room
-     * TODO set up control
+     * Allow us to set an association between esps and the choosen room
      *
      * @param idRoom
      * @param espList
@@ -48,7 +47,6 @@ public class Esp8266ManagementService {
         esp8266List.forEach(esp8266 -> {
             Room room;
             if (esp8266.getIdRoom() != null && !esp8266.getIdRoom().equals(idRoom)) {
-                logger.info("remove from old room");
                 //remove esp from the old room
                 room = roomRepository.findById(esp8266.getIdRoom()).get();
                 List<String> idList = room.getEsp8266List();
@@ -57,7 +55,6 @@ public class Esp8266ManagementService {
             }
         });
 
-        logger.info("add to new room");
         //add esp to the new room
         Room room = roomRepository.findById(idRoom).get();
         List<String> idList = room.getEsp8266List();
@@ -75,7 +72,6 @@ public class Esp8266ManagementService {
 
     /**
      * Allow us to delete an association between an esp and the choosen room
-     * TODO set up control
      *
      * @param idEsp idEsp to delete
      */

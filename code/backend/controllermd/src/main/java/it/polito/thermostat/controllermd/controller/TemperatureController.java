@@ -64,6 +64,10 @@ public class TemperatureController {
         temperatureService.setIsProgrammedRoom(idRoom);
     }
 
+    /**
+     * @param idRoom
+     * @return the CurrentRoomStateResource
+     */
     @GetMapping("/temperature/current_room_state_resource/{idRoom}")
     public CurrentRoomStateResource getCurrentRoomStateResource(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm gonna retrice the Current room state resource for " + idRoom);

@@ -14,30 +14,11 @@ public class ExecuteShellComandService {
     private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    public String executeCommand(String command) {
-
-        StringBuffer output = new StringBuffer();
-
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return output.toString();
-
-    }
-
+    /**
+     * execute bash command
+     * @param command
+     * @return
+     */
     public StringBuilder execute(String command) {
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {

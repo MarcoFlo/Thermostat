@@ -240,9 +240,9 @@ public class WifiService {
      * Handle the connection result
      * First of all start the interface
      *
-     * SCANNING -> still trying, wait a sec
-     * INACTIVE -> credentials were wrong
-     * is present "id=netNumber" -> success
+     * SCANNING : still trying, wait a sec
+     * INACTIVE : credentials were wrong
+     * is present "id=netNumber" : success
      *
      * @param netNumber
      * @return true/false

@@ -1,8 +1,5 @@
 package it.polito.thermostat.controllermd.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;

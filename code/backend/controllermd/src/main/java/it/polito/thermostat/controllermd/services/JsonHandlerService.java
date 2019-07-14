@@ -35,7 +35,7 @@ public class JsonHandlerService {
 
 
     /**
-     * Metodo che legge i JSON delle fermate e li salva sul DB
+     * save the two default programs
      */
     public void readPrograms() {
 

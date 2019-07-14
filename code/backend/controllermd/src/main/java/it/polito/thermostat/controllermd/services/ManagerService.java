@@ -53,11 +53,14 @@ public class ManagerService {
     @Autowired
     SettingService settingService;
 
-
-    @Scheduled(fixedRate = 2000)
+    /**
+     * Scheduled task that manage the temperature for each room
+     * we check that there is at the first wsal to start working
+     */
+    @Scheduled(fixedRate = 1500)
     public void scheduleFixedRateTask() {
         Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
-        if (checkWSAL.isPresent()) //controlliamo che ci sia almneo una config
+        if (checkWSAL.isPresent())
         {
             WSAL currentWSAL = checkWSAL.get();
             List<Room> roomList = ((List<Room>) roomRepository.findAll());
@@ -107,6 +110,10 @@ public class ManagerService {
     }
 
 
+    /**
+     * @param programRoom
+     * @return the nearest time slot to @param when
+     */
     public Program.HourlyProgram findNearestTimeSlot(LocalDateTime when, Program programRoom) {
         Program.DailyProgram dailyProgram;
         if (when.getDayOfWeek().getValue() <= 5)//lunedi - venerdì

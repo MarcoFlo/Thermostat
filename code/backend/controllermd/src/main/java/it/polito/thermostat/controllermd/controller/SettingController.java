@@ -72,7 +72,6 @@ public class SettingController {
     @PostMapping("/setting/room/resource")
     public void postRoom(@RequestBody RoomResource roomResource) {
         logger.info("Room " + roomResource.getIdRoom() + " will be saved");
-//        logger.info(roomResource.toString());
         settingService.saveRoomResource(roomResource);
     }
 
@@ -80,7 +79,6 @@ public class SettingController {
     public RoomResource getRoomResource(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm gonna retrive the roomResource for " + idRoom);
         RoomResource roomResource = settingService.getRoomResource(idRoom);
-//        logger.info(roomResource.toString());
         return roomResource;
     }
 
@@ -95,9 +93,7 @@ public class SettingController {
     }
 
     /**
-     * List of saved room
-     *
-     * @return
+     * @return the list of saved room
      */
     @GetMapping("/setting/room/list")
     public List<String> getListRoom() {
@@ -114,6 +110,9 @@ public class SettingController {
         return settingService.getDefaultProgram();
     }
 
+    /**
+     * @return the program asscoiated to @param idRoom
+     */
     @GetMapping("/setting/program/{idRoom}")
     public Program getProgram(@PathVariable("idRoom") String idRoom) {
         logger.info("I'm trying to retrive a program for " + idRoom);
@@ -137,6 +136,7 @@ public class SettingController {
      * Send the netPassword == null to connect to a known net
      *
      * @param wifiNetResource net credentials
+     * @return true/false
      */
     @PostMapping("/setting/wifi/credentials")
     public String postWifi(@RequestBody WifiNetResource wifiNetResource) {
@@ -161,13 +161,21 @@ public class SettingController {
         return "iamrpi";
     }
 
-
+    /**
+     * @return the stats related to @param idRoom
+     */
     @GetMapping("/setting/stats/{idRoom}")
     public StatsResource getStatsResourceRoom(@PathVariable("idRoom") String idRoom) {
         logger.info("get /setting/stats/" + idRoom + " contacted");
         return statService.getweeklyStats(idRoom);
     }
 
+    /**
+     *
+     * @return the qr image needed to remotly connect to the thermostat
+     * @throws IOException
+     * @throws WriterException
+     */
     @GetMapping(value = "/qr", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody
     byte[] qr() throws IOException, WriterException {

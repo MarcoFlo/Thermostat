@@ -10,6 +10,9 @@ public class LaunchController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * @return the index.html
+     */
     @GetMapping("/")
     public String getIndex() {
         logger.info("page index.html requested");
