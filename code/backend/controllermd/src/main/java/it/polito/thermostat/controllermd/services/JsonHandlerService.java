@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.logic;
+package it.polito.thermostat.controllermd.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.entity.Program;

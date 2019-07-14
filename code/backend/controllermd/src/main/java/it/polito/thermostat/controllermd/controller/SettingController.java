@@ -2,14 +2,11 @@ package it.polito.thermostat.controllermd.controller;
 
 import com.google.zxing.WriterException;
 import it.polito.thermostat.controllermd.entity.Program;
-import it.polito.thermostat.controllermd.entity.Room;
 import it.polito.thermostat.controllermd.repository.ESP8266Repository;
-import it.polito.thermostat.controllermd.resources.AssociationResource;
 import it.polito.thermostat.controllermd.resources.RoomResource;
 import it.polito.thermostat.controllermd.resources.StatsResource;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
-import it.polito.thermostat.controllermd.services.logic.StatService;
-import it.polito.thermostat.controllermd.services.server.*;
+import it.polito.thermostat.controllermd.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 
 /*

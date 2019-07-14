@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.server;
+package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.entity.ESP8266;
 import it.polito.thermostat.controllermd.entity.Room;

@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.server;
+package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.configuration.exception.RoomNotExistException;
 import it.polito.thermostat.controllermd.entity.Room;
@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,7 +52,7 @@ public class TemperatureService {
     }
 
     /**
-     * Set the the room to program mode
+     * Set the the room to programmed mode
      *
      * @param idRoom room to program
      */
@@ -122,10 +120,8 @@ public class TemperatureService {
     }
 
     /**
-     * Get the current state for the specified room
-     *
      * @param idRoom
-     * @return
+     * @return the current state for the specified room
      */
     public CurrentRoomStateResource getCurrentRoomStateResource(String idRoom) {
         Optional<WSAL> wsalCheck = wsalRepository.findById("mainwsal");

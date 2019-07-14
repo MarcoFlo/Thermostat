@@ -7,5 +7,4 @@ it.polito.thermostat.controllermd.object
 it.polito.thermostat.controllermd.repository
 it.polito.thermostat.controllermd.resources
 it.polito.thermostat.controllermd.resources.MQTTaws
-it.polito.thermostat.controllermd.services.logic
-it.polito.thermostat.controllermd.services.server
+it.polito.thermostat.controllermd.services

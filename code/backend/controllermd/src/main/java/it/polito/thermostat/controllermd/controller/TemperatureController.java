@@ -4,7 +4,7 @@ import it.polito.thermostat.controllermd.repository.RoomRepository;
 import it.polito.thermostat.controllermd.resources.CurrentRoomStateResource;
 import it.polito.thermostat.controllermd.resources.LeaveResource;
 import it.polito.thermostat.controllermd.resources.ManualResource;
-import it.polito.thermostat.controllermd.services.server.TemperatureService;
+import it.polito.thermostat.controllermd.services.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

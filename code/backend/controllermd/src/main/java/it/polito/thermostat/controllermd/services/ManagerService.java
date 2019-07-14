@@ -1,10 +1,8 @@
-package it.polito.thermostat.controllermd.services.logic;
+package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.entity.*;
 import it.polito.thermostat.controllermd.entity.Program;
 import it.polito.thermostat.controllermd.repository.*;
-import it.polito.thermostat.controllermd.services.server.SettingService;
-import it.polito.thermostat.controllermd.services.server.TemperatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

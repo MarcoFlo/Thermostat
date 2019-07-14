@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.server;
+package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.configuration.SeasonGetter;
 import it.polito.thermostat.controllermd.configuration.exception.ProgramNotExistException;
@@ -11,12 +11,8 @@ import it.polito.thermostat.controllermd.resources.RoomResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,11 +31,11 @@ public class SettingService {
     @Autowired
     Esp8266ManagementService esp8266ManagementService;
 
-    @PostConstruct
-    public void init() {
-
-    }
-
+    /**
+     * save the room sent by the frontend
+     *
+     * @param roomResource
+     */
     public void saveRoomResource(RoomResource roomResource) {
         Room room = roomRepository.save(new Room(roomResource));
         logger.info(roomResource.getEsp8266List().toString() + room.getIdRoom());
@@ -48,6 +44,12 @@ public class SettingService {
 
     }
 
+    /**
+     * retrive the room needed by the frontend
+     *
+     * @param idRoom
+     * @return
+     */
     public RoomResource getRoomResource(String idRoom) {
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
         Optional<Program> checkProgram = programRepository.findById(idRoom);
@@ -60,6 +62,11 @@ public class SettingService {
 
     }
 
+    /**
+     * delete the room from the db
+     *
+     * @param idRoom
+     */
     public void deleteRoom(String idRoom) {
 
         Optional<Room> checkRoom = roomRepository.findById(idRoom);
@@ -71,12 +78,20 @@ public class SettingService {
         roomRepository.deleteById(idRoom);
     }
 
+    /**
+     * @return the list of saved room
+     */
     public List<String> getListRoom() {
         return ((List<Room>) roomRepository.findAll()).stream().map(room -> {
             logger.info((room.getIdRoom()));
-            return room.getIdRoom();}).collect(Collectors.toList());
+            return room.getIdRoom();
+        }).collect(Collectors.toList());
     }
 
+    /**
+     * @param idRoom
+     * @return the program for that room
+     */
     public Program getProgramRoom(String idRoom) {
         Optional<Program> check = programRepository.findById(idRoom);
         if (!check.isPresent())
@@ -84,6 +99,9 @@ public class SettingService {
         return check.get();
     }
 
+    /**
+     * @return the default program depending on the season
+     */
     public Program getDefaultProgram() {
         Optional<Program> check;
 
@@ -99,6 +117,4 @@ public class SettingService {
         return null;
 
     }
-
-
 }

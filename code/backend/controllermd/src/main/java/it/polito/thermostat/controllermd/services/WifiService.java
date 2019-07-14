@@ -1,6 +1,5 @@
-package it.polito.thermostat.controllermd.services.server;
+package it.polito.thermostat.controllermd.services;
 
-import it.polito.thermostat.controllermd.configuration.exception.WifiCredentialsException;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,8 @@ public class WifiService {
     Boolean wasAP;
 
     /**
-     * @return the available net iterating @count times to check the result with more results
+     *
+     * @return the available net, iterating @count times to return the result with more entry
      */
     public List<WifiNetResource> getAvailableNet() {
         if (!isWindows) {
@@ -54,11 +54,11 @@ public class WifiService {
 
     /**
      * Allow us to connect to a net
-     * If the credentials are wrong and wasAP == true we go back to AP mode, so that the esp have a neto una loro rete
+     * If the credentials are wrong and the rpi was an AP, we go back to AP mode
      *
      * @param essid essid to connect
      * @param pw    pw of the ap
-     * @return debugging string
+     * @return true/false
      */
     public Boolean connectToNet(String essid, String pw) {
         switchToStation();
@@ -78,7 +78,12 @@ public class WifiService {
         }
     }
 
-
+    /**
+     * Connect to a net that was not memorized inside wpa_supplicant.conf
+     * @param essid
+     * @param pw
+     * @return true/false
+     */
     private boolean connectNewNet(String essid, String pw) {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
@@ -95,10 +100,10 @@ public class WifiService {
     }
 
     /**
-     * Mi connette a una rete nota, dopo aver recuperato il netNumber con isKnownNet(essid)
+     * Connect to a net that was memorized inside wpa_supplicant.conf
      *
      * @param netNumber
-     * @return
+     * @return true/false
      */
     private boolean connectKnownNet(Integer netNumber) {
         if (!isWindows) {
@@ -110,10 +115,9 @@ public class WifiService {
     }
 
     /**
-     * Resituisce il netNumber se il essid è noto
      *
      * @param essid
-     * @return
+     * @return the netNumber if the net is contained inside wpa_supplicant.conf
      */
     private Integer isKnownNet(String essid) {
         if (!isWindows) {
@@ -133,9 +137,8 @@ public class WifiService {
 
 
     /**
-     * Ritorna il numero della rete a cui si è connessi o -1, se non si è connessi
      *
-     * @return
+     * @return -1 if we are not connected to any net or the net number
      */
     private Integer getCurrentNetNumber() {
         if (!isWindows) {
@@ -155,8 +158,8 @@ public class WifiService {
     }
 
     /**
-     * Ci permette di passare in modalità AccessPointMode
-     * <p>
+     * Switch from station mode to access point mode
+     *
      * wpa_cli -iwlan0 disable_network 2
      * echo albertengopi | sudo -S ip link set dev wlan0 down
      * echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0
@@ -183,14 +186,14 @@ public class WifiService {
     }
 
     /**
-     * Ci permette di passare in StationMode, solo se non lo siamo già
+     * Switch to station mode from access point mdoe
+     *
      * echo albertengopi | sudo -S systemctl stop dnsmasq.service
      * echo albertengopi | sudo -S systemctl stop hostapd.service
      * wpa_cli -iwlan0 enable_network 2
-     * //separatamente
+     *
      * echo albertengopi | sudo -S ip link set dev wlan0 up
      *
-     * @return
      */
     private void switchToStation() {
         if (!isWindows) {
@@ -217,12 +220,8 @@ public class WifiService {
     }
 
     /**
-     * True se in station mode
-     * False se in AP mode
-     * <p>
-     * Controllo solo hostapd e on dnsmasq tanto vanno di pari passo
      *
-     * @return
+     * @return true if station mode
      */
     private Boolean isStationMode() {
         if (!isWindows) {
@@ -238,14 +237,15 @@ public class WifiService {
     }
 
     /**
-     * Meotodo privato che gestisce la riuscita o meno della connessione
-     * Per prima cosa tira su l'interfaccia se non lo è già
-     * SCANNING significa che ci sta ancora provando
-     * INACTIVE vuol dire che le credenziali sono sbagliate e nel caso fossimo in AP mode ci ritorniamo
-     * è presente "id=netNumber" andato tutto bene
+     * Handle the connection result
+     * First of all start the interface
+     *
+     * SCANNING -> still trying, wait a sec
+     * INACTIVE -> credentials were wrong
+     * is present "id=netNumber" -> success
      *
      * @param netNumber
-     * @return
+     * @return true/false
      */
     private Boolean handleConnectResult(Integer netNumber) {
         if (!isWindows) {

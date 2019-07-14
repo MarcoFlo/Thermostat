@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.logic;
+package it.polito.thermostat.controllermd.services;
 
 import it.polito.thermostat.controllermd.entity.CommandActuator;
 import it.polito.thermostat.controllermd.entity.Room;
@@ -31,7 +31,12 @@ public class StatService {
     @Autowired
     RoomRepository roomRepository;
 
-
+    /**
+     * @param stats
+     * @param currentCommand
+     * @param time
+     * @return the stats updated
+     */
     private Stats handleStatUpdate(Stats stats, Boolean currentCommand, LocalTime time) {
         if (stats.getOn() && !currentCommand) {
             stats.setOn(false);
@@ -45,6 +50,12 @@ public class StatService {
         return null;
     }
 
+    /**
+     * Handle each command updating the daily stat
+     *
+     * @param idRoom
+     * @param commandActuator
+     */
     public void handleNewCommand(String idRoom, CommandActuator commandActuator) {
         LocalDate nowDate = LocalDate.now();
         Optional<Stats> checkStat = statsRepository.findById(nowDate + idRoom);
@@ -58,7 +69,10 @@ public class StatService {
         }
     }
 
-
+    /**
+     * @param idRoom
+     * @return the weekly stats to be displayed
+     */
     public StatsResource getweeklyStats(String idRoom) {
         List<String> dayList = new LinkedList<>();
         List<List<Long>> dataList = new LinkedList<>();
@@ -84,7 +98,9 @@ public class StatService {
         return new StatsResource(dayList, dataList);
     }
 
-
+    /**
+     * At midnight close the stats for the day
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     public void completeStatsCalculation() {
         LocalTime midnight = LocalTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
@@ -104,6 +120,9 @@ public class StatService {
         statsRepository.saveAll(statToBeSaved);
     }
 
+    /**
+     * Build a new random data set
+     */
     @Profile("dev")
     public void buildNewDataSet() {
         statsRepository.deleteAll();

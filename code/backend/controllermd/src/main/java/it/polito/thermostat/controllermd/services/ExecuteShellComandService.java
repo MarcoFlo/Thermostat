@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.server;
+package it.polito.thermostat.controllermd.services;
 
 
 import org.slf4j.Logger;

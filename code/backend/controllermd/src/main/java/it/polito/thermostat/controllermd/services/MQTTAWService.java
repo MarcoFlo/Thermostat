@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.logic;
+package it.polito.thermostat.controllermd.services;
 
 import com.amazonaws.services.iot.client.*;
 import com.amazonaws.services.iot.client.sample.sampleUtil.SampleUtil;
@@ -57,20 +57,30 @@ public class MQTTAWService {
         mqttClient.subscribe(new NotificationTopic());
     }
 
+    /**
+     * Event id:
+     *  - new esp = 10
+     *  - command to actuator = 11
+     *  - sensorData = 12
+     * @param event
+     * @param event_id
+     */
     public void sendEvent(Object event, Integer event_id) {
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         try {
             awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
-//            logger.info("This event will be published" + awsIotMessage.getStringPayload());
+//          logger.info("This event will be published" + awsIotMessage.getStringPayload());
             mqttClient.publish(awsIotMessage);
         } catch (AWSIotException | JsonProcessingException e) {
             logger.error("Error eventTopic" + e.toString());
         }
     }
 
-
+    /**
+     * To handle the notification topic
+     */
     public class NotificationTopic extends AWSIotTopic {
         private Logger logger = LoggerFactory.getLogger(this.getClass());
         String notificationTopic = "pl19/notification";
@@ -80,6 +90,10 @@ public class MQTTAWService {
             super("pl19/notification", AWSIotQos.QOS1);
         }
 
+        /**
+         * To react when ping event occurs
+         * @param message
+         */
         @Override
         public void onMessage(AWSIotMessage message) {
             try {
@@ -87,9 +101,9 @@ public class MQTTAWService {
                 PingAWS response = new PingAWS(request.getEvent().getSequence());
                 AWSIotMessage awsIotMessage = new AWSIotMessage(notificationTopic, qos);
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(response));
-                //mqttClient.publish(awsIotMessage);
-//                logger.info("This has been published" + awsIotMessage.getStringPayload());
-            } catch (IOException e) {
+                mqttClient.publish(awsIotMessage);
+                logger.info("This has been published" + awsIotMessage.getStringPayload());
+            } catch (IOException | AWSIotException e) {
                 logger.error("Error NotificationTopic" + e.toString());
             }
         }

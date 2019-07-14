@@ -1,4 +1,4 @@
-package it.polito.thermostat.controllermd.services.logic;
+package it.polito.thermostat.controllermd.services;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -82,10 +82,11 @@ public class MQTTservice {
         mqttClient.subscribe(esp8266Topic, this::esp8266Connection);
         logger.info("MQTTService connection done");
 
-
     }
 
-
+    /**
+     * Subscribe to the already saved esp sensor
+     */
     public void subscribeToPresentEsp() {
         ((List<ESP8266>) esp8266Repository.findAll()).stream().filter(ESP8266::getIsSensor).forEach(esp -> {
             try {
@@ -98,6 +99,8 @@ public class MQTTservice {
     }
 
     /**
+     * handle the command decided by the manager service
+     *
      * @param commandActuator
      */
     public void manageActuator(CommandActuator commandActuator) {
@@ -118,7 +121,7 @@ public class MQTTservice {
     /**
      * This callback is invoked when a new esp is connected
      */
-    private void esp8266Connection(String topic, MqttMessage message) throws MqttException {
+    private void esp8266Connection(String topic, MqttMessage message) {
         ESP8266 esp8266 = new ESP8266();
         esp8266.setIdEsp(topic.split("/")[2]);
 
@@ -149,7 +152,11 @@ public class MQTTservice {
         logger.info("\tisCooler ->" + esp8266.getIsCooler());
     }
 
-
+    /**
+     * Subscribe to the specified sensor
+     *
+     * @param esp
+     */
     public void subscribeSensor(String esp) {
         try {
             mqttClient.subscribe("/" + esp + "/sensor", this::sensorDataReceived);
@@ -169,21 +176,24 @@ public class MQTTservice {
         String[] data = message.toString().split("_");
         String idEsp = topic.split("/")[1];
 
-        //write into the db the sensor data
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
-//        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
+//      logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
 
         updateClientData(idEsp, sensorData);
         mqttawService.sendEvent(sensorData, 12);
     }
 
+    /**
+     * Send the new data sensor to frontend through websocket
+     *
+     * @param idEsp
+     * @param sensorData
+     * @throws MqttException
+     * @throws JsonProcessingException
+     */
     private void updateClientData(String idEsp, SensorData sensorData) throws MqttException, JsonProcessingException {
-        Optional<Room> checkRoom;
-        if (environment.getActiveProfiles()[0].equals("dev"))
-            checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
-        else
-            checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
+        Optional<Room> checkRoom = ((List<Room>) roomRepository.findAll()).stream().filter(r -> r.getEsp8266List().contains(idEsp)).findFirst();
 
         if (checkRoom.isPresent()) {
             Room room = checkRoom.get();
@@ -193,7 +203,6 @@ public class MQTTservice {
             msg.setQos(2);
             msg.setRetained(true);
             mqttClient.publish("/temperature/" + room.getIdRoom(), msg);
-
         }
     }
 }
