@@ -196,6 +196,9 @@ function manual() {
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(idRoom);
         document.getElementById("main-container").style.pointerEvents = "none";
+        document.getElementById("container-buttons").style.pointerEvents = "auto";
+        document.getElementById("left_button").style.pointerEvents = "auto";
+        document.getElementById("right_button").style.pointerEvents = "auto";
         nest.target_temperature = nest.ambient_temperature;
     }
 }

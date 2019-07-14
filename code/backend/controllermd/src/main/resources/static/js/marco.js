@@ -108,6 +108,9 @@ function get_backend(desired_room) {
             {
                 nest.away = true;
                 document.getElementById("main-container").style.pointerEvents = "none";
+                document.getElementById("container-buttons").style.pointerEvents = "auto";
+                document.getElementById("left_button").style.pointerEvents = "auto";
+                document.getElementById("right_button").style.pointerEvents = "auto";
             }
         }
     };
