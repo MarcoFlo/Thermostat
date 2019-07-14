@@ -4,7 +4,7 @@ After=thermostat_controller
 
 [Service]
 ExecStart=python3 mainSensor.py
-WorkingDirectory=/home/pi/Documents/Thermostat/test_exe/controller
+WorkingDirectory=/home/pi/Documents/Thermostat/exe/controller
 StandardOutput=inherit
 StandardError=inherit
 Restart=always

@@ -90,7 +90,7 @@ public class ManagerService {
         if (now.isAfter(leaveEnd.plus((long) (60 * temperatureDiff * scalingFactor), ChronoUnit.MINUTES))) {
             manageESP(room, leaveBackTemperature, currentWSAL.getIsSummer(), true);
         } else {
-            //waiting at leave beack temperature
+            //waiting at leave temperature
             manageESP(room, currentWSAL.getLeaveTemperature(), currentWSAL.getIsSummer(), true);
         }
     }
