@@ -172,7 +172,7 @@ public class MQTTservice {
         //write into the db the sensor data
         SensorData sensorData = new SensorData(idEsp, Double.valueOf(data[0]), Double.valueOf(data[1]));
         sensorDataRepository.save(sensorData);
-        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
+//        logger.info("New sensor data -> " + data[0] + "\t" + data[1]);
 
         updateClientData(idEsp, sensorData);
         mqttawService.sendEvent(sensorData, 12);
