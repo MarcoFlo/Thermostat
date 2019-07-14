@@ -23,8 +23,7 @@
   
 - execute the tester   
     Open an other cmd and run "java -jar "tester-0.0.1-SNAPSHOT.jar
-    
-      The tester at every execution will create data for the esp
+    The tester at every execution will create data for the esp
       
       
 # How to test it on a new rpi
