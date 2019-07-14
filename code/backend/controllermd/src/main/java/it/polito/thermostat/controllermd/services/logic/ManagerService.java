@@ -129,15 +129,9 @@ public class ManagerService {
         if (!room.getEsp8266List().isEmpty()) {
             int deleteBuffer = isProgrammed ? 1 : 0; //if manual delete buffer
 
-            List<ESP8266> esp8266List = room.getEsp8266List().stream().map(idEsp -> {
-                Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
-                if (checkEsp.isPresent())
-                    return checkEsp.get();
-                else
-                    return null;
-            }).collect(Collectors.toList());//.filter(esp8266 -> esp8266.getIsCooler().equals(isSummer) && !esp8266.getIsSensor()).forEach(esp8266 -> logger.info(esp8266.toString()));
+            List<ESP8266> esp8266List = room.getEsp8266List().stream().map(idEsp -> esp8266Repository.findById(idEsp).orElse(null)).collect(Collectors.toList());//.filter(esp8266 -> esp8266.getIsCooler().equals(isSummer) && !esp8266.getIsSensor()).forEach(esp8266 -> logger.info(esp8266.toString()));
 
-            List<String> esp8266ListActuator = esp8266List.stream().filter(esp8266 -> esp8266.getIsCooler().equals(isSummer) && !esp8266.getIsSensor()).map(ESP8266::getIdEsp).collect(Collectors.toList());
+            List<ESP8266> esp8266ListActuator = esp8266List.stream().filter(esp8266 -> !esp8266.getIsSensor()).collect(Collectors.toList());
             Optional<String> checkString = esp8266List.stream().filter(ESP8266::getIsSensor).map(ESP8266::getIdEsp).findFirst();
             String idSensor;
             if (checkString.isPresent())
@@ -145,15 +139,20 @@ public class ManagerService {
             else
                 throw new IllegalArgumentException("Room must have a sensor");
 
-            esp8266ListActuator.stream().forEach(idEsp -> {
+            esp8266ListActuator.stream().forEach(esp8266 -> {
                 Optional<SensorData> sensorDataCheck = sensorDataRepository.findById(idSensor);
                 if (sensorDataCheck.isPresent()) {
                     SensorData sensorData = sensorDataCheck.get();
                     CommandActuator commandActuator;
-                    if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
-                        commandActuator = new CommandActuator(idEsp, !isSummer);
+                    if (esp8266.getIsCooler().equals(isSummer)) {
+                        if (sensorData.getTemperature() < (desiredTemperature - (temperatureBuffer * deleteBuffer)))
+                            commandActuator = new CommandActuator(esp8266.getIdEsp(), !isSummer);
+                        else
+                            commandActuator = new CommandActuator(esp8266.getIdEsp(), isSummer);
+                    }
                     else
-                        commandActuator = new CommandActuator(idEsp, isSummer);
+                        commandActuator = new CommandActuator(esp8266.getIdEsp(), false);
+
                     mqttService.manageActuator(commandActuator);
                     statService.handleNewCommand(room.getIdRoom(), commandActuator);
                 }

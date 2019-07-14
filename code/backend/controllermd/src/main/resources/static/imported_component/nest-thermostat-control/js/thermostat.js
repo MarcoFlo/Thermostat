@@ -89,7 +89,7 @@ var thermostatDial = (function () {
         options = {
             diameter: options.diameter || 400,
             minValue: options.minValue || 10, // Minimum value for target temperature
-            maxValue: options.maxValue || 30, // Maximum value for target temperature
+            maxValue: options.maxValue || 35, // Maximum value for target temperature
             numTicks: options.numTicks || 150, // Number of tick lines to display around the dial
             onSetTargetTemperature: options.onSetTargetTemperature || function () {
             }, // Function called when new target temperature set by the dial
