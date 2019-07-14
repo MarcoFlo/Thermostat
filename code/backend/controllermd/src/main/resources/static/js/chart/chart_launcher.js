@@ -61,7 +61,7 @@ function getStats(room) {
 
             }
                 else {
-                console.log("No stats"); //TODO setup
+                console.log("No stats");
                 document.getElementById("no-stats").innerText = "Sorry, there are not available stats for this room";
 
                 var chart = document.getElementById('myChart');
@@ -72,7 +72,7 @@ function getStats(room) {
 
         }
     };
-    xhttp_stats.open("GET", "http://localhost:8080/setting/stats/" + room, true);
+    xhttp_stats.open("GET", window.location.origin + "/setting/stats/" + room, true);
     xhttp_stats.send();
 }
 

@@ -67,7 +67,7 @@ function resetPhoneForm() {
 
             }
         };
-        xhttp_select_room.open("GET", "http://localhost:8080/setting/room/resource/" + select_room.value, true);
+        xhttp_select_room.open("GET", window.location.origin + "/setting/room/resource/" + select_room.value, true);
         xhttp_select_room.send();
     } else {
         requestListFreeEsp(null);
@@ -104,7 +104,7 @@ function savePhoneForm() {
     if (room_name !== "" && espSelected.length !== 0 && sliceList[0].size === 4 && sliceList[1].size === 4) {
 
         var xhttp_room = new XMLHttpRequest();
-        xhttp_room.open("POST", "http://localhost:8080/setting/room/resource", true);
+        xhttp_room.open("POST", window.location.origin + "/setting/room/resource", true);
         xhttp_room.setRequestHeader("Content-Type", "application/json");
 
         xhttp_room.send(produceProgramJson(room_name, espSelected));

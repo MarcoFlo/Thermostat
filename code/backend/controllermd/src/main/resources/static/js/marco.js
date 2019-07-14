@@ -28,19 +28,14 @@ function setMqttRoom(idRoom) {
     client.subscribe("/temperature/" + room_list[idRoom]);
     currentRoom = idRoom;
     document.getElementById("room_name").innerText = room_list[currentRoom];
-    //InitialState();
-
-    //if(idRoom!=undefined){
-    //alert(room_list[currentRoom]);
-    //   get_backend(currentRoom);
-    //}
 }
 
 function onMessageArrived(message) {
     switch (message._getDestinationName()) {
         case "/temperature/" + room_list[currentRoom]: {
             var thermostatClientResource = JSON.parse(message.payloadString);
-            if (thermostatClientResource.desiredTemperature !== -1)
+            console.log(message.payloadString);
+             if (thermostatClientResource.desiredTemperature !== -1)
                 nest.target_temperature = thermostatClientResource.desiredTemperature;
             nest.ambient_temperature = thermostatClientResource.currentApparentTemperature;
             break;
@@ -64,20 +59,11 @@ function requestRoom() {
 
         }
     };
-    xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
+    xhttp_room.open("GET", window.location.origin + "/setting/room/list", true);
     xhttp_room.send();
 }
 
-function requestRoomList() {
-    var xhttp_room = new XMLHttpRequest();
-    xhttp_room.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            room_list = JSON.parse(xhttp_room.responseText);
-        }
-    };
-    xhttp_room.open("GET", "http://localhost:8080/setting/room/list", true);
-    xhttp_room.send();
-}
+
 
 /**
  * Function that handle the right/left click
@@ -101,17 +87,14 @@ function get_backend(desired_room) {
     var xhttp_backend = new XMLHttpRequest();
     xhttp_backend.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            // Typical action to be performed when the document is ready:
-            /*console.log(xhttp.responseText);*/
-            console.log("Entry backend");
-            var obj = JSON.parse(xhttp_backend.responseText);
 
-            //obj.isWinter = true;
+            var obj = JSON.parse(xhttp_backend.responseText);
+            console.log("Entry backend " + xhttp_backend.responseText);
+
             if (obj.isManual) {
                 retrieve_values("Manual", "heating");
             }
             if (obj.isWinter) {
-                //alert("entra");
                 retrieve_values("Winter","heating");
             }
             if (obj.isSummer) {
@@ -121,11 +104,14 @@ function get_backend(desired_room) {
                 retrieve_values("Winter","heating");
                 retrieve_values("AntiFreeze","heating");
             }
-            /*document.getElementById("demo").innerHTML = obj;*//*String separado por comas*/
-
+            if (obj.isLeave)
+            {
+                nest.away = true;
+                document.getElementById("main-container").style.pointerEvents = "none";
+            }
         }
     };
-    xhttp_backend.open("GET", "http://localhost:8080/temperature/current_room_state_resource/" + desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
+    xhttp_backend.open("GET", window.location.origin + "/temperature/current_room_state_resource/" + desired_room, true); /*filename='localhost:8080/setting/esp/free';*/
     xhttp_backend.send();
 }
 

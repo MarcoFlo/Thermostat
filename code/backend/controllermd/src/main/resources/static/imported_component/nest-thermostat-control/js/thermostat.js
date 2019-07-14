@@ -411,7 +411,7 @@ var thermostatDial = (function () {
                 }
                 var manualResource = {idRoom: room_list[currentRoom], desiredTemperature: self.target_temperature};
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", 'http://localhost:8080/temperature/manual', true);
+                xhr.open("POST", window.location.origin + '/temperature/manual', true);
                 xhr.setRequestHeader("Content-Type", "application/json");
                 xhr.send(JSON.stringify(manualResource));
                 console.log("sending manual resource " + self.target_temperature);

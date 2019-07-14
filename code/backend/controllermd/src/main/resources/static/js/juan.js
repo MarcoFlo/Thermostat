@@ -31,7 +31,7 @@ function requestWifiList() {
 
         }
     };
-    xhttp_wifi.open("GET", "http://localhost:8080/setting/wifi/list", true);
+    xhttp_wifi.open("GET", window.location.origin + "/setting/wifi/list", true);
     xhttp_wifi.send();
 }
 
@@ -62,7 +62,7 @@ function connectWifi() {
             }
         }
     };
-    xhr.open("POST", 'http://localhost:8080/setting/wifi/credentials', true);
+    xhr.open("POST", window.location.origin + '/setting/wifi/credentials', true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(wifi_selected));
 }
@@ -99,6 +99,8 @@ function createMapFromWifiList(obj) {
 }
 
 function change_color() {
+    nest.away = false;
+    document.getElementById("main-container").style.pointerEvents = "auto";
     var name = this.id;
     var value = this.value;
     var array = ["Summer", "Winter"];
@@ -109,14 +111,13 @@ function change_color() {
                 document.getElementById(name).value = 1;
                 document.getElementById(array[x]).className = "btn btn-secondary";
                 document.getElementById(array[x]).value = 0;
-                // var xhr = new XMLHttpRequest();
 
                 if (name === "Summer") {
                     antif_state = document.getElementById("AntiFreeze").value;
                     if ( antif_state == 0) {
                         nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.open("POST", window.location.origin + '/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     }else {
@@ -130,15 +131,10 @@ function change_color() {
                     if ( antif_state == 0) {
                         nest.hvac_state = 'heating';
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.open("POST", window.location.origin + '/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("winter");
-                    } /*else {
-                        document.getElementById(name).className = "btn btn-secondary m-1";
-                        document.getElementById(name).value = 0;
-                        document.getElementById(array[x]).className = "btn btn-primary m-1";
-                        document.getElementById(array[x]).value = 1;
-                    }*/
+                    }
                 }
             }
         } else if (value == 1) {
@@ -147,13 +143,12 @@ function change_color() {
                 document.getElementById(name).value = 0;
                 document.getElementById(array[x]).className = "btn btn-primary";
                 document.getElementById(array[x]).value = 1;
-                //nest.hvac_state = 'off';
                 if (array[x] === "Summer") {
                     antif_state = document.getElementById("AntiFreeze").value;
                     if ( antif_state == 0) {
                         nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                        xhr.open("POST", window.location.origin + '/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
                     } else {
@@ -165,7 +160,7 @@ function change_color() {
                 } else if (array[x] === "Winter") {
                     nest.hvac_state = 'heating';
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+                    xhr.open("POST", window.location.origin + '/temperature/wsa', true);
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send("winter");
                 }
@@ -176,60 +171,43 @@ function change_color() {
 
 
 function manual() {
+    nest.away = false;
     var name = this.id;
     var value = this.value;
     var xhr = new XMLHttpRequest();
     var idRoom = $($('h1').contents()[0]).text();
     var desiredTemperature = nest.target_temperature;
     var obj = {idRoom: idRoom, desiredTemperature: desiredTemperature};
-    //alert(obj.idRoom);
-    //alert(obj.desiredTemperature);
-    //alert(desiredTemperature);
-    //alert(as);
+
     if (value == 0) {
         document.getElementById(name).className = "btn btn-primary m-1";
         document.getElementById(name).value = 1;
         document.getElementById("AntiFreeze").className = "btn btn-secondary m-1";
         document.getElementById("AntiFreeze").value = 0;
         var jsonSend = JSON.stringify(obj);
-        xhr.open("POST", 'http://localhost:8080/temperature/manual', true);
+        xhr.open("POST", window.location.origin + '/temperature/manual', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
         document.getElementById("main-container").style.pointerEvents = "auto";
     } else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary m-1";
         document.getElementById(name).value = 0;
-        xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
+        xhr.open("POST", window.location.origin + '/temperature/programmed', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(idRoom);
-        //document.getElementById("thermostat").style.visibility = "hidden";
         document.getElementById("main-container").style.pointerEvents = "none";
-        document.getElementById("container-buttons").style.pointerEvents = "auto";
-        document.getElementById("left_button").style.pointerEvents = "auto";
-        document.getElementById("right_button").style.pointerEvents = "auto";
-
         nest.target_temperature = nest.ambient_temperature;
-        //nest.disabled = true;
-
-        /*document.getElementById("main-container").removeEventListener('mousedown', dragStart);
-        document.getElementById("main-container").removeEventListener('touchstart', dragStart);
-
-        document.getElementById("main-container").removeEventListener('mouseup', dragEnd);
-        document.getElementById("main-container").removeEventListener('mouseleave', dragEnd);
-        document.getElementById("main-container").removeEventListener('touchend', dragEnd);*/
-
-        //include('../../imported_component/nest-thermostat-control/js/thermostat.js');
-        //document.getElementById("main-container").removeEventListener('mousemove', dragMove);
-        //document.getElementById("main-container").removeEventListener('touchmove', dragMove);        
-
     }
 }
 
 function antifreeze() {
+    nest.away = false;
+    document.getElementById("main-container").style.pointerEvents = "auto";
+
+
     var name = this.id;
     var value = this.value;
     if (value == 0) {
-        var idRoom = $($('h1').contents()[0]).text();
         document.getElementById(name).className = "btn btn-primary m-1";
         document.getElementById(name).value = 1;
         document.getElementById("Summer").className = "btn btn-secondary";
@@ -240,39 +218,35 @@ function antifreeze() {
         document.getElementById("Winter").value = 1;
         nest.hvac_state = 'heating';
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", 'http://localhost:8080/temperature/wsa', true);
+        xhr.open("POST", window.location.origin + '/temperature/wsa', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send("antifreeze");
-        xhr = new XMLHttpRequest();
-        xhr.open("POST", 'http://localhost:8080/temperature/programmed', true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(idRoom);
     } else if (value == 1) {
         document.getElementById(name).className = "btn btn-secondary m-1";
         document.getElementById(name).value = 0;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.origin + '/temperature/wsa', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send("antifreeze");
     }
 }
 
-function Activate_Leave_Resource(){
+function activate_Leave_Resource(){
     if(this.value == 0){
         var hours = document.getElementById("time-hours-select").value.split(" ")[0];
-        //alert(hours);
         var days = document.getElementById("time-days-select").value.split(" ")[0];
-        //alert(days);
         var leaveTemperature = document.getElementById("temperature_leave").value;
-        //alert(leaveTemperature);
         var hourAmount = days*24 + parseInt(hours);
-        //alert(hourAmount);
-        document.getElementById("activate-leave").className = "btn btn-primary";
+        document.getElementById("activate-leave").className = "btn btn-primary btn-lg btn-block";
         document.getElementById("activate-leave").value = 1;
         var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
         var xhr = new XMLHttpRequest();
         var jsonSend = JSON.stringify(LeaveResource);
-        xhr.open("POST", 'http://localhost:8080/temperature/leave', true);
+        xhr.open("POST", window.location.origin + '/temperature/leave', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
     }else{
-        document.getElementById("activate-leave").className = "btn btn-secondary";
+        document.getElementById("activate-leave").className = "btn btn-secondary btn-lg btn-block";
         document.getElementById("activate-leave").value = 0;
     }
 }

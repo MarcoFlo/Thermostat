@@ -47,6 +47,6 @@ function requestListFreeEsp(espSelectedList) {
 
         }
     };
-    xhttp_esp.open("GET", "http://localhost:8080/setting/esp/free", true);
+    xhttp_esp.open("GET", window.location.origin + "/setting/esp/free", true);
     xhttp_esp.send();
 }
