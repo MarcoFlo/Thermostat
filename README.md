@@ -86,6 +86,7 @@ First found, if you have problem cloning this repository check youtube or ask me
 Before pushing(sending the code to git), remember to pull(download the new code if there is some)
 
 # HTTP endpoint description
+Not updated right now    
 https://docs.google.com/document/d/1TF6zZ8DTbSKHRjFNf6_r4kNfpuSn5rqgrSfVmJvNIGA/edit#heading=h.38xql5hyg87g
 
 # EXTRA
