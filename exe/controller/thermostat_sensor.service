@@ -1,6 +1,6 @@
 [Unit]
 Description=ThermostatService
-After=thermostat_controller
+After=thermostat_controller.service
 
 [Service]
 ExecStart=python3 mainSensor.py
