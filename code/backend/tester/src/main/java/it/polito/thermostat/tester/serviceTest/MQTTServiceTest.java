@@ -251,7 +251,7 @@ public class MQTTServiceTest {
     }
 
 
-    @Scheduled(fixedRate = 10000, initialDelay = 50000)
+    @Scheduled(fixedRate = 10000, initialDelay = 10000)
     public void newSensorData() throws MqttException {
         for (String idEsp : savedEsp) {
             Optional<ESP8266> checkEsp = esp8266Repository.findById(idEsp);
@@ -282,9 +282,9 @@ public class MQTTServiceTest {
         msg.setQos(2);
         mqttClient.publish("/esp8266/" + mainRoomCooler, msg);
 
-        TimeUnit.SECONDS.sleep(10);
-
-        createRoom(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater));
+//        TimeUnit.SECONDS.sleep(10);
+//
+//        createRoom(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater));
 
         logger.info("main room created");
     }
