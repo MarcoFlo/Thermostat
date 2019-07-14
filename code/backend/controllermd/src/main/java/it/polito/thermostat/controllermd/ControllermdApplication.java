@@ -153,7 +153,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
 
         //Main room creation
-        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), true, 25.0));
+        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, 25.0));
 
         //Main room program creation
         Program program = settingService.getDefaultProgram();
