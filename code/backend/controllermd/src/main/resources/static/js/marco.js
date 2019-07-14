@@ -3,7 +3,7 @@ var client;
 var room_list;
 
 function mqttLoad() {
-    client = new Paho.MQTT.Client('localhost', 9001, '/ws', 'frontend');
+    client = new Paho.MQTT.Client(window.location.hostname, 9001, '/ws', 'frontend');
 
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;

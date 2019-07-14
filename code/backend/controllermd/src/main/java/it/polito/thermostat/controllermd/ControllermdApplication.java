@@ -152,8 +152,8 @@ public class ControllermdApplication implements CommandLineRunner {
 //        esp8266Repository.deleteAll();
 
 
-        //Main room creation todo if c'è già
-        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), false, -1.0));
+        //Main room creation
+        roomRepository.save(new Room(mainRoomName, Arrays.asList(mainRoomSensor, mainRoomCooler, mainRoomHeater), true, 25.0));
 
         //Main room program creation
         Program program = settingService.getDefaultProgram();

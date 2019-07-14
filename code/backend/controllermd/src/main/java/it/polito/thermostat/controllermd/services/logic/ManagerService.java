@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -150,9 +148,10 @@ public class ManagerService {
                         else
                             commandActuator = new CommandActuator(esp8266.getIdEsp(), isSummer);
                     }
-                    else
+                    else {
+                        // turn off the heater in summer&viceversa
                         commandActuator = new CommandActuator(esp8266.getIdEsp(), false);
-
+                    }
                     mqttService.manageActuator(commandActuator);
                     statService.handleNewCommand(room.getIdRoom(), commandActuator);
                 }

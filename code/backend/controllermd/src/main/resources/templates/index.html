@@ -322,8 +322,7 @@
                         <div class="tab-pane fade " id="qr-code" role="tabpanel"
                              aria-labelledby="qr-code-qr">
                             <div class="row justify-content-center" id="ssss">
-                                <img src="http://localhost:8080/qr" style="width: 80vmin; height: 80vmin;"
-                                     id="image-qr">
+                                <img style="width: 80vmin; height: 80vmin;" id="image-qr">
                             </div>
                         </div>
 
@@ -423,6 +422,7 @@
 
     $('#settingsIcon').click(function (e) {
         $("#settings-modal").modal({backdrop: "static"});
+        $("#image-qr").attr("src", window.location.origin + "/qr");
     });
 
     $('#settings-modal').on('hide.bs.modal', function (e) {
