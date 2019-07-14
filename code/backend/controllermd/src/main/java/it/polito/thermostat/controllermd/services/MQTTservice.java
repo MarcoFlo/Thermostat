@@ -108,7 +108,6 @@ public class MQTTservice {
         String command = commandActuator.getCommandBoolean() ? "on" : "off";
         MqttMessage msg = new MqttMessage(command.getBytes());
         msg.setQos(2);
-        logger.info(commandActuator.toString());
         try {
             mqttClient.publish("/" + commandActuator.getIdEsp() + "/actuator", msg);
             mqttawService.sendEvent(commandActuator, 11);
