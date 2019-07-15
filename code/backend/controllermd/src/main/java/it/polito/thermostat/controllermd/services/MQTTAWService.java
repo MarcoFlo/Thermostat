@@ -54,6 +54,8 @@ public class MQTTAWService {
         clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
+        mqttClient.setKeepAliveInterval(10000000);
+        mqttClient.setMaxConnectionRetries(5);
         mqttClient.connect();
         mqttClient.subscribe(new NotificationTopic());
     }
