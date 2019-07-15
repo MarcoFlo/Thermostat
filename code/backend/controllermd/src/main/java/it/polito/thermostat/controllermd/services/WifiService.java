@@ -22,7 +22,6 @@ public class WifiService {
     Boolean wasAP;
 
     /**
-     *
      * @return the available net, iterating @count times to return the result with more entry
      */
     public List<WifiNetResource> getAvailableNet() {
@@ -82,6 +81,7 @@ public class WifiService {
 
     /**
      * Connect to a net that was not memorized inside wpa_supplicant.conf
+     *
      * @param essid
      * @param pw
      * @return true/false
@@ -117,7 +117,6 @@ public class WifiService {
     }
 
     /**
-     *
      * @param essid
      * @return the netNumber if the net is contained inside wpa_supplicant.conf
      */
@@ -139,7 +138,6 @@ public class WifiService {
 
 
     /**
-     *
      * @return -1 if we are not connected to any net or the net number
      */
     private Integer getCurrentNetNumber() {
@@ -161,7 +159,7 @@ public class WifiService {
 
     /**
      * Switch from station mode to access point mode
-     *
+     * <p>
      * wpa_cli -iwlan0 disable_network 2
      * echo albertengopi | sudo -S ip link set dev wlan0 down
      * echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0
@@ -191,8 +189,7 @@ public class WifiService {
      * automatic switch to ap if no net
      */
     @Scheduled(fixedRate = 20000)
-    public void switchToApIfNone()
-    {
+    public void switchToApIfNone() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 status"));
@@ -212,13 +209,12 @@ public class WifiService {
 
     /**
      * Switch to station mode from access point mdoe
-     *
+     * <p>
      * echo albertengopi | sudo -S systemctl stop dnsmasq.service
      * echo albertengopi | sudo -S systemctl stop hostapd.service
      * wpa_cli -iwlan0 enable_network 2
-     *
+     * <p>
      * echo albertengopi | sudo -S ip link set dev wlan0 up
-     *
      */
     private void switchToStation() {
         if (!isWindows) {
@@ -245,7 +241,6 @@ public class WifiService {
     }
 
     /**
-     *
      * @return true if station mode
      */
     private Boolean isStationMode() {
@@ -264,7 +259,7 @@ public class WifiService {
     /**
      * Handle the connection result
      * First of all start the interface
-     *
+     * <p>
      * ASSOCIATING : still trying, wait a sec
      * INACTIVE SCANNING : credentials were wrong / not connected
      * is present "id=netNumber" : success
@@ -285,7 +280,7 @@ public class WifiService {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
             }
-            if (result.indexOf("INACTIVE") != -1 || result.indexOf("SCANNING") != -1  || result.indexOf("DISCONNECTED") != -1 ) {
+            if (result.indexOf("INACTIVE") != -1 || result.indexOf("SCANNING") != -1 || result.indexOf("DISCONNECTED") != -1) {
                 execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
                 if (wasAP)
                     switchToAP();
@@ -305,16 +300,12 @@ public class WifiService {
     }
 
 
-    public Boolean isInternet()
-    {
+    public Boolean isInternet() {
         StringBuilder result = new StringBuilder();
         result.append(execService.execute("wpa_cli -iwlan0 status"));
-        if (result.indexOf("ssid") != -1) {
-            execService.execute(" wpa_cli -iwlan0 save_config");
-            return true;
-        }
-        else
-            return false;
-
+        Boolean res = result.indexOf("ssid") != -1;
+        if (!res)
+            logger.info(res.toString());
+        return res;
     }
 }
