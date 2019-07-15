@@ -70,7 +70,7 @@ public class MQTTAWService {
 
         if (wifiService.isInternet()) {
             String eventTopic = "pl19/event";
-            AWSIotQos qos = AWSIotQos.QOS1;
+            AWSIotQos qos = AWSIotQos.QOS0;
             AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
             try {
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
@@ -88,7 +88,7 @@ public class MQTTAWService {
     public class NotificationTopic extends AWSIotTopic {
         private Logger logger = LoggerFactory.getLogger(this.getClass());
         String notificationTopic = "pl19/notification";
-        AWSIotQos qos = AWSIotQos.QOS1;
+        AWSIotQos qos = AWSIotQos.QOS0;
 
         public NotificationTopic() {
             super("pl19/notification", AWSIotQos.QOS1);

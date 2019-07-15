@@ -305,7 +305,7 @@ public class WifiService {
         result.append(execService.execute("wpa_cli -iwlan0 status"));
         Boolean res = result.indexOf("ssid") != -1;
         if (!res)
-            logger.info(res.toString());
+            logger.info(result.toString());
         return res;
     }
 }
