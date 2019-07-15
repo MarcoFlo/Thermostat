@@ -31,6 +31,9 @@ public class MQTTAWService {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    WifiService wifiService;
+
     @Value("${clientEndpoint}")
     String clientEndpoint;
 
@@ -64,15 +67,18 @@ public class MQTTAWService {
      * @param event_id
      */
     public void sendEvent(Object event, Integer event_id) {
-        String eventTopic = "pl19/event";
-        AWSIotQos qos = AWSIotQos.QOS1;
-        AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
-        try {
-            awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
+
+        if (wifiService.isInternet()) {
+            String eventTopic = "pl19/event";
+            AWSIotQos qos = AWSIotQos.QOS1;
+            AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
+            try {
+                awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
 //          logger.info("This event will be published" + awsIotMessage.getStringPayload());
-            mqttClient.publish(awsIotMessage);
-        } catch (AWSIotException | JsonProcessingException e) {
-            logger.error("Error eventTopic" + e.toString());
+                mqttClient.publish(awsIotMessage);
+            } catch (AWSIotException | JsonProcessingException e) {
+                logger.error("Error eventTopic" + e.toString());
+            }
         }
     }
 

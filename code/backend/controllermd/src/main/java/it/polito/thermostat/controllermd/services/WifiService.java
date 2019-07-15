@@ -1,5 +1,6 @@
 package it.polito.thermostat.controllermd.services;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -301,5 +302,19 @@ public class WifiService {
         }
         logger.info("handleConnectResult doesn't work on windows");
         return false;
+    }
+
+
+    public Boolean isInternet()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append(execService.execute("wpa_cli -iwlan0 status"));
+        if (result.indexOf("ssid") != -1) {
+            execService.execute(" wpa_cli -iwlan0 save_config");
+            return true;
+        }
+        else
+            return false;
+
     }
 }
