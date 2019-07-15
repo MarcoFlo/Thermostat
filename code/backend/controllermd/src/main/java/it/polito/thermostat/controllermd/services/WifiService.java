@@ -261,8 +261,8 @@ public class WifiService {
      * Handle the connection result
      * First of all start the interface
      *
-     * SCANNING : still trying, wait a sec
-     * INACTIVE : credentials were wrong
+     * ASSOCIATING : still trying, wait a sec
+     * INACTIVE SCANNING : credentials were wrong / not connected
      * is present "id=netNumber" : success
      *
      * @param netNumber
@@ -277,18 +277,18 @@ public class WifiService {
             logger.info(result.toString());
 
 
-            while (result.indexOf("SCANNING") != -1) {
+            while (result.indexOf("ASSOCIATING") != -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
             }
-            if (result.indexOf("INACTIVE") != -1) {
+            if (result.indexOf("INACTIVE") != -1 || result.indexOf("SCANNING") != -1) {
                 execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
                 if (wasAP)
                     switchToAP();
                 logger.info("handleConnectResult -> credenziali sbagliate");
                 return false;
             }
-            if (result.indexOf("id") != -1) {
+            if (result.indexOf("ssid") != -1) {
                 execService.execute(" wpa_cli -iwlan0 save_config");
                 logger.info("handleConnectResult credenziali ok");
                 return true;
