@@ -201,8 +201,11 @@ public class WifiService {
                 result.append(execService.execute("sleep 1.5s | wpa_cli -iwlan0 status"));
                 if (result.indexOf("id") == -1) {
                     switchToAP();
+                    logger.info("switching to ap");
                 }
             }
+            logger.info(" NOOOO switching to ap");
+
         }
     }
 
