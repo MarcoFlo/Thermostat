@@ -187,7 +187,7 @@ public class WifiService {
     /**
      * automatic switch to ap if no net
      */
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 20000, initialDelay = 10000)
     public void switchToApIfNone() {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();

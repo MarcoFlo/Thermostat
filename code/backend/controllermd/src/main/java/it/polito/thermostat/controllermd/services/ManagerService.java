@@ -57,7 +57,7 @@ public class ManagerService {
      * Scheduled task that manage the temperature for each room
      * we check that there is at the first wsal to start working
      */
-    @Scheduled(fixedRate = 2000, initialDelay = 4000)
+    @Scheduled(fixedRate = 2000, initialDelay = 6000)
     public void scheduleFixedRateTask() {
         Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
         if (checkWSAL.isPresent()) {
