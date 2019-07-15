@@ -51,7 +51,7 @@ public class MQTTAWService {
 
     @PostConstruct
     public void init() throws AWSIotException {
-        clientId += HostAddressGetter.getMAC().replace(":", "") + "-" + new Random().nextInt(100);
+        clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
         mqttClient.connect();
