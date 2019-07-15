@@ -1,6 +1,5 @@
 package it.polito.thermostat.controllermd.services;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -300,12 +299,4 @@ public class WifiService {
     }
 
 
-    public Boolean isInternet() {
-        StringBuilder result = new StringBuilder();
-        result.append(execService.execute("wpa_cli -iwlan0 status"));
-        Boolean res = result.indexOf("ssid") != -1;
-        if (!res)
-            logger.info(result.toString());
-        return res;
-    }
 }
