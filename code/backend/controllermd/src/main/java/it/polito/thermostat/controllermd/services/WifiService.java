@@ -4,6 +4,7 @@ import it.polito.thermostat.controllermd.resources.WifiNetResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -183,6 +184,26 @@ public class WifiService {
             }
         }
         logger.info("switchToAp doesn't work on windows");
+    }
+
+    /**
+     * automatic switch to ap if no net
+     */
+    @Scheduled(fixedRate = 20000)
+    public void switchToApIfNone()
+    {
+        if (!isWindows) {
+            StringBuilder result = new StringBuilder();
+            result.append(execService.execute("wpa_cli -iwlan0 status | grep SCANNING"));
+
+            if (result.length() != 0) {
+                result.setLength(0);
+                result.append(execService.execute("sleep 1.5s | wpa_cli -iwlan0 status | grep SCANNING"));
+                if (result.length() != 0) {
+                    switchToAP();
+                }
+            }
+        }
     }
 
     /**
