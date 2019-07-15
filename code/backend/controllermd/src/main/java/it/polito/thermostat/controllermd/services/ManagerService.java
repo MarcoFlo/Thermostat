@@ -57,11 +57,10 @@ public class ManagerService {
      * Scheduled task that manage the temperature for each room
      * we check that there is at the first wsal to start working
      */
-    @Scheduled(fixedRate = 1500)
+    @Scheduled(fixedRate = 1500, initialDelay = 4000)
     public void scheduleFixedRateTask() {
         Optional<WSAL> checkWSAL = wsalRepository.findById("mainwsal");
-        if (checkWSAL.isPresent())
-        {
+        if (checkWSAL.isPresent()) {
             WSAL currentWSAL = checkWSAL.get();
             List<Room> roomList = ((List<Room>) roomRepository.findAll());
             if (currentWSAL.getIsLeave()) {
@@ -121,11 +120,12 @@ public class ManagerService {
         else
             dailyProgram = programRoom.getWeeklyList().get(1);
 
-        Program.HourlyProgram programResult = dailyProgram.getDailyMap().values().stream()
+        Optional<Program.HourlyProgram> checkHourlyProgram = dailyProgram.getDailyMap().values().stream()
                 .filter(hourlyProgram -> hourlyProgram.getTime().isAfter(when.toLocalTime()))
-                .min(Comparator.comparing(o -> o.getTime()))
-                .get();
-        return programResult;
+                .min(Comparator.comparing(Program.HourlyProgram::getTime));
+
+        return checkHourlyProgram.orElseGet(() -> dailyProgram.getDailyMap().get("wake"));
+
     }
 
     private void manageESP(Room room, Double desiredTemperature, Boolean isSummer, Boolean isProgrammed) {
@@ -152,8 +152,7 @@ public class ManagerService {
                             commandActuator = new CommandActuator(esp8266.getIdEsp(), !isSummer);
                         else
                             commandActuator = new CommandActuator(esp8266.getIdEsp(), isSummer);
-                    }
-                    else {
+                    } else {
                         // turn off the heater in summer&viceversa
                         commandActuator = new CommandActuator(esp8266.getIdEsp(), false);
                     }

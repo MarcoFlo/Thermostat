@@ -40,6 +40,12 @@ public class DebugRestController {
         wsalRepository.deleteAll();
     }
 
+    @PostMapping("/debug/deletall")
+    public void deleteAll() {
+        wsalRepository.deleteAll();
+        roomRepository.deleteAll();
+    }
+
     @PostMapping("/debug/getall")
     public void getAll() {
         logger.info(wsalRepository.findAll().toString());
