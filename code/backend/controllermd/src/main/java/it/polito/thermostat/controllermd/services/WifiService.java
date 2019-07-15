@@ -194,12 +194,12 @@ public class WifiService {
     {
         if (!isWindows) {
             StringBuilder result = new StringBuilder();
-            result.append(execService.execute("wpa_cli -iwlan0 status | grep SCANNING"));
+            result.append(execService.execute("wpa_cli -iwlan0 status"));
 
-            if (result.length() != 0) {
+            if (result.indexOf("id") == -1) {
                 result.setLength(0);
-                result.append(execService.execute("sleep 1.5s | wpa_cli -iwlan0 status | grep SCANNING"));
-                if (result.length() != 0) {
+                result.append(execService.execute("sleep 1.5s | wpa_cli -iwlan0 status"));
+                if (result.indexOf("id") == -1) {
                     switchToAP();
                 }
             }
