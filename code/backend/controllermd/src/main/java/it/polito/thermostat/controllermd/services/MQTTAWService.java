@@ -52,10 +52,11 @@ public class MQTTAWService {
 
     @PostConstruct
     public void init() throws AWSIotException {
-        clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
+//        clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
         if (wifiService.isInternet()) {
+            mqttClient.setCleanSession(true);
             mqttClient.connect();
             mqttClient.subscribe(new NotificationTopic());
         }
@@ -74,14 +75,8 @@ public class MQTTAWService {
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
-        if (wifiService.isInternet() && mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.DISCONNECTED)) {
-            try {
-                mqttClient.connect();
-                mqttClient.subscribe(new NotificationTopic());
+        if (wifiService.isInternet()) {
 
-            } catch (AWSIotException e) {
-                e.printStackTrace();
-            }
             try {
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
 //          logger.info("This event will be published" + awsIotMessage.getStringPayload());
@@ -92,37 +87,38 @@ public class MQTTAWService {
         }
     }
 
+
+/**
+ * To handle the notification topic
+ */
+public class NotificationTopic extends AWSIotTopic {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    String notificationTopic = "pl19/notification";
+    AWSIotQos qos = AWSIotQos.QOS1;
+
+    public NotificationTopic() {
+        super("pl19/notification", AWSIotQos.QOS1);
+    }
+
     /**
-     * To handle the notification topic
+     * To react when ping event occurs
+     *
+     * @param message
      */
-    public class NotificationTopic extends AWSIotTopic {
-        private Logger logger = LoggerFactory.getLogger(this.getClass());
-        String notificationTopic = "pl19/notification";
-        AWSIotQos qos = AWSIotQos.QOS1;
-
-        public NotificationTopic() {
-            super("pl19/notification", AWSIotQos.QOS1);
-        }
-
-        /**
-         * To react when ping event occurs
-         *
-         * @param message
-         */
-        @Override
-        public void onMessage(AWSIotMessage message) {
-            try {
-                PingAWS request = objectMapper.readValue(message.getStringPayload(), PingAWS.class);
-                PingAWS response = new PingAWS(request.getEvent().getSequence());
-                AWSIotMessage awsIotMessage = new AWSIotMessage(notificationTopic, qos);
-                awsIotMessage.setStringPayload(objectMapper.writeValueAsString(response));
-                mqttClient.publish(awsIotMessage);
-                logger.info("This has been published" + awsIotMessage.getStringPayload());
-            } catch (IOException | AWSIotException e) {
-                logger.error("Error NotificationTopic" + e.toString());
-            }
+    @Override
+    public void onMessage(AWSIotMessage message) {
+        try {
+            PingAWS request = objectMapper.readValue(message.getStringPayload(), PingAWS.class);
+            PingAWS response = new PingAWS(request.getEvent().getSequence());
+            AWSIotMessage awsIotMessage = new AWSIotMessage(notificationTopic, qos);
+            awsIotMessage.setStringPayload(objectMapper.writeValueAsString(response));
+            mqttClient.publish(awsIotMessage);
+            logger.info("This has been published" + awsIotMessage.getStringPayload());
+        } catch (IOException | AWSIotException e) {
+            logger.error("Error NotificationTopic" + e.toString());
         }
     }
+}
 }
 
 
