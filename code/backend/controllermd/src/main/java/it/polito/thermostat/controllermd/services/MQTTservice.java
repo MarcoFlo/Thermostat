@@ -141,8 +141,8 @@ public class MQTTservice {
             default:
                 logger.error("mqttService/esp8266Connection esp msg err");
         }
-
-        esp8266Repository.save(esp8266);
+        if (!esp8266Repository.findById(esp8266.getIdEsp()).isPresent())
+            esp8266Repository.save(esp8266);
 
         mqttawService.sendEvent(esp8266, 10);
 

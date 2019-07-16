@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.thermostat.controllermd.configuration.HostAddressGetter;
 import it.polito.thermostat.controllermd.resources.MQTTaws.EventAWS;
 import it.polito.thermostat.controllermd.resources.MQTTaws.PingAWS;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,13 @@ public class MQTTAWService {
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
         mqttClient.setMaxConnectionRetries(0);
         mqttClient.setMaxOfflineQueueSize(3);
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setMaxInflight(1000); // Default = 10
+//        client.connect(options);
         if (wifiService.isInternet()) {
             mqttClient.setCleanSession(true);
             mqttClient.connect();
-//            mqttClient.subscribe(new NotificationTopic());
+            mqttClient.subscribe(new NotificationTopic());
         }
     }
 
@@ -75,14 +79,14 @@ public class MQTTAWService {
      */
     public void sendEvent(Object event, Integer event_id) {
         String eventTopic = "pl19/event";
-        AWSIotQos qos = AWSIotQos.QOS1;
+        AWSIotQos qos = AWSIotQos.QOS0;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         if (wifiService.isInternet()) {
             if (!mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.CONNECTED) && !mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.RECONNECTING) ){
                 try {
                     mqttClient.setCleanSession(true);
                     mqttClient.connect();
-//                    mqttClient.subscribe(new NotificationTopic());
+                    mqttClient.subscribe(new NotificationTopic());
                 } catch (AWSIotException e) {
                     try {
                         mqttClient.disconnect();
@@ -110,10 +114,10 @@ public class MQTTAWService {
     public class NotificationTopic extends AWSIotTopic {
         private Logger logger = LoggerFactory.getLogger(this.getClass());
         String notificationTopic = "pl19/notification";
-        AWSIotQos qos = AWSIotQos.QOS1;
+        AWSIotQos qos = AWSIotQos.QOS0;
 
         public NotificationTopic() {
-            super("pl19/notification", AWSIotQos.QOS1);
+            super("pl19/notification", AWSIotQos.QOS0);
         }
 
         /**

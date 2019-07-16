@@ -46,6 +46,14 @@ public class DebugRestController {
         roomRepository.deleteAll();
     }
 
+
+    @PostMapping("/debug/berniesp")
+    public void deleteEspBerni() {
+        esp8266Repository.deleteById("esp2sensor");
+        esp8266Repository.deleteById("esp1actuator");
+        roomRepository.deleteById("Kitchen");
+    }
+
     @PostMapping("/debug/getall")
     public void getAll() {
         logger.info(wsalRepository.findAll().toString());

@@ -95,7 +95,7 @@ public class ManagerService {
 
     private void manageRoom(Room room, Boolean isSummer) {
         if (room.getIsManual()) {
-            logger.info(room.getIdRoom() + "isManual");
+//            logger.info(room.getIdRoom() + "isManual");
             manageESP(room, room.getDesiredTemperature(), isSummer, false);
         } else {
             logger.info(room.getIdRoom() + "isProgramed");
