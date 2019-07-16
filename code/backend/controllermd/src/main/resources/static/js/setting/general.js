@@ -14,6 +14,7 @@ function rotateRoom(currentRoom, id) {
 }
 
 function toggleButton() {
+    console.log("touchstart event");
     if (this.classList.contains("btn-secondary"))
         this.className = "btn btn-primary";
     else

@@ -52,7 +52,7 @@ window.onload = function () {
     document.getElementById("reset").addEventListener("touchstart", resetPhoneForm);
 
     document.getElementById("weekend").addEventListener("click", toggleButton);
-    document.getElementById("weekend").addEventListener("touchend", toggleButton);
+    document.getElementById("weekend").addEventListener("touchstart", toggleButton);
 
 
     document.getElementById("time-slice-select").addEventListener("change", saveSliceData);
