@@ -279,7 +279,7 @@ public class WifiService {
             logger.info(result.toString());
 
 
-            while (result.indexOf("ASSOCIATING") != -1 || result.indexOf("SCANNING") != -1) {
+            while (result.indexOf("ASSOCIATING") != -1 || result.indexOf("SCANNING") != -1 || result.indexOf("DISCONNECTED") != -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
             }
