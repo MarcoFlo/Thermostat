@@ -73,10 +73,8 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                String res = getB("ip");
-                if (res == null)
-                    return "192.168.5.5";
-                return res;
+                return getB("ip");
+
             } catch (SocketException e) {
                 i++;
             }
