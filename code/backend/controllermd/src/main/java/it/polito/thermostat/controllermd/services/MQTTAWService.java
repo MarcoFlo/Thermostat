@@ -55,7 +55,7 @@ public class MQTTAWService {
         clientId += HostAddressGetter.getMAC().replace(":", "") + "-" + new Random().nextInt(1000);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
-        mqttClient.setMaxConnectionRetries(1);
+        mqttClient.setMaxConnectionRetries(0);
         mqttClient.setMaxOfflineQueueSize(3);
         if (wifiService.isInternet()) {
             mqttClient.setCleanSession(true);
