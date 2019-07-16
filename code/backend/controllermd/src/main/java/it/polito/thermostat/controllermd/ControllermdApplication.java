@@ -165,7 +165,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
         mqtTservice.subscribeToPresentEsp();
 
-        logger.info(isWindows + "2");
+        logger.info(System.getProperty("os.name"));
     }
 
 
