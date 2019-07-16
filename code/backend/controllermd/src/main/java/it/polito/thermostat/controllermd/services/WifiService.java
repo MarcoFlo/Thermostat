@@ -168,21 +168,20 @@ public class WifiService {
      */
     public void switchToAP() {
         if (!isWindows) {
-            if (isStationMode()) {
-                int netNumber = getCurrentNetNumber();
-                StringBuilder disable_network = new StringBuilder();
+            int netNumber = getCurrentNetNumber();
+            StringBuilder disable_network = new StringBuilder();
 
-                if (netNumber != -1)
-                    disable_network.append("wpa_cli -iwlan0 disable_network " + netNumber + " | ");
+            if (netNumber != -1)
+                disable_network.append("wpa_cli -iwlan0 disable_network " + netNumber + " | ");
 
-                execService.execute(disable_network + "echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
+            execService.execute(disable_network + "echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
 //                if (!isStationMode())
 //                    logger.info("switchToAP okay");
 //                else
 //                    logger.error("switchToAP error");
-                wasAP = true;
-                return;
-            }
+            wasAP = true;
+            return;
+
         }
         logger.info("switchToAp doesn't work on windows");
     }
