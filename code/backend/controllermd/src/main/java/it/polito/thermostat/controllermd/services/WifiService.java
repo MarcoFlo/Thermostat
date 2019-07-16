@@ -120,21 +120,20 @@ public class WifiService {
      * @return the netNumber if the net is contained inside wpa_supplicant.conf
      */
     private Integer isKnownNet(String essid) {
+
+        if (!isWindows) {
+            StringBuilder result = new StringBuilder();
+            result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep " + essid));
+            if (result.length() == 0) {
+                logger.info("isKnownNet, " + essid + " sconosciuta");
+                return -1;
+            } else {
+                logger.info("isKnownNet, " + essid + " nota");
+                return Integer.valueOf(result.substring(0, result.indexOf("\t")));
+            }
+        }
+        logger.info("isKnownNet doesn't work on windows");
         return -1;
-//
-//        if (!isWindows) {
-//            StringBuilder result = new StringBuilder();
-//            result.append(execService.execute("wpa_cli -iwlan0 list_networks | grep " + essid));
-//            if (result.length() == 0) {
-//                logger.info("isKnownNet, " + essid + " sconosciuta");
-//                return -1;
-//            } else {
-//                logger.info("isKnownNet, " + essid + " nota");
-//                return Integer.valueOf(result.substring(0, result.indexOf("\t")));
-//            }
-//        }
-//        logger.info("isKnownNet doesn't work on windows");
-//        return -1;
     }
 
 
@@ -239,6 +238,7 @@ public class WifiService {
             } else {
                 wasAP = false;
             }
+            return;
         }
         logger.info("switchToStation doesn't work on windows");
     }
