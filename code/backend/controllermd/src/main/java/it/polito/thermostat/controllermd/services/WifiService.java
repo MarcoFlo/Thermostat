@@ -277,23 +277,33 @@ public class WifiService {
 
             logger.info(result.toString());
 
-
+            int i = 0;
             while (result.indexOf("ASSOCIATING") != -1 || result.indexOf("SCANNING") != -1 || result.indexOf("DISCONNECTED") != -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
+                if (i == 7) {
+                    execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
+                    if (wasAP)
+                        switchToAP();
+                    logger.info("handleConnectResult -> credenziali sbagliate");
+                    return false;
+                }
+                i++;
             }
             if (result.indexOf("ssid") != -1) {
                 execService.execute(" wpa_cli -iwlan0 save_config");
                 logger.info("handleConnectResult credenziali ok");
                 wasAP = false;
                 return true;
-            } else if (result.indexOf("INACTIVE") != -1) {
-                execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
-                if (wasAP)
-                    switchToAP();
-                logger.info("handleConnectResult -> credenziali sbagliate");
-                return false;
             }
+
+//            if (result.indexOf("INACTIVE") != -1) {
+//                execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
+//                if (wasAP)
+//                    switchToAP();
+//                logger.info("handleConnectResult -> credenziali sbagliate");
+//                return false;
+//            }
 
             logger.info("Unexpected result handleConnectResult" + result.toString());
             return false;
