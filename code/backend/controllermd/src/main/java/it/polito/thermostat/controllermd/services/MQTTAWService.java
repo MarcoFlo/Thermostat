@@ -64,7 +64,7 @@ public class MQTTAWService {
         if (wifiService.isInternet()) {
             mqttClient.setCleanSession(true);
             mqttClient.connect();
-            mqttClient.subscribe(new NotificationTopic());
+//            mqttClient.subscribe(new NotificationTopic());
         }
     }
 
@@ -86,7 +86,7 @@ public class MQTTAWService {
                 try {
                     mqttClient.setCleanSession(true);
                     mqttClient.connect();
-                    mqttClient.subscribe(new NotificationTopic());
+//                    mqttClient.subscribe(new NotificationTopic());
                 } catch (AWSIotException e) {
                     try {
                         mqttClient.disconnect();
