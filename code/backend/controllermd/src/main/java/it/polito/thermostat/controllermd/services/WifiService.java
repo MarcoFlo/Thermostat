@@ -281,7 +281,7 @@ public class WifiService {
             while (result.indexOf("ASSOCIATING") != -1 || result.indexOf("SCANNING") != -1 || result.indexOf("DISCONNECTED") != -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
-                if (i == 20) {
+                if (i == 24) {
                     execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
                     if (wasAP)
                         switchToAP();

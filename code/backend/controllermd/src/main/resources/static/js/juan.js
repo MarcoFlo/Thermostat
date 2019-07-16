@@ -55,9 +55,9 @@ function connectWifi() {
     xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var res = xhr.responseText;
-            if(res === "true"){
+            if (res === "true") {
                 document.getElementById("successful").style.display = "block";
-            }else{
+            } else {
                 document.getElementById("fail").style.display = "block";
             }
         }
@@ -74,20 +74,20 @@ function wifiSelection() {
             this.classList.contains("btn-secondary") ? this.className = "btn btn-primary btn-block" : this.className = "btn btn-secondary btn-block";
         else {
             children[i].children[0].className = "btn btn-secondary btn-block";
-            $('#collapseKeyboard').collapse('hide');
+            // $('#collapseKeyboard').collapse('hide');
 
         }
     }
 
-    if (wifiMap.get(this.id).isKnown) {
-        console.log("hide");
-        $('#collapseKeyboard').collapse('hide');
-    } else {
-        console.log("show");
+    // if (wifiMap.get(this.id).isKnown) {
+    //     console.log("hide");
+    //     $('#collapseKeyboard').collapse('hide');
+    // } else {
+    //     console.log("show");
 
-        $('#collapseKeyboard').collapse('show');
-
-    }
+    $('#collapseKeyboard').collapse('show');
+    document.getElementById("keyboardInput").value = "";
+    // }
 }
 
 function createMapFromWifiList(obj) {
@@ -114,13 +114,13 @@ function change_color() {
 
                 if (name === "Summer") {
                     antif_state = document.getElementById("AntiFreeze").value;
-                    if ( antif_state == 0) {
+                    if (antif_state == 0) {
                         nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", window.location.origin + '/temperature/wsa', true);
                         xhr.setRequestHeader("Content-Type", "application/json");
                         xhr.send("summer");
-                    }else {
+                    } else {
                         document.getElementById(name).className = "btn btn-secondary";
                         document.getElementById(name).value = 0;
                         document.getElementById(array[x]).className = "btn btn-primary";
@@ -128,7 +128,7 @@ function change_color() {
                     }
                 } else if (name === "Winter") {
                     antif_state = document.getElementById("AntiFreeze").value;
-                    if ( antif_state == 0) {
+                    if (antif_state == 0) {
                         nest.hvac_state = 'heating';
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", window.location.origin + '/temperature/wsa', true);
@@ -145,7 +145,7 @@ function change_color() {
                 document.getElementById(array[x]).value = 1;
                 if (array[x] === "Summer") {
                     antif_state = document.getElementById("AntiFreeze").value;
-                    if ( antif_state == 0) {
+                    if (antif_state == 0) {
                         nest.hvac_state = 'cooling';
                         var xhr = new XMLHttpRequest();
                         xhr.open("POST", window.location.origin + '/temperature/wsa', true);
@@ -234,12 +234,12 @@ function antifreeze() {
     }
 }
 
-function activate_Leave_Resource(){
-    if(this.value == 0){
+function activate_Leave_Resource() {
+    if (this.value == 0) {
         var hours = document.getElementById("time-hours-select").value.split(" ")[0];
         var days = document.getElementById("time-days-select").value.split(" ")[0];
         var leaveTemperature = document.getElementById("temperature_leave").value;
-        var hourAmount = days*24 + parseInt(hours);
+        var hourAmount = days * 24 + parseInt(hours);
         document.getElementById("activate-leave").className = "btn btn-primary btn-lg btn-block";
         document.getElementById("activate-leave").value = 1;
         var LeaveResource = {leaveTemperature: leaveTemperature, hourAmount: hourAmount};
@@ -248,7 +248,7 @@ function activate_Leave_Resource(){
         xhr.open("POST", window.location.origin + '/temperature/leave', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(jsonSend);
-    }else{
+    } else {
         document.getElementById("activate-leave").className = "btn btn-secondary btn-lg btn-block";
         document.getElementById("activate-leave").value = 0;
     }
