@@ -84,6 +84,12 @@ public class MQTTAWService {
                     mqttClient.connect();
 //                    mqttClient.subscribe(new NotificationTopic());
                 } catch (AWSIotException e) {
+                    try {
+                        mqttClient.disconnect();
+                        mqttClient.connect();
+                    } catch (AWSIotException ex) {
+                        ex.printStackTrace();
+                    }
                     logger.info(e.toString());
                 }
             }
