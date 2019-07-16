@@ -1,6 +1,7 @@
 package it.polito.thermostat.controllermd.services;
 
 import com.amazonaws.services.iot.client.*;
+import com.amazonaws.services.iot.client.core.AwsIotConnection;
 import com.amazonaws.services.iot.client.sample.sampleUtil.SampleUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,7 +74,7 @@ public class MQTTAWService {
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
-        if (wifiService.isInternet()) {
+        if (wifiService.isInternet() && mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.DISCONNECTED)) {
             try {
                 mqttClient.connect();
                 mqttClient.subscribe(new NotificationTopic());
