@@ -164,6 +164,8 @@ public class ControllermdApplication implements CommandLineRunner {
         logger.info("Main room saved");
 
         mqtTservice.subscribeToPresentEsp();
+
+        logger.info(isWindows + "2");
     }
 
 

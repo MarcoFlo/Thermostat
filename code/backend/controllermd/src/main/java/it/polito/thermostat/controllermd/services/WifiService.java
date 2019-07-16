@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class WifiService {
-    private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private boolean isWindows = false;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
