@@ -36,6 +36,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 import javax.annotation.PostConstruct;
+import java.time.LocalTime;
 import java.util.Arrays;
 
 
@@ -165,7 +166,7 @@ public class ControllermdApplication implements CommandLineRunner {
 
         mqtTservice.subscribeToPresentEsp();
 
-        logger.info(System.getProperty("os.name"));
+        logger.info(LocalTime.now().toString());
     }
 
 
