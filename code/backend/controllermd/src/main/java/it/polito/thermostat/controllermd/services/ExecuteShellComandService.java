@@ -20,6 +20,7 @@ public class ExecuteShellComandService {
      * @return
      */
     public StringBuilder execute(String command) {
+        logger.info("in");
         ProcessBuilder builder = new ProcessBuilder();
         if (isWindows) {
             builder.command("cmd.exe", "/c", command);
@@ -44,6 +45,8 @@ public class ExecuteShellComandService {
             e.printStackTrace();
         }
         assert exitCode == 0;
+        logger.info("out");
+
         return stringBuilder;
     }
 

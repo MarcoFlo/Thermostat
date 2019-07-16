@@ -299,4 +299,17 @@ public class WifiService {
     }
 
 
+    public Boolean isInternet()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append(execService.execute("wpa_cli -iwlan0 status"));
+        if (result.indexOf("ssid") != -1) {
+            execService.execute(" wpa_cli -iwlan0 save_config");
+            return true;
+        }
+        else
+            return false;
+
+    }
+
 }

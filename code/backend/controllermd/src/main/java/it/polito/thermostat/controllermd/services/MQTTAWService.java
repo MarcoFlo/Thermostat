@@ -51,13 +51,15 @@ public class MQTTAWService {
 
     @PostConstruct
     public void init() throws AWSIotException {
-//        clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
-//        KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
-//        mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
-//        mqttClient.connect();
-//        mqttClient.subscribe(new NotificationTopic());
-    }
+        if (wifiService.isInternet()) {
 
+        clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
+        KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
+        mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
+        mqttClient.connect();
+        mqttClient.subscribe(new NotificationTopic());
+        }
+    }
     /**
      * Event id:
      * - new esp = 10
@@ -71,15 +73,16 @@ public class MQTTAWService {
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
-//        try {
-//            awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
-////          logger.info("This event will be published" + awsIotMessage.getStringPayload());
-//            mqttClient.publish(awsIotMessage);
-//        } catch (AWSIotException | JsonProcessingException e) {
-//            logger.error("Error eventTopic" + e.toString());
-//        }
+        if (wifiService.isInternet()) {
+            try {
+                awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
+//          logger.info("This event will be published" + awsIotMessage.getStringPayload());
+                mqttClient.publish(awsIotMessage);
+            } catch (AWSIotException | JsonProcessingException e) {
+                logger.error("Error eventTopic" + e.toString());
+            }
+        }
     }
-
 
     /**
      * To handle the notification topic
