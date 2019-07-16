@@ -76,7 +76,7 @@ public class MQTTAWService {
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         if (wifiService.isInternet()) {
-            if (!mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.CONNECTED)) {
+            if (!mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.CONNECTED) && !mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.RECONNECTING) ){
                 try {
                     mqttClient.setCleanSession(true);
                     mqttClient.connect();
