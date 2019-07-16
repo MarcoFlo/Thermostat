@@ -166,7 +166,6 @@ public class ControllermdApplication implements CommandLineRunner {
 
         mqtTservice.subscribeToPresentEsp();
 
-        logger.info(LocalTime.now().toString());
     }
 
 
