@@ -175,10 +175,12 @@ public class WifiService {
                     disable_network.append("wpa_cli -iwlan0 disable_network " + netNumber + " | ");
 
                 execService.execute(disable_network + "echo albertengopi | sudo -S ip link set dev wlan0 down | echo albertengopi | sudo -S ip addr add 192.168.4.1/24 dev wlan0 | echo albertengopi | sudo -S systemctl restart dnsmasq.service | echo albertengopi | sudo -S systemctl restart hostapd.service");
-                if (!isStationMode())
-                    logger.info("switchToAP okay");
-                else
-                    logger.error("switchToAP error");
+//                if (!isStationMode())
+//                    logger.info("switchToAP okay");
+//                else
+//                    logger.error("switchToAP error");
+
+                return;
             }
         }
         logger.info("switchToAp doesn't work on windows");
@@ -200,8 +202,8 @@ public class WifiService {
                     switchToAP();
                     logger.info("switching to ap");
                 }
-            }
-            logger.info(" NOOOO switching to ap");
+            } else
+                logger.info("not switching to ap");
 
         }
     }
@@ -299,15 +301,13 @@ public class WifiService {
     }
 
 
-    public Boolean isInternet()
-    {
+    public Boolean isInternet() {
         StringBuilder result = new StringBuilder();
         result.append(execService.execute("wpa_cli -iwlan0 status"));
         if (result.indexOf("ssid") != -1) {
             execService.execute(" wpa_cli -iwlan0 save_config");
             return true;
-        }
-        else
+        } else
             return false;
 
     }
