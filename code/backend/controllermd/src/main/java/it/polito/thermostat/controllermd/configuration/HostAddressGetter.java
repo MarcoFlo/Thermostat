@@ -73,8 +73,9 @@ public class HostAddressGetter {
         int i = 0;
         while (i < 10) {
             try {
-                return getB("ip");
-
+                String resul = getB("ip");
+                if (resul.indexOf("169") != -1)
+                    return "192.168.4.1";
             } catch (SocketException e) {
                 i++;
             }
