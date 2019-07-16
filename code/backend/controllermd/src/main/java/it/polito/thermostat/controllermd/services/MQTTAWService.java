@@ -51,15 +51,15 @@ public class MQTTAWService {
 
     @PostConstruct
     public void init() throws AWSIotException {
-        if (wifiService.isInternet()) {
-
         clientId += HostAddressGetter.getMAC().replace(":", ""); // + "-" + new Random().nextInt(100);
         KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(certificateFile, privateKeyFile);
         mqttClient = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
-        mqttClient.connect();
-        mqttClient.subscribe(new NotificationTopic());
+        if (wifiService.isInternet()) {
+            mqttClient.connect();
+            mqttClient.subscribe(new NotificationTopic());
         }
     }
+
     /**
      * Event id:
      * - new esp = 10
@@ -69,7 +69,7 @@ public class MQTTAWService {
      * @param event
      * @param event_id
      */
-    public void sendEvent(Object event, Integer event_id){
+    public void sendEvent(Object event, Integer event_id) {
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
