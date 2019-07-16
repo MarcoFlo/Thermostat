@@ -192,7 +192,7 @@ public class WifiService {
      */
     @Scheduled(fixedRate = 20000, initialDelay = 10000)
     public void switchToApIfNone() {
-        if (!isWindows) {
+        if (!isWindows && !wasAP) {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 status"));
 
