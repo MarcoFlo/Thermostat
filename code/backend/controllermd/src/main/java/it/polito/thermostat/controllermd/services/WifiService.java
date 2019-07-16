@@ -292,6 +292,7 @@ public class WifiService {
             if (result.indexOf("ssid") != -1) {
                 execService.execute(" wpa_cli -iwlan0 save_config");
                 logger.info("handleConnectResult credenziali ok");
+                wasAP=false;
                 return true;
             }
             logger.info("Unexpected result handleConnectResult" + result.toString());
