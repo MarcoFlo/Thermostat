@@ -63,7 +63,7 @@ public class MQTTservice {
 
     @PostConstruct
     public void init() throws MqttException {
-        String localBroker = "tcp://" + HostAddressGetter.getIp() + ":1883";
+        String localBroker = "tcp://localhost:1883";
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
 //      options.setCleanSession(true);
