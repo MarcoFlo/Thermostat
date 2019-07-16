@@ -283,7 +283,7 @@ public class WifiService {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
             }
-            if (result.indexOf("INACTIVE") != -1 || result.indexOf("DISCONNECTED") != -1) {
+            if (result.indexOf("INACTIVE") != -1) {
                 execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
                 if (wasAP)
                     switchToAP();
