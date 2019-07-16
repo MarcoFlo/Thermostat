@@ -69,11 +69,18 @@ public class MQTTAWService {
      * @param event
      * @param event_id
      */
-    public void sendEvent(Object event, Integer event_id) {
+    public void sendEvent(Object event, Integer event_id){
         String eventTopic = "pl19/event";
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         if (wifiService.isInternet()) {
+            try {
+                mqttClient.connect();
+                mqttClient.subscribe(new NotificationTopic());
+
+            } catch (AWSIotException e) {
+                e.printStackTrace();
+            }
             try {
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
 //          logger.info("This event will be published" + awsIotMessage.getStringPayload());
