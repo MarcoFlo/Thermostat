@@ -145,239 +145,244 @@
 
                                                 <div class="card-header" id="headingOne">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="roomName"
+                                                        <input type="text" class="keyboard-input form-control"
+                                                               id="roomName"
                                                                aria-describedby="rommNameHelp"
-                                                               placeholder="Enter room name">
-                                                        <div class="simple-keyboard"></div>
+                                                               placeholder="Enter room name"/>
+
+                                                        <div id="collapseZero" class="collapse"
+                                                             aria-labelledby="headingZero"
+                                                             data-parent="#accordionExample">
+                                                            <div class="keyboard-program"></div>
+                                                        </div>
                                                     </div>
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link" type="button"
+                                                                data-toggle="collapse" data-target="#collapseOne"
+                                                                aria-expanded="true" aria-controls="collapseOne">
+                                                            Sensor&Actuator
+                                                        </button>
+                                                    </h5>
                                                 </div>
-                                                <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button"
-                                                            data-toggle="collapse" data-target="#collapseOne"
-                                                            aria-expanded="true" aria-controls="collapseOne">
-                                                        Sensor&Actuator
-                                                    </button>
-                                                </h5>
-                                            </div>
 
-                                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
-                                                 data-parent="#accordionExample">
-                                                <div id="esp-container" class="card-body row justify-content-start">
-                                                    <!--                        <div class="col-auto p-1">-->
-                                                    <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
-                                                    <!--                        </div>-->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header" id="headingTwo">
-                                                <h5 class="mb-0">
-                                                    <button class="btn btn-link collapsed" type="button"
-                                                            data-toggle="collapse"
-                                                            data-target="#collapseTwo" aria-expanded="false"
-                                                            aria-controls="collapseTwo">Program
-                                                    </button>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                                                 data-parent="#accordionExample">
-                                                <div class="card-body container my-2">
-
-                                                    <div class="form-group row">
-                                                        <div class="col">
-                                                            <select class="form-control" id="time-slice-select">
-                                                                <option>Wake</option>
-                                                                <option>Leave</option>
-                                                                <option>Back</option>
-                                                                <option>Sleep</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <button type="button" id="weekend"
-                                                                    class="btn btn-secondary">Weekend
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row  m-0 input-group clockpicker" id="start-time">
-                                                        <div class="input-group-addon input-group-prepend ">
-                                                            <i class="input-group-text fa fa-clock"></i>
-                                                        </div>
-                                                        <input id="start-time-input" placeholder="Start time"
-                                                               class="form-control"
-                                                               aria-describedby="start-time-help-block"/>
-                                                        <small class="d-none" id="start-time-help-block"></small>
-                                                    </div>
-                                                    <div class="row m-0 pt-2 input-group">
-                                                        <input type="number" id="temperature" value="20.0"
-                                                               data-decimals="1" min="5" max="30"
-                                                               step="0.1"/>
-
+                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                                     data-parent="#accordionExample">
+                                                    <div id="esp-container" class="card-body row justify-content-start">
+                                                        <!--                        <div class="col-auto p-1">-->
+                                                        <!--                            <button type="button" class="btn btn-secondary">Text</button>-->
+                                                        <!--                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="card">
+                                                <div class="card-header" id="headingTwo">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link collapsed" type="button"
+                                                                data-toggle="collapse"
+                                                                data-target="#collapseTwo" aria-expanded="false"
+                                                                aria-controls="collapseTwo">Program
+                                                        </button>
+                                                    </h5>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                                     data-parent="#accordionExample">
+                                                    <div class="card-body container my-2">
 
-                                        <div class="card">
-                                            <div class="card-footer" id="headingThree">
-                                                <div class="d-flex justify-content-end">
-                                                    <div class="d-flex flex-column">
-                                                        <div class="p-1 px-0">
-                                                            <button id="reset" type="button"
-                                                                    class="btn btn-secondary m-1">Reset
-                                                            </button>
-                                                            <button id="save" type="button"
-                                                                    class="btn btn-primary m-1">
-                                                                Save
-                                                            </button>
+                                                        <div class="form-group row">
+                                                            <div class="col">
+                                                                <select class="form-control" id="time-slice-select">
+                                                                    <option>Wake</option>
+                                                                    <option>Leave</option>
+                                                                    <option>Back</option>
+                                                                    <option>Sleep</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <button type="button" id="weekend"
+                                                                        class="btn btn-secondary">Weekend
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex flex-row" id="save-div"></div>
-                                                    </div>
 
+                                                        <div class="row  m-0 input-group clockpicker" id="start-time">
+                                                            <div class="input-group-addon input-group-prepend ">
+                                                                <i class="input-group-text fa fa-clock"></i>
+                                                            </div>
+                                                            <input id="start-time-input" placeholder="Start time"
+                                                                   class="form-control"
+                                                                   aria-describedby="start-time-help-block"/>
+                                                            <small class="d-none" id="start-time-help-block"></small>
+                                                        </div>
+                                                        <div class="row m-0 pt-2 input-group">
+                                                            <input type="number" id="temperature" value="20.0"
+                                                                   data-decimals="1" min="5" max="30"
+                                                                   step="0.1"/>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card">
+                                                <div class="card-footer" id="headingThree">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div class="d-flex flex-column">
+                                                            <div class="p-1 px-0">
+                                                                <button id="reset" type="button"
+                                                                        class="btn btn-secondary m-1">Reset
+                                                                </button>
+                                                                <button id="save" type="button"
+                                                                        class="btn btn-primary m-1">
+                                                                    Save
+                                                                </button>
+                                                            </div>
+                                                            <div class="d-flex flex-row" id="save-div"></div>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                            </div>
 
-                            </form>
+                                </form>
 
 
-                        </div>
-                    </div>
-
-                    <!-- stats-->
-                    <div class="tab-pane fade " id="list-setting" role="tabpanel"
-                         aria-labelledby="list-setting-list">
-                        <div class="d-flex flex-row justify-content-center p-1">
-
-                            <div class="input-group px-5 mx-5">
-                                <div class="input-group-prepend" id="left-stats">
-                                    <i class=" input-group-text fa fa-chevron-left"
-                                       style=" vertical-align: middle;"></i>
-                                </div>
-                                <h3 id="room-stats" class="form-control">M</h3>
-                                <div class="input-group-append align-middle font-awesome-div" id="right-stats">
-                                    <i class=" input-group-text fa fa-chevron-right"
-                                       style=" vertical-align: middle;"></i>
-                                </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <div class="d-flex flex-row">
-                                <h4 id="no-stats"></h4>
-                            </div>
-                        </div>
-                        <canvas class="pb-2" id="myChart"></canvas>
-                    </div>
 
-                    <!-- Leave-->
-                    <div class="tab-pane fade " id="leave-resource" role="tabpanel"
-                         aria-labelledby="leave-resource-leave">
-                        <div class="card-body my-2">
-                            <div class="form-group row">
-                                <div class="col">
-                                    <select class="form-control" id="time-days-select" aria-describedby="leaveHelp">
-                                        <option>0 Day</option>
-                                        <option>1 Day</option>
-                                        <option>2 Days</option>
-                                        <option>3 Days</option>
-                                        <option>4 Days</option>
-                                        <option>5 Days</option>
-                                        <option>6 Days</option>
-                                        <option>7 Days</option>
-                                    </select>
-                                    <small id="leaveHelp" class="form-text text-muted">Leave time</small>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-control" id="time-hours-select">
-                                        <option>1 Hour</option>
-                                        <option>3 Hours</option>
-                                        <option>6 Hours</option>
-                                        <option>9 Hours</option>
-                                        <option>12 Hours</option>
-                                        <option>15 Hours</option>
-                                        <option>18 Hours</option>
-                                        <option>21 Hours</option>
-                                        <option>24 Hours</option>
-                                    </select>
+                        <!-- stats-->
+                        <div class="tab-pane fade " id="list-setting" role="tabpanel"
+                             aria-labelledby="list-setting-list">
+                            <div class="d-flex flex-row justify-content-center p-1">
+
+                                <div class="input-group px-5 mx-5">
+                                    <div class="input-group-prepend" id="left-stats">
+                                        <i class=" input-group-text fa fa-chevron-left"
+                                           style=" vertical-align: middle;"></i>
+                                    </div>
+                                    <h3 id="room-stats" class="form-control">M</h3>
+                                    <div class="input-group-append align-middle font-awesome-div" id="right-stats">
+                                        <i class=" input-group-text fa fa-chevron-right"
+                                           style=" vertical-align: middle;"></i>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row m-0  input-group">
-                                <input type="number" id="temperature_leave" aria-describedby="temperatureHelp"
-                                       value="20.0" data-decimals="1" min="5" max="30" step="0.1"/>
-                                <small id="temperatureHelp" class="form-text text-muted">The temperature you will
-                                    find
-                                    at comeback
-                                </small>
+                            <div class="d-flex justify-content-center">
+                                <div class="d-flex flex-row">
+                                    <h4 id="no-stats"></h4>
+                                </div>
+                            </div>
+                            <canvas class="pb-2" id="myChart"></canvas>
+                        </div>
+
+                        <!-- Leave-->
+                        <div class="tab-pane fade " id="leave-resource" role="tabpanel"
+                             aria-labelledby="leave-resource-leave">
+                            <div class="card-body my-2">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <select class="form-control" id="time-days-select" aria-describedby="leaveHelp">
+                                            <option>0 Day</option>
+                                            <option>1 Day</option>
+                                            <option>2 Days</option>
+                                            <option>3 Days</option>
+                                            <option>4 Days</option>
+                                            <option>5 Days</option>
+                                            <option>6 Days</option>
+                                            <option>7 Days</option>
+                                        </select>
+                                        <small id="leaveHelp" class="form-text text-muted">Leave time</small>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select class="form-control" id="time-hours-select">
+                                            <option>1 Hour</option>
+                                            <option>3 Hours</option>
+                                            <option>6 Hours</option>
+                                            <option>9 Hours</option>
+                                            <option>12 Hours</option>
+                                            <option>15 Hours</option>
+                                            <option>18 Hours</option>
+                                            <option>21 Hours</option>
+                                            <option>24 Hours</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row m-0  input-group">
+                                    <input type="number" id="temperature_leave" aria-describedby="temperatureHelp"
+                                           value="20.0" data-decimals="1" min="5" max="30" step="0.1"/>
+                                    <small id="temperatureHelp" class="form-text text-muted">The temperature you will
+                                        find
+                                        at comeback
+                                    </small>
+
+                                </div>
 
                             </div>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-secondary btn-lg btn-block" id="activate-leave"
+                                        value="0">Activate
+                                </button>
+                            </div>
+                        </div>
+                        <!-- QR-code -->
+                        <div class="tab-pane fade " id="qr-code" role="tabpanel"
+                             aria-labelledby="qr-code-qr">
+                            <div class="row justify-content-center" id="ssss">
+                                <img style="width: 80vmin; height: 80vmin;" id="image-qr">
+                            </div>
+                        </div>
 
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-secondary btn-lg btn-block" id="activate-leave"
-                                    value="0">Activate
-                            </button>
-                        </div>
+
                     </div>
-                    <!-- QR-code -->
-                    <div class="tab-pane fade " id="qr-code" role="tabpanel"
-                         aria-labelledby="qr-code-qr">
-                        <div class="row justify-content-center" id="ssss">
-                            <img style="width: 80vmin; height: 80vmin;" id="image-qr">
-                        </div>
-                    </div>
-
-
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<div class="d-flex justify-content-between px-2" style="background-color: #a3a3a3;">
-    <div id="settingsIcon" class="p-2 d-flex align-items-center" data-toggle="modal"
-         data-target="#settings-modal">
-        <span class="fa fa-cog fa-2x text-white"/>
-    </div>
-    <h4 id="clock" class="d-flex align-items-center text-white"></h4>
-    <div id="wifiIcon" class="p-2 d-flex align-items-center" data-toggle="modal">
-        <span class="fas fa-wifi fa-2x text-white"/>
-    </div>
-</div>
-<div id="main-container" class="container-fluid  justify-content-center bg-dark ">
-    <div class="row justify-content-center text-light">
-        <h1 id="room_name"></h1>
-    </div>
-    <div class="d-flex flex-row justify-content-around">
-        <!--        left button-->
-        <div class="d-flex flex-column justify-content-center flex-wrap  rounded-left" id="left_button">
-            <button id="left_arrow" type="button" class="btn btn-secondary btn-lg w-100 h-25 rounded-left">
-                <i class="fa fa-chevron-left"></i>
-            </button>
+    <div class="d-flex justify-content-between px-2" style="background-color: #a3a3a3;">
+        <div id="settingsIcon" class="p-2 d-flex align-items-center" data-toggle="modal"
+             data-target="#settings-modal">
+            <span class="fa fa-cog fa-2x text-white"/>
         </div>
-        <!--            thermostat-->
-        <div class="d-flex flex-column justify-content-center m-2" style="width: 60vmin; height: 60vmin;"
-             id='thermostat'></div>
-
-        <!--        right button-->
-        <div class="d-flex flex-column justify-content-center flex-wrap rounded-right" id="right_button">
-            <button id="right_arrow" type="button" class="btn btn-secondary btn-lg w-100 h-25 rounded-right">
-                <span class="fa fa-chevron-right"></span>
-            </button>
+        <h4 id="clock" class="d-flex align-items-center text-white"></h4>
+        <div id="wifiIcon" class="p-2 d-flex align-items-center" data-toggle="modal">
+            <span class="fas fa-wifi fa-2x text-white"/>
         </div>
     </div>
-    <div class="row justify-content-center p-2" id="container-buttons">
-        <div class="btn-group m-1" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
-            <button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
+    <div id="main-container" class="container-fluid  justify-content-center bg-dark ">
+        <div class="row justify-content-center text-light">
+            <h1 id="room_name"></h1>
         </div>
-        <button type="button" class="btn btn-secondary m-1" id="Manual" value="0">Manual</button>
-        <button type="button" class="btn btn-secondary m-1" id="AntiFreeze" value="0">Antifreeze</button>
+        <div class="d-flex flex-row justify-content-around">
+            <!--        left button-->
+            <div class="d-flex flex-column justify-content-center flex-wrap  rounded-left" id="left_button">
+                <button id="left_arrow" type="button" class="btn btn-secondary btn-lg w-100 h-25 rounded-left">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+            </div>
+            <!--            thermostat-->
+            <div class="d-flex flex-column justify-content-center m-2" style="width: 60vmin; height: 60vmin;"
+                 id='thermostat'></div>
 
+            <!--        right button-->
+            <div class="d-flex flex-column justify-content-center flex-wrap rounded-right" id="right_button">
+                <button id="right_arrow" type="button" class="btn btn-secondary btn-lg w-100 h-25 rounded-right">
+                    <span class="fa fa-chevron-right"></span>
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center p-2" id="container-buttons">
+            <div class="btn-group m-1" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary" id="Summer" value="0">Summer</button>
+                <button type="button" class="btn btn-secondary" id="Winter" value="0">Winter</button>
+            </div>
+            <button type="button" class="btn btn-secondary m-1" id="Manual" value="0">Manual</button>
+            <button type="button" class="btn btn-secondary m-1" id="AntiFreeze" value="0">Antifreeze</button>
+
+        </div>
     </div>
-</div>
 </div>
 
 
@@ -404,14 +409,20 @@
     let Keyboard = window.SimpleKeyboard.default;
 
     let myKeyboard = new Keyboard({
-        onChange: input = > onChange(input),
-        onKeyPress
-    :
-    button =
-    >
-    onKeyPress(button)
-    })
-    ;
+        onChange: input => onChange(input),
+        onKeyPress: button => onKeyPress(button)
+    });
+
+    let keyboard2 = new Keyboard(".keyboard-program", {
+        onChange: input => onChangeProgram(input),
+        onKeyPress: button => onKeyPress(button),
+        theme: "simple-keyboard hg-theme-default hg-layout-default"
+    });
+
+    function onChangeProgram(input) {
+        document.querySelector(".keyboard-input").value = input;
+        console.log("Input changed", input);
+    }
 
     function onChange(input) {
         document.querySelector(".input").value = input;
@@ -430,6 +441,12 @@
     $('#settingsIcon').click(function (e) {
         $("#settings-modal").modal({backdrop: "static"});
         $("#image-qr").attr("src", window.location.origin + "/qr");
+        $('#roomName').on('click', function (ev) {
+            $("#collapseZero").collapse('show');
+        });
+        $('#roomName').on('touchstart', function (ev) {
+            $("#collapseZero").collapse('show');
+        });
     });
 
     $('#settings-modal').on('hide.bs.modal', function (e) {
@@ -444,6 +461,7 @@
         xhttp_room.open("GET", window.location.origin + "/setting/room/list", true);
         xhttp_room.send();
     });
+
 
 
 </script>
