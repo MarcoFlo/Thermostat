@@ -18,7 +18,7 @@ public class WifiService {
 
     @Autowired
     ExecuteShellComandService execService;
-    Boolean wasAP;
+    Boolean wasAP = false;
 
     /**
      * @return the available net, iterating @count times to return the result with more entry
@@ -181,7 +181,7 @@ public class WifiService {
 //                    logger.info("switchToAP okay");
 //                else
 //                    logger.error("switchToAP error");
-
+                wasAP = true;
                 return;
             }
         }
@@ -279,11 +279,11 @@ public class WifiService {
             logger.info(result.toString());
 
 
-            while (result.indexOf("ASSOCIATING") != -1) {
+            while (result.indexOf("ASSOCIATING") != -1 || result.indexOf("SCANNING") != -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 0.5s | wpa_cli -iwlan0 status"));
             }
-            if (result.indexOf("INACTIVE") != -1 || result.indexOf("SCANNING") != -1 || result.indexOf("DISCONNECTED") != -1) {
+            if (result.indexOf("INACTIVE") != -1 || result.indexOf("DISCONNECTED") != -1) {
                 execService.execute("wpa_cli -iwlan0 remove_network " + netNumber + " | wpa_cli -i wlan0 reconfigure");
                 if (wasAP)
                     switchToAP();
