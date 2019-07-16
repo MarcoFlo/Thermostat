@@ -118,7 +118,7 @@ public class MQTTAWService {
             try {
 
                 PingAWS request = objectMapper.readValue(message.getStringPayload(), PingAWS.class);
-                logger.info(request.toString());
+                logger.info(message.getStringPayload());
                 PingAWS response = new PingAWS(request.getEvent().getSequence());
                 AWSIotMessage awsIotMessage = new AWSIotMessage(notificationTopic, qos);
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(response));
