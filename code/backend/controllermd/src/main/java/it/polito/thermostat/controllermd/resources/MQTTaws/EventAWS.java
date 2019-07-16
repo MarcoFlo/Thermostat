@@ -21,7 +21,7 @@ public class EventAWS {
 
     public EventAWS(Object event, Integer event_id) {
         this.event_id = event_id;
-        timestamp = LocalDateTime.now().withNano(1000).toString();
+        timestamp = LocalDateTime.now().withNano(1000).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
         device_mac = HostAddressGetter.getMAC();
         this.event = event;
     }
