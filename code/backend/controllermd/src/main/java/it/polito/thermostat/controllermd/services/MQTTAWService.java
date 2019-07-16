@@ -76,7 +76,16 @@ public class MQTTAWService {
         AWSIotQos qos = AWSIotQos.QOS1;
         AWSIotMessage awsIotMessage = new AWSIotMessage(eventTopic, qos);
         if (wifiService.isInternet()) {
-
+            if (!mqttClient.getConnectionStatus().equals(AWSIotConnectionStatus.CONNECTED))
+            {
+                try {
+                    mqttClient.setCleanSession(true);
+                    mqttClient.connect();
+                    mqttClient.subscribe(new NotificationTopic());
+                } catch (AWSIotException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
                 awsIotMessage.setStringPayload(objectMapper.writeValueAsString(new EventAWS(event, event_id)));
 //          logger.info("This event will be published" + awsIotMessage.getStringPayload());
