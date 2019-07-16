@@ -193,10 +193,10 @@ public class WifiService {
             StringBuilder result = new StringBuilder();
             result.append(execService.execute("wpa_cli -iwlan0 status"));
 
-            if (result.indexOf("id") == -1) {
+            if (result.indexOf("ssid") == -1) {
                 result.setLength(0);
                 result.append(execService.execute("sleep 1.5s | wpa_cli -iwlan0 status"));
-                if (result.indexOf("id") == -1) {
+                if (result.indexOf("ssid") == -1) {
                     switchToAP();
                     logger.info("switching to ap");
                 }
