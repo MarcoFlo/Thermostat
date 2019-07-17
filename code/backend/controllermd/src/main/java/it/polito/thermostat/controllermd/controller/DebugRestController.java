@@ -49,8 +49,8 @@ public class DebugRestController {
 
     @PostMapping("/debug/berniesp")
     public void deleteEspBerni() {
-        esp8266Repository.deleteById("esp2sensor");
-        esp8266Repository.deleteById("esp1actuator");
+        esp8266Repository.deleteById("esp2sensor-esp");
+        esp8266Repository.deleteById("esp1actuator-esp");
         roomRepository.deleteById("Kitchen");
     }
 
