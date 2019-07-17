@@ -26,7 +26,7 @@ public class QRService {
      * @throws IOException
      */
     public byte[] getQRCodeImage() throws WriterException, IOException {
-        String text = "http://" + HostAddressGetter.getIp() + ":8080";
+        String text = "http://192.168.43.100:8080";
         int size = 500;
 
         BitMatrix bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size);
