@@ -87,7 +87,7 @@ Before pushing(sending the code to git), remember to pull(download the new code 
 
 # HTTP endpoint description
 Not updated right now    
-https://docs.google.com/document/d/1TF6zZ8DTbSKHRjFNf6_r4kNfpuSn5rqgrSfVmJvNIGA/edit#heading=h.38xql5hyg87g
+https://docs.google.com/document/d/1TF6zZ8DTbSKHRjFNf6_r4kNfpuSn5rqgrSfVmJvNIGA/edit?usp=sharing
 
 # EXTRA
 To open a cmdline very fast go the folder and shift+right click and then choose Open PowerShell here  
